@@ -5,6 +5,7 @@ import 'package:ordem_services/utils/menu.dart';
 
 class TabBarMenu extends StatefulWidget {
   TabBarMenu({Key key}) : super(key: key);
+
   @override
   _TabBarMenuState createState() => _TabBarMenuState();
 }
@@ -25,20 +26,20 @@ class _TabBarMenuState extends State<TabBarMenu> {
       drawer: DrawerMenu(),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.list), title: Text('Lista de Pedido')),
-          BottomNavigationBarItem(icon: Icon(Icons.edit), title: Text('Cadastrar Pedido')),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.list), title: Text('Lista de Pedido')),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.edit), title: Text('Cadastrar Pedido')),
         ],
         currentIndex: _currentIndex, //目前選擇頁索引值 index(Página) atual
         fixedColor: Colors.amber, //選擇頁顏色
-        onTap: _onItemClick, //BottomNavigationBar 按下處理事件
+        onTap: (int index) {
+          //BottomNavigationBar 按下處理事件，更新設定當下索引值
+          setState(() {
+            _currentIndex = index;
+          });
+        }, //BottomNavigationBar 按下處理事件
       ),
     );
-  }
-
-  //BottomNavigationBar 按下處理事件，更新設定當下索引值
-  void _onItemClick(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
   }
 }
