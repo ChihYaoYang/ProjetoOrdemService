@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ordem_services/ui_admin/home.dart';
 import 'package:ordem_services/ui_admin/cadastro.dart';
 import 'package:ordem_services/utils/menu.dart';
@@ -14,6 +15,12 @@ class _TabBarMenuState extends State<TabBarMenu> {
   //目前選擇頁索引值 index(Página) atual
   int _currentIndex = 0; //預設值
   final pages = [HomePage(), CadastroPedido()];
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+  }
 
   @override
   Widget build(BuildContext context) {

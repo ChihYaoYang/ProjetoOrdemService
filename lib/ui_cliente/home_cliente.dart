@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ordem_services/utils/menu.dart';
 
 class HomeCliente extends StatefulWidget {
@@ -7,6 +8,13 @@ class HomeCliente extends StatefulWidget {
 }
 
 class _HomeClienteState extends State<HomeCliente> {
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
