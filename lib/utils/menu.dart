@@ -21,6 +21,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
             decoration: BoxDecoration(
               color: Colors.blue,
             ),
+            accountName: Text('Nome do Usuário'),
             currentAccountPicture: CircleAvatar(
               backgroundImage: AssetImage('assets/user.png'),
             ),
@@ -98,6 +99,13 @@ class _DrawerMenuState extends State<DrawerMenu> {
                     style: TextStyle(fontSize: 0),
                   ),
                 ),
+          ListTile(
+            title: Text('Dados do Usuário'),
+            leading: Icon(
+              Icons.verified_user,
+            ),
+            onTap: () {},
+          ),
           ListTile(
             title: Text('Sair'),
             leading: Icon(
