@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:ordem_services/tabbar.dart';
 
-class CadastroPedido extends StatefulWidget {
+class AlterarPedido extends StatefulWidget {
   @override
-  _CadastroPedidoState createState() => _CadastroPedidoState();
+  _AlterarPedidoState createState() => _AlterarPedidoState();
 }
 
-class _CadastroPedidoState extends State<CadastroPedido> {
+class _AlterarPedidoState extends State<AlterarPedido> {
   GlobalKey<FormState> _formkey = GlobalKey<FormState>();
-  final _nomeController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _cpfController = TextEditingController();
-  final _telefoneController = TextEditingController();
-  final _enderecoController = TextEditingController();
   final _marcaController = TextEditingController();
   final _modeloController = TextEditingController();
   final _defeitoController = TextEditingController();
   final _descricaoController = TextEditingController();
+  final _servicesController = TextEditingController();
+  final _precosController = TextEditingController();
 
   //DropDown
   List<String> _locations = ['Notebook', 'Celular'];
@@ -33,188 +29,17 @@ class _CadastroPedidoState extends State<CadastroPedido> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blueAccent,
+        title: Text('Update Pedido'),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Form(
           key: _formkey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(top: 5),
-                child: Text(
-                  "Dados do Cliente",
-                  style: TextStyle(fontSize: 20, color: Colors.blueGrey),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " Nome",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.account_circle,
-                        color: Colors.white,
-                      ),
-                      color: Colors.blue,
-                    ),
-                  ),
-                  controller: _nomeController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  keyboardType: TextInputType.emailAddress,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " E-mail",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.email,
-                        color: Colors.white,
-                      ),
-                      color: Colors.blue,
-                    ),
-                  ),
-                  controller: _emailController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " CPF",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.assignment_ind,
-                        color: Colors.white,
-                      ),
-                      color: Colors.blue,
-                    ),
-                  ),
-                  controller: _cpfController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " Telefone",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.phone,
-                        color: Colors.white,
-                      ),
-                      color: Colors.blue,
-                    ),
-                  ),
-                  controller: _telefoneController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " Endereço: R. B.",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.location_on,
-                        color: Colors.white,
-                      ),
-                      color: Colors.blue,
-                    ),
-                  ),
-                  controller: _enderecoController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Row(
-                children: <Widget>[
-                  Expanded(child: Divider(color: Colors.blueGrey)),
-                ],
-              ),
               Container(
                 padding: EdgeInsets.only(top: 5),
                 child: Text(
@@ -406,16 +231,93 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                   },
                 ),
               ),
+              Row(
+                children: <Widget>[
+                  Expanded(child: Divider(color: Colors.blueGrey)),
+                ],
+              ),
+              Container(
+                padding: EdgeInsets.only(top: 5),
+                child: Text(
+                  "Serviço feitos",
+                  style: TextStyle(fontSize: 20, color: Colors.blueGrey),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(top: 10.0),
+                margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                child: TextFormField(
+                  maxLines: 5,
+                  style: TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0)),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                    filled: true,
+                    fillColor: Colors.blueGrey.withOpacity(0.45),
+                    hintText: " Descrição dos Servicos",
+                    hintStyle: TextStyle(color: Colors.white),
+                    prefixIcon: Container(
+                      child: Icon(
+                        Icons.room_service,
+                        color: Colors.white,
+                      ),
+                      color: Colors.blue,
+                    ),
+                  ),
+                  controller: _servicesController,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return "Campo obrigatório !";
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(top: 10.0),
+                margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  style: TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0)),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                    filled: true,
+                    fillColor: Colors.blueGrey.withOpacity(0.45),
+                    hintText: " Preço",
+                    hintStyle: TextStyle(color: Colors.white),
+                    prefixIcon: Container(
+                      child: Icon(
+                        Icons.attach_money,
+                        color: Colors.white,
+                      ),
+                      color: Colors.blue,
+                    ),
+                  ),
+                  controller: _precosController,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return "Campo obrigatório !";
+                    }
+                    return null;
+                  },
+                ),
+              ),
               RaisedButton(
                 padding: EdgeInsets.symmetric(vertical: 15.0),
-                child: Text("Cadastrar"),
+                child: Text("Enviar"),
                 color: Colors.blueGrey,
                 textColor: Colors.white,
                 onPressed: () {
                   if (_formkey.currentState.validate()) {
                     Navigator.pop(context);
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => TabBarMenu()));
                   }
                 },
               ),

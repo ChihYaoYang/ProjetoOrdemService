@@ -46,26 +46,6 @@ class _DrawerMenuState extends State<DrawerMenu> {
                 ),
           (admin == 0)
               ? ListTile(
-                  title: Text('Cadastrar Cliente'),
-                  leading: Icon(
-                    Icons.account_circle,
-                  ),
-                  onTap: () {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => TabBarCliente()));
-                  },
-                )
-              : Visibility(
-                  visible: true,
-                  child: Text(
-                    '',
-                    style: TextStyle(fontSize: 0),
-                  ),
-                ),
-          (admin == 0)
-              ? ListTile(
                   title: Text('Cadastrar Funcionários'),
                   leading: Icon(
                     Icons.supervisor_account,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ordem_services/ui_admin/funcionario/lista.dart';
 
 class CadastroFuncionario extends StatefulWidget {
   @override
@@ -183,6 +184,26 @@ class _CadastroFuncionarioState extends State<CadastroFuncionario> {
                       return null;
                     },
                   ),
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Divider(color: Colors.blueGrey)),
+                  ],
+                ),
+                RaisedButton(
+                  padding: EdgeInsets.symmetric(vertical: 15.0),
+                  child: Text("Cadastrar"),
+                  color: Colors.blueGrey,
+                  textColor: Colors.white,
+                  onPressed: () {
+                    if (_formkey.currentState.validate()) {
+                      Navigator.pop(context);
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ListaFuncionario()));
+                    }
+                  },
                 ),
               ],
             )),
