@@ -3,9 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:ordem_services/ui_admin/pedido/home.dart';
 import 'package:ordem_services/ui_admin/pedido/cadastro.dart';
 import 'package:ordem_services/utils/menu.dart';
+import 'package:ordem_services/helper/Api.dart';
 
 class TabBarMenu extends StatefulWidget {
-  TabBarMenu({Key key}) : super(key: key);
+  final Api api;
+  int login_id;
+
+  TabBarMenu(this.login_id, this.api, {Key key}) : super(key: key);
 
   @override
   _TabBarMenuState createState() => _TabBarMenuState();
@@ -20,6 +24,8 @@ enum OrderOptions {
 }
 
 class _TabBarMenuState extends State<TabBarMenu> {
+  Api api = new Api();
+
   //目前選擇頁索引值 index(Página) atual
   int _currentIndex = 0; //預設值
   final pages = [HomePage(), CadastroPedido()];

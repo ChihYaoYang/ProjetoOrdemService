@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:ordem_services/tabbar.dart';
 import 'package:ordem_services/ui_cliente/home_cliente.dart';
 import 'package:ordem_services/screen/login.dart';
+import 'package:ordem_services/helper/login_helper.dart';
+import 'package:ordem_services/helper/Api.dart';
+import 'package:ordem_services/utils/menu.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -10,21 +13,24 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
+  LoginHelper helper = LoginHelper();
+
   @override
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIOverlays([]);
     Future.delayed(Duration(seconds: 1)).then((_) async {
-      //ex a getlogado / ex b status
-      int a = 0;
-      int admin = 1;
-      if (a != 0) {
-        if (admin == 1) {
+      Logado logado = await helper.getLogado();
+      if (logado != null) {
+        if (logado.token != null) {
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => TabBarMenu()));
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      TabBarMenu(logado.id, Api(token: logado.token))));
         } else {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => HomeCliente()));
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => HomeCliente(logado.id)));
         }
       } else {
         Navigator.pushReplacement(

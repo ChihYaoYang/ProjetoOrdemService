@@ -12,7 +12,6 @@ class _CadastroPedidoState extends State<CadastroPedido> {
   final _emailController = TextEditingController();
   final _cpfController = TextEditingController();
   final _telefoneController = TextEditingController();
-  final _enderecoController = TextEditingController();
   final _marcaController = TextEditingController();
   final _modeloController = TextEditingController();
   final _defeitoController = TextEditingController();
@@ -170,38 +169,6 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                     ),
                   ),
                   controller: _telefoneController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " Endereço: R. B.",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.location_on,
-                        color: Colors.white,
-                      ),
-                      color: Colors.blue,
-                    ),
-                  ),
-                  controller: _enderecoController,
                   validator: (value) {
                     if (value.isEmpty) {
                       return "Campo obrigatório !";
@@ -414,8 +381,8 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                 onPressed: () {
                   if (_formkey.currentState.validate()) {
                     Navigator.pop(context);
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => TabBarMenu()));
+//                    Navigator.pushReplacement(context,
+//                        MaterialPageRoute(builder: (context) => TabBarMenu()));
                   }
                 },
               ),

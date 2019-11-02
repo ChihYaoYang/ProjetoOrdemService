@@ -3,12 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:ordem_services/utils/menu.dart';
 
 class HomeCliente extends StatefulWidget {
+  int login_id;
+  HomeCliente(this.login_id);
+
   @override
   _HomeClienteState createState() => _HomeClienteState();
 }
 
 class _HomeClienteState extends State<HomeCliente> {
-
   @override
   void initState() {
     super.initState();

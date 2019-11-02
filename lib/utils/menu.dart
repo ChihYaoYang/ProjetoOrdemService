@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:ordem_services/helper/Api.dart';
+import 'package:ordem_services/screen/login.dart';
 import 'package:ordem_services/tabbar.dart';
 import 'package:ordem_services/tabbar_funcionario.dart';
 import 'package:ordem_services/tabbar_cliente.dart';
+import 'package:ordem_services/helper/login_helper.dart';
 
 class DrawerMenu extends StatefulWidget {
   @override
@@ -9,7 +12,7 @@ class DrawerMenu extends StatefulWidget {
 }
 
 class _DrawerMenuState extends State<DrawerMenu> {
-  int admin = 0;
+  LoginHelper helperLog = LoginHelper();
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +29,15 @@ class _DrawerMenuState extends State<DrawerMenu> {
               backgroundImage: AssetImage('assets/user.png'),
             ),
           ),
-          (admin == 0)
+          (widget != null)
               ? ListTile(
                   title: Text('Home'),
                   leading: Icon(
                     Icons.home,
                   ),
                   onTap: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => TabBarMenu()));
+//                    Navigator.pushReplacement(context,
+//                        MaterialPageRoute(builder: (context) => TabBarMenu()));
                   },
                 )
               : Visibility(
@@ -44,7 +47,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
                     style: TextStyle(fontSize: 0),
                   ),
                 ),
-          (admin == 0)
+          (widget != null)
               ? ListTile(
                   title: Text('Cadastrar Funcionários'),
                   leading: Icon(
@@ -64,7 +67,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
                     style: TextStyle(fontSize: 0),
                   ),
                 ),
-          (admin != 0)
+          (widget == null)
               ? ListTile(
                   title: Text('Contato Suporte'),
                   leading: Icon(
@@ -91,7 +94,12 @@ class _DrawerMenuState extends State<DrawerMenu> {
             leading: Icon(
               Icons.exit_to_app,
             ),
-            onTap: () {},
+            onTap: () async {
+              await helperLog.deleteLogado();
+              Navigator.pop(context);
+              await Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => LoginPage()));
+            },
           ),
         ],
       ),

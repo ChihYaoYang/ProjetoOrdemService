@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ordem_services/helper/login_helper.dart';
 import 'package:ordem_services/tabbar.dart';
+import 'package:ordem_services/helper/Api.dart';
+import 'package:ordem_services/ui_cliente/home_cliente.dart';
+import 'package:ordem_services/utils/Dialogs.dart';
 
 class LoginPage extends StatefulWidget {
+  final Login login;
+  final Api api;
+
+  LoginPage({this.login, this.api});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -12,6 +21,12 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _senhaController = TextEditingController();
   bool passwordVisible;
+  bool isLoading = false;
+
+  LoginHelper helper = LoginHelper();
+  Api api = new Api();
+  List<Login> login = List();
+  Dialogs dialog = new Dialogs();
 
   @override
   void initState() {
@@ -22,6 +37,18 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    Widget loadingIndicator = isLoading
+        ? new Container(
+            width: 70.0,
+            height: 70.0,
+            child: new Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: new Center(
+                    child: new CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                ))),
+          )
+        : new Container();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
@@ -132,25 +159,60 @@ class _LoginPageState extends State<LoginPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      RaisedButton(
-                        padding: EdgeInsets.all(10),
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(10.0),
-                            side: BorderSide(color: Colors.transparent)),
-                        child: Text(
-                          "Login",
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                        color: Colors.red,
-                        textColor: Colors.white,
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => TabBarMenu()));
-                        },
-                        elevation: 10,
-                      )
+                      (isLoading)
+                          ? new Align(
+                              child: loadingIndicator,
+                              alignment: FractionalOffset.center,
+                            )
+                          : RaisedButton(
+                              padding: EdgeInsets.all(10),
+                              shape: new RoundedRectangleBorder(
+                                  borderRadius: new BorderRadius.circular(10.0),
+                                  side: BorderSide(color: Colors.transparent)),
+                              child: Text(
+                                "Login",
+                                style: TextStyle(fontSize: 20.0),
+                              ),
+                              color: Colors.red,
+                              textColor: Colors.white,
+                              onPressed: () async {
+                                FocusScope.of(context)
+                                    .requestFocus(new FocusNode());
+                                if (_formkey.currentState.validate()) {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  Login user = await api.login(
+                                      _emailController.text,
+                                      _senhaController.text);
+                                  if (user != null) {
+                                    helper.saveLogado(user.id, user.token);
+                                    if (user.token != null) {
+                                      Navigator.pop(context);
+                                      await Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => TabBarMenu(
+                                                  user.id,
+                                                  Api(token: user.token))));
+                                    } else {
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  HomeCliente(user.id)));
+                                    }
+                                  } else {
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                    dialog.showAlertDialog(
+                                        context, 'Aviso', 'Login inválido');
+                                  }
+                                }
+                              },
+                              elevation: 10,
+                            )
                     ],
                   ),
                 ],
