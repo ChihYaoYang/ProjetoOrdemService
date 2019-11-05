@@ -25,14 +25,18 @@ class _SplashState extends State<Splash> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => TabBarMenu(logado.id, logado.nome,
-                      logado.email, logado.status, Api(token: logado.token))));
+                  builder: (context) =>
+                      TabBarMenu(logado.id, logado.nome,
+                          logado.email, logado.status,
+                          Api(token: logado.token))));
         } else if (logado.status == 2) {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => HomeCliente(
-                      logado.id, logado.nome, logado.email, logado.status)));
+                  builder: (context) =>
+                      HomeCliente(
+                          logado.id, logado.nome, logado.email,
+                          logado.status)));
         }
       } else {
         Navigator.pushReplacement(
@@ -47,14 +51,9 @@ class _SplashState extends State<Splash> {
         color: Colors.indigo,
         child: Center(
           child: Container(
-            width: 280.0,
-            height: 280.0,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                image: AssetImage('assets/ic_launcher.jpg'),
-              ),
-            ),
+            width: 150.0,
+            height: 150.0,
+            child: Image.asset('assets/ic_launcher.png'),
           ),
         ));
   }

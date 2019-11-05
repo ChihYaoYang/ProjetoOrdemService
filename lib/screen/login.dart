@@ -73,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: AssetImage('assets/ic_launcher.jpg'),
+                          image: AssetImage('assets/ic_launcher.png'),
                         ),
                       ),
                     ),
