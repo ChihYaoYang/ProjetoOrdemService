@@ -4,9 +4,12 @@ import 'package:ordem_services/ui_admin/cliente/cadastro.dart';
 import 'package:ordem_services/ui_admin/cliente/lista.dart';
 
 class TabBarCliente extends StatefulWidget {
+  String nome;
+  String email;
   dynamic status;
 
-  TabBarCliente(this.status, {Key key}) : super(key: key);
+  TabBarCliente(this.nome, this.email, this.status, {Key key})
+      : super(key: key);
 
   @override
   _TabBarClienteState createState() => _TabBarClienteState();
@@ -18,6 +21,11 @@ class _TabBarClienteState extends State<TabBarCliente> {
   final pages = [ListaCliente(), CadastroCliente()];
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -25,7 +33,7 @@ class _TabBarClienteState extends State<TabBarCliente> {
         centerTitle: true,
       ),
       body: pages[_currentIndex],
-      drawer: DrawerMenu(widget.status),
+      drawer: DrawerMenu(widget.nome, widget.email, widget.status),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(

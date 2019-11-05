@@ -7,9 +7,11 @@ import 'package:ordem_services/tabbar_cliente.dart';
 import 'package:ordem_services/helper/login_helper.dart';
 
 class DrawerMenu extends StatefulWidget {
+  String nome;
+  String email;
   dynamic status;
 
-  DrawerMenu(this.status);
+  DrawerMenu(this.nome, this.email, this.status);
 
   @override
   _DrawerMenuState createState() => _DrawerMenuState();
@@ -21,7 +23,6 @@ class _DrawerMenuState extends State<DrawerMenu> {
   @override
   void initState() {
     super.initState();
-    print(widget.status);
   }
 
   @override
@@ -34,20 +35,29 @@ class _DrawerMenuState extends State<DrawerMenu> {
             decoration: BoxDecoration(
               color: Colors.blue,
             ),
-            accountName: Text('Nome do Usuário'),
+            accountName: Text(widget.nome),
+            accountEmail: Text(widget.email),
             currentAccountPicture: CircleAvatar(
               backgroundImage: AssetImage('assets/user.png'),
             ),
           ),
-          (widget.status == 1)
+          (widget.status == "1" || widget.status == 1)
               ? ListTile(
                   title: Text('Home'),
                   leading: Icon(
                     Icons.home,
                   ),
-                  onTap: () {
-//                    Navigator.pushReplacement(context,
-//                        MaterialPageRoute(builder: (context) => TabBarMenu(widget.status)));
+                  onTap: () async {
+                    Logado logado = await helperLog.getLogado();
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TabBarMenu(
+                                logado.id,
+                                logado.nome,
+                                logado.email,
+                                logado.status,
+                                Api(token: logado.token))));
                   },
                 )
               : Visibility(
@@ -57,7 +67,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
                     style: TextStyle(fontSize: 0),
                   ),
                 ),
-          (widget.status == 1)
+          (widget.status == "1" || widget.status == 1)
               ? ListTile(
                   title: Text('Lista de Cliente'),
                   leading: Icon(
@@ -67,8 +77,8 @@ class _DrawerMenuState extends State<DrawerMenu> {
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                TabBarCliente(widget.status)));
+                            builder: (context) => TabBarCliente(
+                                widget.nome, widget.email, widget.status)));
                   },
                 )
               : Visibility(
@@ -78,9 +88,9 @@ class _DrawerMenuState extends State<DrawerMenu> {
                     style: TextStyle(fontSize: 0),
                   ),
                 ),
-          (widget.status == 1)
+          (widget.status == "1" || widget.status == 1)
               ? ListTile(
-                  title: Text('Cadastrar Funcionários'),
+                  title: Text('Cadastrar de Funcionários'),
                   leading: Icon(
                     Icons.supervisor_account,
                   ),
@@ -88,8 +98,8 @@ class _DrawerMenuState extends State<DrawerMenu> {
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                TabBarFuncionario(widget.status)));
+                            builder: (context) => TabBarFuncionario(
+                                widget.nome, widget.email, widget.status)));
                   },
                 )
               : Visibility(
@@ -99,7 +109,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
                     style: TextStyle(fontSize: 0),
                   ),
                 ),
-          (widget.status == 2)
+          (widget.status == "2" || widget.status == 2)
               ? ListTile(
                   title: Text('Contato Suporte'),
                   leading: Icon(
@@ -121,6 +131,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
             ),
             onTap: () {},
           ),
+          Divider(),
           ListTile(
             title: Text('Sair'),
             leading: Icon(

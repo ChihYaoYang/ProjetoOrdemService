@@ -4,9 +4,11 @@ import 'package:ordem_services/utils/menu.dart';
 
 class HomeCliente extends StatefulWidget {
   int login_id;
+  String nome;
+  String email;
   dynamic status;
 
-  HomeCliente(this.login_id, this.status);
+  HomeCliente(this.login_id, this.nome, this.email, this.status);
 
   @override
   _HomeClienteState createState() => _HomeClienteState();
@@ -16,7 +18,6 @@ class _HomeClienteState extends State<HomeCliente> {
   @override
   void initState() {
     super.initState();
-    print(widget.status);
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   }
 
@@ -28,7 +29,7 @@ class _HomeClienteState extends State<HomeCliente> {
         backgroundColor: Colors.blueAccent,
         centerTitle: true,
       ),
-      drawer: DrawerMenu(widget.status),
+      drawer: DrawerMenu(widget.nome, widget.email, widget.status),
     );
   }
 }

@@ -4,9 +4,12 @@ import 'package:ordem_services/ui_admin/funcionario/cadastro.dart';
 import 'package:ordem_services/ui_admin/funcionario/lista.dart';
 
 class TabBarFuncionario extends StatefulWidget {
+  String nome;
+  String email;
   dynamic status;
 
-  TabBarFuncionario(this.status, {Key key}) : super(key: key);
+  TabBarFuncionario(this.nome, this.email, this.status, {Key key})
+      : super(key: key);
 
   @override
   _TabBarFuncionarioState createState() => _TabBarFuncionarioState();
@@ -18,6 +21,11 @@ class _TabBarFuncionarioState extends State<TabBarFuncionario> {
   final pages = [ListaFuncionario(), CadastroFuncionario()];
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -25,7 +33,7 @@ class _TabBarFuncionarioState extends State<TabBarFuncionario> {
         centerTitle: true,
       ),
       body: pages[_currentIndex],
-      drawer: DrawerMenu(widget.status),
+      drawer: DrawerMenu(widget.nome, widget.email, widget.status),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(

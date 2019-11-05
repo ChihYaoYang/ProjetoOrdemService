@@ -12,11 +12,14 @@ class LoginHelper {
 
   Databases databases = new Databases();
 
-  Future<bool> saveLogado(int login_id, dynamic status, String tokens) async {
+  Future<bool> saveLogado(int login_id, String nome, String email,
+      dynamic status, String tokens) async {
     Database dbLogado = await databases.db;
     Logado logado = new Logado();
     logado.id = 1;
     logado.logado_login_id = login_id;
+    logado.nome = nome;
+    logado.email = email;
     logado.status = status;
     logado.token = tokens;
     if (await dbLogado.insert(logadoTable, logado.toMap()) > 0) {
@@ -51,6 +54,8 @@ class LoginHelper {
 
 class Logado {
   int id;
+  String nome;
+  String email;
   int logado_login_id;
   dynamic status;
   String token;
@@ -59,6 +64,8 @@ class Logado {
 
   Logado.fromMap(Map map) {
     id = map[idLogadoColumn];
+    nome = map[nomeLogadoColumn];
+    email = map[emailLogadoColumn];
     logado_login_id = map[login_idLogadoColumn];
     status = map[statusColumn];
     token = map[tokenColumn];
@@ -67,6 +74,8 @@ class Logado {
   Map toMap() {
     Map<String, dynamic> map = {
       idLoginColumn: id,
+      nomeLogadoColumn: nome,
+      emailLogadoColumn: email,
       login_idLogadoColumn: logado_login_id,
       statusColumn: status,
       tokenColumn: token

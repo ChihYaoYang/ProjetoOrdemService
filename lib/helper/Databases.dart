@@ -23,7 +23,7 @@ class Databases {
       await db.execute(
           "CREATE TABLE $loginTable($idLoginColumn INTEGER PRIMARY KEY AUTOINCREMENT, $nomeLoginColumn TEXT, $emailLoginColumn TEXT, $passwordLoginColumn TEXT,$telefoneLoginColumn TEXT,$cpfLoginColumn TEXT,$statusLoginColumn INT, $tokenLoginColumn TEXT);");
       await db.execute(
-          "CREATE TABLE $logadoTable ($idLogadoColumn INTEGER PRIMARY KEY AUTOINCREMENT,$login_idLogadoColumn INT,$statusColumn INT, $tokenColumn TEXT);");
+          "CREATE TABLE $logadoTable ($idLogadoColumn INTEGER PRIMARY KEY AUTOINCREMENT,$nomeLogadoColumn TEXT,$emailLogadoColumn TEXT,$login_idLogadoColumn INT,$statusColumn INT, $tokenColumn TEXT);");
     });
   }
 }

@@ -5,10 +5,6 @@ import 'package:ordem_services/tabbar.dart';
 import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/ui_cliente/home_cliente.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
-import 'package:ordem_services/utils/menu.dart';
-
-import '../tabbar_cliente.dart';
-import '../tabbar_funcionario.dart';
 
 class LoginPage extends StatefulWidget {
   final Login login;
@@ -190,28 +186,30 @@ class _LoginPageState extends State<LoginPage> {
                                       _emailController.text,
                                       _senhaController.text);
                                   if (user != null) {
-                                    helper.saveLogado(
-                                        user.id, user.status, user.token);
-                                    if (user.token != null) {
+                                    helper.saveLogado(user.id, user.nome,
+                                        user.email, user.status, user.token);
+                                    Logado logado = await helper.getLogado();
+                                    if (logado.status == 1) {
                                       Navigator.pop(context);
                                       await Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => TabBarMenu(
                                                   user.id,
+                                                  user.nome,
+                                                  user.email,
                                                   user.status,
                                                   Api(token: user.token))));
-                                    } else {
+                                    } else if (logado.status == 2) {
                                       Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => HomeCliente(
-                                                  user.id, user.status)));
+                                                  user.id,
+                                                  user.nome,
+                                                  user.email,
+                                                  user.status)));
                                     }
-                                    //passa status para page menu
-                                    TabBarCliente(user.status);
-                                    TabBarFuncionario(user.status);
-                                    DrawerMenu(user.status);
                                   } else {
                                     setState(() {
                                       isLoading = false;
