@@ -5,6 +5,10 @@ import 'package:ordem_services/tabbar.dart';
 import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/ui_cliente/home_cliente.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
+import 'package:ordem_services/utils/menu.dart';
+
+import '../tabbar_cliente.dart';
+import '../tabbar_funcionario.dart';
 
 class LoginPage extends StatefulWidget {
   final Login login;
@@ -186,7 +190,8 @@ class _LoginPageState extends State<LoginPage> {
                                       _emailController.text,
                                       _senhaController.text);
                                   if (user != null) {
-                                    helper.saveLogado(user.id, user.token);
+                                    helper.saveLogado(
+                                        user.id, user.status, user.token);
                                     if (user.token != null) {
                                       Navigator.pop(context);
                                       await Navigator.pushReplacement(
@@ -194,14 +199,19 @@ class _LoginPageState extends State<LoginPage> {
                                           MaterialPageRoute(
                                               builder: (context) => TabBarMenu(
                                                   user.id,
+                                                  user.status,
                                                   Api(token: user.token))));
                                     } else {
                                       Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  HomeCliente(user.id)));
+                                              builder: (context) => HomeCliente(
+                                                  user.id, user.status)));
                                     }
+                                    //passa status para page menu
+                                    TabBarCliente(user.status);
+                                    TabBarFuncionario(user.status);
+                                    DrawerMenu(user.status);
                                   } else {
                                     setState(() {
                                       isLoading = false;

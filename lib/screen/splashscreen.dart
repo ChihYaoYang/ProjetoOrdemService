@@ -5,7 +5,6 @@ import 'package:ordem_services/ui_cliente/home_cliente.dart';
 import 'package:ordem_services/screen/login.dart';
 import 'package:ordem_services/helper/login_helper.dart';
 import 'package:ordem_services/helper/Api.dart';
-import 'package:ordem_services/utils/menu.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -22,15 +21,17 @@ class _SplashState extends State<Splash> {
     Future.delayed(Duration(seconds: 1)).then((_) async {
       Logado logado = await helper.getLogado();
       if (logado != null) {
-        if (logado.token != null) {
+        if (logado.status == 1) {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      TabBarMenu(logado.id, Api(token: logado.token))));
-        } else {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => HomeCliente(logado.id)));
+                  builder: (context) => TabBarMenu(
+                      logado.id, logado.status, Api(token: logado.token))));
+        } else if (logado.status == 2) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => HomeCliente(logado.id, logado.status)));
         }
       } else {
         Navigator.pushReplacement(

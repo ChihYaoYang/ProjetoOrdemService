@@ -7,12 +7,22 @@ import 'package:ordem_services/tabbar_cliente.dart';
 import 'package:ordem_services/helper/login_helper.dart';
 
 class DrawerMenu extends StatefulWidget {
+  dynamic status;
+
+  DrawerMenu(this.status);
+
   @override
   _DrawerMenuState createState() => _DrawerMenuState();
 }
 
 class _DrawerMenuState extends State<DrawerMenu> {
   LoginHelper helperLog = LoginHelper();
+
+  @override
+  void initState() {
+    super.initState();
+    print(widget.status);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +39,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
               backgroundImage: AssetImage('assets/user.png'),
             ),
           ),
-          (widget != null)
+          (widget.status == 1)
               ? ListTile(
                   title: Text('Home'),
                   leading: Icon(
@@ -37,7 +47,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
                   ),
                   onTap: () {
 //                    Navigator.pushReplacement(context,
-//                        MaterialPageRoute(builder: (context) => TabBarMenu()));
+//                        MaterialPageRoute(builder: (context) => TabBarMenu(widget.status)));
                   },
                 )
               : Visibility(
@@ -47,7 +57,28 @@ class _DrawerMenuState extends State<DrawerMenu> {
                     style: TextStyle(fontSize: 0),
                   ),
                 ),
-          (widget != null)
+          (widget.status == 1)
+              ? ListTile(
+                  title: Text('Lista de Cliente'),
+                  leading: Icon(
+                    Icons.supervisor_account,
+                  ),
+                  onTap: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                TabBarCliente(widget.status)));
+                  },
+                )
+              : Visibility(
+                  visible: true,
+                  child: Text(
+                    '',
+                    style: TextStyle(fontSize: 0),
+                  ),
+                ),
+          (widget.status == 1)
               ? ListTile(
                   title: Text('Cadastrar Funcionários'),
                   leading: Icon(
@@ -57,7 +88,8 @@ class _DrawerMenuState extends State<DrawerMenu> {
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => TabBarFuncionario()));
+                            builder: (context) =>
+                                TabBarFuncionario(widget.status)));
                   },
                 )
               : Visibility(
@@ -67,7 +99,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
                     style: TextStyle(fontSize: 0),
                   ),
                 ),
-          (widget == null)
+          (widget.status == 2)
               ? ListTile(
                   title: Text('Contato Suporte'),
                   leading: Icon(

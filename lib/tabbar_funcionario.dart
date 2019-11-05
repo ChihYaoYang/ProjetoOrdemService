@@ -4,7 +4,9 @@ import 'package:ordem_services/ui_admin/funcionario/cadastro.dart';
 import 'package:ordem_services/ui_admin/funcionario/lista.dart';
 
 class TabBarFuncionario extends StatefulWidget {
-  TabBarFuncionario({Key key}) : super(key: key);
+  dynamic status;
+
+  TabBarFuncionario(this.status, {Key key}) : super(key: key);
 
   @override
   _TabBarFuncionarioState createState() => _TabBarFuncionarioState();
@@ -23,7 +25,7 @@ class _TabBarFuncionarioState extends State<TabBarFuncionario> {
         centerTitle: true,
       ),
       body: pages[_currentIndex],
-      drawer: DrawerMenu(),
+      drawer: DrawerMenu(widget.status),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(

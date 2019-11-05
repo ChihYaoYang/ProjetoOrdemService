@@ -4,7 +4,9 @@ import 'package:ordem_services/ui_admin/cliente/cadastro.dart';
 import 'package:ordem_services/ui_admin/cliente/lista.dart';
 
 class TabBarCliente extends StatefulWidget {
-  TabBarCliente({Key key}) : super(key: key);
+  dynamic status;
+
+  TabBarCliente(this.status, {Key key}) : super(key: key);
 
   @override
   _TabBarClienteState createState() => _TabBarClienteState();
@@ -23,7 +25,7 @@ class _TabBarClienteState extends State<TabBarCliente> {
         centerTitle: true,
       ),
       body: pages[_currentIndex],
-      drawer: DrawerMenu(),
+      drawer: DrawerMenu(widget.status),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(

@@ -11,4 +11,5 @@ final String tokenLoginColumn = "token";
 final String logadoTable = "logadoTable";
 final String idLogadoColumn = "id";
 final String login_idLogadoColumn = "login_id";
+final String statusColumn = "status";
 final String tokenColumn = "token";

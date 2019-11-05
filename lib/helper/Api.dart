@@ -10,7 +10,7 @@ class Api {
   Api({this.token});
 
   Future<Login> login(String email, String senha) async {
-    http.Response response = await http.post(BASE_URL + "Funcionario/login",
+    http.Response response = await http.post(BASE_URL + "Login/login",
         body: jsonEncode({"password": senha, "email": email}),
         headers: {'token': token, 'Content-Type': 'application/json'});
     if (response.statusCode == 200) {

@@ -8,8 +8,9 @@ import 'package:ordem_services/helper/Api.dart';
 class TabBarMenu extends StatefulWidget {
   final Api api;
   int login_id;
+  dynamic status;
 
-  TabBarMenu(this.login_id, this.api, {Key key}) : super(key: key);
+  TabBarMenu(this.login_id, this.status, this.api, {Key key}) : super(key: key);
 
   @override
   _TabBarMenuState createState() => _TabBarMenuState();
@@ -33,6 +34,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
   @override
   void initState() {
     super.initState();
+    print(widget.status);
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   }
 
@@ -73,7 +75,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
         ],
       ),
       body: pages[_currentIndex],
-      drawer: DrawerMenu(),
+      drawer: DrawerMenu(widget.status),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
