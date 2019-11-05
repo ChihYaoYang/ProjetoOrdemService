@@ -44,12 +44,17 @@ class _SplashState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.white,
+        color: Colors.indigo,
         child: Center(
           child: Container(
-            width: 150,
-            height: 150,
-            child: Image.asset("assets/ic_launcher.png"),
+            width: 280.0,
+            height: 280.0,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: AssetImage('assets/ic_launcher.jpg'),
+              ),
+            ),
           ),
         ));
   }

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ordem_services/helper/login_helper.dart';
@@ -72,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: AssetImage('assets/user.png'),
+                          image: AssetImage('assets/ic_launcher.jpg'),
                         ),
                       ),
                     ),
