@@ -25,18 +25,14 @@ class _SplashState extends State<Splash> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      TabBarMenu(logado.id, logado.nome,
-                          logado.email, logado.status,
-                          Api(token: logado.token))));
+                  builder: (context) => TabBarMenu(logado.id, logado.nome,
+                      logado.email, logado.status, Api(token: logado.token))));
         } else if (logado.status == 2) {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      HomeCliente(
-                          logado.id, logado.nome, logado.email,
-                          logado.status)));
+                  builder: (context) => HomeCliente(
+                      logado.id, logado.nome, logado.email, logado.status)));
         }
       } else {
         Navigator.pushReplacement(
