@@ -198,10 +198,10 @@ class _CadastroFuncionarioState extends State<CadastroFuncionario> {
                   onPressed: () {
                     if (_formkey.currentState.validate()) {
                       Navigator.pop(context);
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ListaFuncionario()));
+//                      Navigator.pushReplacement(
+//                          context,
+//                          MaterialPageRoute(
+//                              builder: (context) => ListaFuncionario()));
                     }
                   },
                 ),

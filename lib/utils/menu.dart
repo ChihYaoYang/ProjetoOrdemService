@@ -94,12 +94,17 @@ class _DrawerMenuState extends State<DrawerMenu> {
                   leading: Icon(
                     Icons.supervisor_account,
                   ),
-                  onTap: () {
+                  onTap: () async {
+                    Logado logado = await helperLog.getLogado();
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => TabBarFuncionario(
-                                widget.nome, widget.email, widget.status)));
+                                logado.id,
+                                logado.nome,
+                                logado.email,
+                                logado.status,
+                                Api(token: logado.token))));
                   },
                 )
               : Visibility(

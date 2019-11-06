@@ -3,12 +3,17 @@ import 'package:ordem_services/utils/menu.dart';
 import 'package:ordem_services/ui_admin/funcionario/cadastro.dart';
 import 'package:ordem_services/ui_admin/funcionario/lista.dart';
 
+import 'helper/Api.dart';
+
 class TabBarFuncionario extends StatefulWidget {
+  final Api api;
+  int login_id;
   String nome;
   String email;
   dynamic status;
 
-  TabBarFuncionario(this.nome, this.email, this.status, {Key key})
+  TabBarFuncionario(this.login_id, this.nome, this.email, this.status, this.api,
+      {Key key})
       : super(key: key);
 
   @override
@@ -18,21 +23,27 @@ class TabBarFuncionario extends StatefulWidget {
 class _TabBarFuncionarioState extends State<TabBarFuncionario> {
   //目前選擇頁索引值 index(Página) atual
   int _currentIndex = 0; //預設值
-  final pages = [ListaFuncionario(), CadastroFuncionario()];
+  List<Widget> pages() => [
+        ListaFuncionario(widget.api, widget.login_id),
+        CadastroFuncionario(),
+      ];
 
   @override
   void initState() {
     super.initState();
+    print(widget.api);
+    print(widget.login_id);
   }
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> page = pages();
     return Scaffold(
       appBar: AppBar(
         title: Text('Cadastro de Funcionários'),
         centerTitle: true,
       ),
-      body: pages[_currentIndex],
+      body: page[_currentIndex],
       drawer: DrawerMenu(widget.nome, widget.email, widget.status),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[

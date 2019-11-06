@@ -2,6 +2,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:ordem_services/helper/login_helper.dart';
 
+import 'funcionario_helper.dart';
+
 const BASE_URL = "https://ordemservices.000webhostapp.com/rest/";
 
 class Api {
@@ -22,6 +24,19 @@ class Api {
     }
   }
 
+  Future<List<Funcionario>> getfuncionario() async {
+    http.Response response = await http.get(BASE_URL + 'Funcionario',
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    if (response.statusCode == 200) {
+      List<Funcionario> pessoas =
+          json.decode(response.body).map<Funcionario>((map) {
+        return Funcionario.fromJson(map);
+      }).toList();
+      return pessoas;
+    } else {
+      return null;
+    }
+  }
 //  Future<Login> cadastro(String nome, String email, String senha) async {
 //    http.Response response = await http.post(BASE_URL + "login/cadastro",
 //        body: jsonEncode({"senha": senha, "email": email, "nome": nome}),
@@ -51,18 +66,7 @@ class Api {
 //    }
 //  }
 //
-//  Future<List<Person>> contatos(String token) async {
-//    http.Response response = await http.get(BASE_URL + 'Contato',
-//        headers: {'token': token, 'Content-Type': 'application/json'});
-//    if (response.statusCode == 200) {
-//      List<Person> pessoas = json.decode(response.body).map<Person>((map) {
-//        return Person.fromJson(map);
-//      }).toList();
-//      return pessoas;
-//    } else {
-//      return null;
-//    }
-//  }
+
 //
 //  Future<Person> atualizarContato(
 //      Person person, int login_id, String token) async {
