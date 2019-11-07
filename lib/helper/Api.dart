@@ -37,17 +37,25 @@ class Api {
       return null;
     }
   }
-//  Future<Login> cadastro(String nome, String email, String senha) async {
-//    http.Response response = await http.post(BASE_URL + "login/cadastro",
-//        body: jsonEncode({"senha": senha, "email": email, "nome": nome}),
-//        headers: {'token': token, 'Content-Type': 'application/json'});
-//    if (response.statusCode == 200) {
-//      Login dadosJson = new Login.fromMap(json.decode(response.body));
-//      return dadosJson;
-//    } else {
-//      return null;
-//    }
-//  }
+
+  Future<Funcionario> cadastrarFuncionario(Funcionario funcionario) async {
+    http.Response response = await http.post(BASE_URL + "Login/cadastro",
+        body: jsonEncode({
+          "nome": funcionario.nome,
+          "email": funcionario.email,
+          "password": funcionario.password,
+          "telefone": funcionario.telefone,
+          "cpf": funcionario.cpf
+        }),
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    if (response.statusCode == 200) {
+      Funcionario dadosJson =
+          new Funcionario.fromJson(json.decode(response.body));
+      return dadosJson;
+    } else {
+      return null;
+    }
+  }
 //
 //  Future<Person> cadastroPerson(
 //      Person person, int login_id, String token) async {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ordem_services/helper/funcionario_helper.dart';
 import 'package:ordem_services/utils/menu.dart';
 import 'package:ordem_services/ui_admin/funcionario/cadastro.dart';
 import 'package:ordem_services/ui_admin/funcionario/lista.dart';
@@ -21,6 +22,8 @@ class TabBarFuncionario extends StatefulWidget {
 }
 
 class _TabBarFuncionarioState extends State<TabBarFuncionario> {
+  FuncionarioHelper helper = FuncionarioHelper();
+
   //目前選擇頁索引值 index(Página) atual
   int _currentIndex = 0; //預設值
   List<Widget> pages() => [

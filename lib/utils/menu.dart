@@ -129,13 +129,21 @@ class _DrawerMenuState extends State<DrawerMenu> {
                     style: TextStyle(fontSize: 0),
                   ),
                 ),
-          ListTile(
-            title: Text('Dados do Usuário'),
-            leading: Icon(
-              Icons.verified_user,
-            ),
-            onTap: () {},
-          ),
+          (widget.status == "2" || widget.status == 2)
+              ? ListTile(
+                  title: Text('Dados do Usuário'),
+                  leading: Icon(
+                    Icons.verified_user,
+                  ),
+                  onTap: () {},
+                )
+              : Visibility(
+                  visible: true,
+                  child: Text(
+                    '',
+                    style: TextStyle(fontSize: 0),
+                  ),
+                ),
           Divider(),
           ListTile(
             title: Text('Sair'),
