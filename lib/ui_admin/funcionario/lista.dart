@@ -144,24 +144,54 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
 //      ),
 //      onPressed: () {},
 //    ));
-//    botoes.add(FlatButton(
-//      child: Row(
-//        children: <Widget>[
-//          Icon(Icons.delete, color: Colors.blueAccent),
-//          Padding(
-//              padding: EdgeInsets.only(left: 10),
-//              child: Column(
-//                children: <Widget>[
-//                  Text(
-//                    'Apagar',
-//                    style: TextStyle(color: Colors.blueAccent, fontSize: 20.0),
-//                  )
-//                ],
-//              ))
-//        ],
-//      ),
-//      onPressed: () {},
-//    ));
+    botoes.add(FlatButton(
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.delete, color: Colors.blueAccent),
+          Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    'Deletar',
+                    style: TextStyle(color: Colors.blueAccent, fontSize: 20.0),
+                  )
+                ],
+              ))
+        ],
+      ),
+      onPressed: () {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Aviso !'),
+                content: Text('Você realmente deseja excluir ?'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Sim'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      api.deletarFuncionario(funcionario[index].id);
+                      setState(() {
+                        funcionario.removeAt(index);
+                        Navigator.pop(context);
+                      });
+                    },
+                  ),
+                  FlatButton(
+                    child: Text('Cancelar'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              );
+            });
+      },
+    ));
     dialog.showBottomOptions(context, botoes);
   }
 

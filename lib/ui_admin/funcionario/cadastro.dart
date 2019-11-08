@@ -208,23 +208,24 @@ class _CadastroFuncionarioState extends State<CadastroFuncionario> {
                   child: Text("Cadastrar"),
                   color: Colors.blueGrey,
                   textColor: Colors.white,
-                  onPressed: () async {
+                  onPressed: () {
                     if (_formkey.currentState.validate()) {
                       if (isEmail(_emailController.text)) {
                         if (isNumeric(_telefoneController.text)) {
                           if (CPFValidator.isValid(_cpfController.text)) {
                             _editedFuncionario.password = randomAlphaNumeric(8);
-                            //cadastro
-                            await api.cadastrarFuncionario(_editedFuncionario);
                             final snackBar = SnackBar(
                               duration: const Duration(minutes: 60),
                               content:
-                                  Text("Senha: " + _editedFuncionario.password),
+                              Text("Senha: " + _editedFuncionario.password),
                               action: SnackBarAction(
                                 label: 'Copiar',
                                 onPressed: () async {
                                   Clipboard.setData(new ClipboardData(
                                       text: _editedFuncionario.password));
+                                  //cadastro
+                                  await api.cadastrarFuncionario(
+                                      _editedFuncionario);
                                   Logado logado = await helper.getLogado();
                                   Navigator.pop(context);
                                   Navigator.pushReplacement(

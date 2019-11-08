@@ -56,6 +56,17 @@ class Api {
       return null;
     }
   }
+
+  Future<bool> deletarFuncionario(String codigoContato) async {
+    http.Response response = await http.delete(
+        BASE_URL + "Funcionario/" + codigoContato,
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 //
 //  Future<Person> cadastroPerson(
 //      Person person, int login_id, String token) async {
@@ -92,14 +103,4 @@ class Api {
 //    }
 //  }
 //
-//  Future<bool> deletarContato(String codigoContato, String token) async {
-//    http.Response response = await http.delete(
-//        BASE_URL + "Contato/" + codigoContato,
-//        headers: {'token': token, 'Content-Type': 'application/json'});
-//    if (response.statusCode == 200) {
-//      return true;
-//    } else {
-//      return false;
-//    }
-//  }
 }
