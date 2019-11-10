@@ -5,7 +5,7 @@ import 'package:ordem_services/helper/login_helper.dart';
 import 'cliente_helper.dart';
 import 'funcionario_helper.dart';
 
-const BASE_URL = "https://ordemservices.000webhostapp.com/rest/";
+const BASE_URL = "http://ordemservice.epizy.com/rest/";
 
 class Api {
   String token;
