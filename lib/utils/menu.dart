@@ -3,8 +3,8 @@ import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/screen/login.dart';
 import 'package:ordem_services/tabbar.dart';
 import 'package:ordem_services/tabbar_funcionario.dart';
-import 'package:ordem_services/tabbar_cliente.dart';
 import 'package:ordem_services/helper/login_helper.dart';
+import 'package:ordem_services/ui_admin/cliente/lista.dart';
 
 class DrawerMenu extends StatefulWidget {
   String nome;
@@ -73,12 +73,17 @@ class _DrawerMenuState extends State<DrawerMenu> {
                   leading: Icon(
                     Icons.supervisor_account,
                   ),
-                  onTap: () {
+                  onTap: () async {
+                    Logado logado = await helperLog.getLogado();
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => TabBarCliente(
-                                widget.nome, widget.email, widget.status)));
+                            builder: (context) => ListaCliente(
+                                Api(token: logado.token),
+                                logado.id,
+                                logado.nome,
+                                logado.email,
+                                logado.status)));
                   },
                 )
               : Visibility(

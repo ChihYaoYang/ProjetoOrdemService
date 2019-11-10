@@ -86,7 +86,7 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
         context,
         MaterialPageRoute(
             builder: (context) => UpdateFunconario(
-                  contact: funcionario,
+                  funcionarios: funcionario,
                 )));
     if (recContact != null) {
       setState(() {

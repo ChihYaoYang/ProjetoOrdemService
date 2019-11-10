@@ -1,44 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:ordem_services/helper/funcionario_helper.dart';
-import 'package:ordem_services/utils/validator.dart';
-import 'package:ordem_services/utils/Dialogs.dart';
-import 'package:validators/validators.dart';
-import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:ordem_services/helper/cliente_helper.dart';
+import 'package:ordem_services/utils/Dialogs.dart';
+import 'package:ordem_services/utils/validator.dart';
+import 'package:validators/validators.dart';
 
-class UpdateFunconario extends StatefulWidget {
-  final Funcionario funcionarios;
+class UpdateCliente extends StatefulWidget {
+  final Cliente client;
   final login_id;
 
-  UpdateFunconario({this.funcionarios, this.login_id});
+  UpdateCliente({this.client, this.login_id});
 
   @override
-  _UpdateFunconarioState createState() => _UpdateFunconarioState();
+  _UpdateClienteState createState() => _UpdateClienteState();
 }
 
-class _UpdateFunconarioState extends State<UpdateFunconario> {
+class _UpdateClienteState extends State<UpdateCliente> {
   GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   final _nomeController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _telefoneController = TextEditingController();
   final _cpfController = MaskedTextController(mask: '000.000.000-00');
+
   Dialogs dialog = new Dialogs();
-  Funcionario _editedFuncionario;
+  Cliente _editedCliente;
   bool passwordVisible;
   bool _userEdited = false;
 
   @override
   void initState() {
     super.initState();
-    if (widget.funcionarios == null) {
-      _editedFuncionario = Funcionario();
+    if (widget.client == null) {
+      _editedCliente = Cliente();
     } else {
-      _editedFuncionario = Funcionario.fromJson(widget.funcionarios.toJson());
-      _nomeController.text = _editedFuncionario.nome;
-      _emailController.text = _editedFuncionario.email;
-      _telefoneController.text = _editedFuncionario.telefone;
-      _cpfController.text = _editedFuncionario.cpf;
+      _editedCliente = Cliente.fromJson(widget.client.toJson());
+      _nomeController.text = _editedCliente.nome;
+      _emailController.text = _editedCliente.email;
+      _telefoneController.text = _editedCliente.telefone;
+      _cpfController.text = _editedCliente.cpf;
     }
     passwordVisible = true;
   }
@@ -50,7 +51,7 @@ class _UpdateFunconarioState extends State<UpdateFunconario> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.blueAccent,
-          title: Text('Alterar Funcionário'),
+          title: Text('Alterar Cliente'),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
@@ -86,7 +87,7 @@ class _UpdateFunconarioState extends State<UpdateFunconario> {
                       ),
                       onChanged: (text) {
                         _userEdited = true;
-                        _editedFuncionario.nome = text;
+                        _editedCliente.nome = text;
                       },
                       controller: _nomeController,
                       validator: (value) {
@@ -123,7 +124,7 @@ class _UpdateFunconarioState extends State<UpdateFunconario> {
                       ),
                       onChanged: (text) {
                         _userEdited = true;
-                        _editedFuncionario.email = text;
+                        _editedCliente.email = text;
                       },
                       controller: _emailController,
                       validator: (value) {
@@ -173,7 +174,7 @@ class _UpdateFunconarioState extends State<UpdateFunconario> {
                       ),
                       onChanged: (text) {
                         _userEdited = true;
-                        _editedFuncionario.password = text;
+                        _editedCliente.password = text;
                       },
                       controller: _passwordController,
                       validator: (value) {
@@ -213,7 +214,7 @@ class _UpdateFunconarioState extends State<UpdateFunconario> {
                       ),
                       onChanged: (text) {
                         _userEdited = true;
-                        _editedFuncionario.telefone = text;
+                        _editedCliente.telefone = text;
                       },
                       controller: _telefoneController,
                       validator: (value) {
@@ -250,7 +251,7 @@ class _UpdateFunconarioState extends State<UpdateFunconario> {
                       ),
                       onChanged: (text) {
                         _userEdited = true;
-                        _editedFuncionario.cpf = text;
+                        _editedCliente.cpf = text;
                       },
                       controller: _cpfController,
                       validator: (value) {
@@ -276,7 +277,7 @@ class _UpdateFunconarioState extends State<UpdateFunconario> {
                         if (isEmail(_emailController.text)) {
                           if (isNumeric(_telefoneController.text)) {
                             if (CPFValidator.isValid(_cpfController.text)) {
-                              Navigator.pop(context, _editedFuncionario);
+                              Navigator.pop(context, _editedCliente);
                             } else {
                               dialog.showAlertDialog(
                                   context, 'Aviso', 'Preencher com CPF válido');
