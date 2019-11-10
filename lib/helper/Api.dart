@@ -57,9 +57,9 @@ class Api {
     }
   }
 
-  Future<bool> deletarFuncionario(String codigoContato) async {
+  Future<bool> deletarFuncionario(String codigoFuncionario) async {
     http.Response response = await http.delete(
-        BASE_URL + "Funcionario/" + codigoContato,
+        BASE_URL + "Funcionario/" + codigoFuncionario,
         headers: {'token': token, 'Content-Type': 'application/json'});
     if (response.statusCode == 200) {
       return true;
@@ -67,40 +67,22 @@ class Api {
       return false;
     }
   }
-//
-//  Future<Person> cadastroPerson(
-//      Person person, int login_id, String token) async {
-//    http.Response response = await http.post(BASE_URL + "Contato",
-//        body: jsonEncode({
-//          "telefone": person.telefone,
-//          "nome": person.nome,
-//          "usuario_id": login_id
-//        }),
-//        headers: {'token': token, 'Content-Type': 'application/json'});
-//    if (response.statusCode == 200) {
-//      Person dadosJson = new Person.fromJson(json.decode(response.body));
-//      return dadosJson;
-//    } else {
-//      return null;
-//    }
-//  }
-//
 
-//
-//  Future<Person> atualizarContato(
-//      Person person, int login_id, String token) async {
-//    http.Response response = await http.put(BASE_URL + "Contato/" + person.id,
-//        body: jsonEncode({
-//          "telefone": person.telefone,
-//          "nome": person.nome,
-//          "usuario_id": login_id
-//        }),
-//        headers: {'token': token, 'Content-Type': 'application/json'});
-//    if (response.statusCode == 200) {
-//      return new Person.fromJson(json.decode(response.body));
-//    } else {
-//      return null;
-//    }
-//  }
-//
+  Future<Funcionario> atualizarFuncionario(Funcionario funcionario) async {
+    http.Response response =
+        await http.put(BASE_URL + "Funcionario/" + funcionario.id,
+            body: jsonEncode({
+              "nome": funcionario.nome,
+              "email": funcionario.email,
+              "password": funcionario.password,
+              "telefone": funcionario.telefone,
+              "cpf": funcionario.cpf
+            }),
+            headers: {'token': token, 'Content-Type': 'application/json'});
+    if (response.statusCode == 200) {
+      return new Funcionario.fromJson(json.decode(response.body));
+    } else {
+      return null;
+    }
+  }
 }

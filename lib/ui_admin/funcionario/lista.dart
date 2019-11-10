@@ -3,6 +3,7 @@ import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/helper/funcionario_helper.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:ordem_services/ui_admin/funcionario/alterar.dart';
 
 class ListaFuncionario extends StatefulWidget {
   final Api api;
@@ -17,7 +18,6 @@ class ListaFuncionario extends StatefulWidget {
 class _ListaFuncionarioState extends State<ListaFuncionario> {
   List<Funcionario> funcionario = List();
   Dialogs dialog = new Dialogs();
-  Api api = new Api();
   bool isLoading = false;
 
   @override
@@ -68,7 +68,7 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Text('E-mail: ' + funcionario[index].email),
-                  Text('Número: ' + funcionario[index].telefone),
+                  Text('Telefone: ' + funcionario[index].telefone),
                   Text('CPF: ' + funcionario[index].cpf),
                 ],
               ),
@@ -79,6 +79,24 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
         _showOptions(context, index);
       },
     );
+  }
+
+  void _Alterar({Funcionario funcionario}) async {
+    final recContact = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => UpdateFunconario(
+                  contact: funcionario,
+                )));
+    if (recContact != null) {
+      setState(() {
+        isLoading = true;
+      });
+      if (funcionario != null) {
+        await widget.api.atualizarFuncionario(recContact);
+      }
+      _getAllFuncionarios();
+    }
   }
 
   void _showOptions(BuildContext context, int index) {
@@ -126,24 +144,27 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
         Navigator.pop(context);
       },
     ));
-//    botoes.add(FlatButton(
-//      child: Row(
-//        children: <Widget>[
-//          Icon(Icons.edit, color: Colors.blueAccent),
-//          Padding(
-//              padding: EdgeInsets.only(left: 10),
-//              child: Column(
-//                children: <Widget>[
-//                  Text(
-//                    'Modificar',
-//                    style: TextStyle(color: Colors.blueAccent, fontSize: 20.0),
-//                  )
-//                ],
-//              ))
-//        ],
-//      ),
-//      onPressed: () {},
-//    ));
+    botoes.add(FlatButton(
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.edit, color: Colors.blueAccent),
+          Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    'Alterar',
+                    style: TextStyle(color: Colors.blueAccent, fontSize: 20.0),
+                  )
+                ],
+              ))
+        ],
+      ),
+      onPressed: () {
+        Navigator.pop(context);
+        _Alterar(funcionario: funcionario[index]);
+      },
+    ));
     botoes.add(FlatButton(
       child: Row(
         children: <Widget>[
@@ -171,10 +192,9 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
                   FlatButton(
                     child: Text('Sim'),
                     onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                      api.deletarFuncionario(funcionario[index].id);
+                      widget.api.deletarFuncionario(funcionario[index].id);
                       setState(() {
+                        Navigator.pop(context);
                         funcionario.removeAt(index);
                         Navigator.pop(context);
                       });

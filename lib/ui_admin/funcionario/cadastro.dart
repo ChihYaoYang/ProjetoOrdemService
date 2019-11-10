@@ -26,6 +26,7 @@ class _CadastroFuncionarioState extends State<CadastroFuncionario> {
   Api api = new Api();
   Funcionario funcionario;
   Funcionario _editedFuncionario;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -43,6 +44,18 @@ class _CadastroFuncionarioState extends State<CadastroFuncionario> {
 
   @override
   Widget build(BuildContext context) {
+    Widget loadingIndicator = isLoading
+        ? new Container(
+            width: 70.0,
+            height: 70.0,
+            child: new Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: new Center(
+                    child: new CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                ))),
+          )
+        : new Container();
     return Scaffold(
       body: SingleChildScrollView(
         child: Form(
@@ -203,60 +216,81 @@ class _CadastroFuncionarioState extends State<CadastroFuncionario> {
                     Expanded(child: Divider(color: Colors.blueGrey)),
                   ],
                 ),
-                RaisedButton(
-                  padding: EdgeInsets.symmetric(vertical: 15.0),
-                  child: Text("Cadastrar"),
-                  color: Colors.blueGrey,
-                  textColor: Colors.white,
-                  onPressed: () {
-                    if (_formkey.currentState.validate()) {
-                      if (isEmail(_emailController.text)) {
-                        if (isNumeric(_telefoneController.text)) {
-                          if (CPFValidator.isValid(_cpfController.text)) {
-                            _editedFuncionario.password = randomAlphaNumeric(8);
-                            final snackBar = SnackBar(
-                              duration: const Duration(minutes: 60),
-                              content:
-                              Text("Senha: " + _editedFuncionario.password),
-                              action: SnackBarAction(
-                                label: 'Copiar',
-                                onPressed: () async {
-                                  Clipboard.setData(new ClipboardData(
-                                      text: _editedFuncionario.password));
+                (isLoading)
+                    ? new Align(
+                        child: loadingIndicator,
+                        alignment: FractionalOffset.center,
+                      )
+                    : RaisedButton(
+                        padding: EdgeInsets.symmetric(vertical: 15.0),
+                        child: Text("Cadastrar"),
+                        color: Colors.blueGrey,
+                        textColor: Colors.white,
+                        onPressed: () async {
+                          if (_formkey.currentState.validate()) {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            if (isEmail(_emailController.text)) {
+                              if (isNumeric(_telefoneController.text)) {
+                                if (CPFValidator.isValid(_cpfController.text)) {
+                                  _editedFuncionario.password =
+                                      randomAlphaNumeric(8);
                                   //cadastro
-                                  await api.cadastrarFuncionario(
-                                      _editedFuncionario);
-                                  Logado logado = await helper.getLogado();
-                                  Navigator.pop(context);
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              TabBarFuncionario(
-                                                  logado.logado_login_id,
-                                                  logado.nome,
-                                                  logado.email,
-                                                  logado.status,
-                                                  Api(token: logado.token))));
-                                },
-                              ),
-                            );
-                            Scaffold.of(context).showSnackBar(snackBar);
-                          } else {
-                            dialog.showAlertDialog(
-                                context, 'Aviso', 'Preencher com CPF válido');
+                                  await api
+                                      .cadastrarFuncionario(_editedFuncionario);
+                                  final snackBar = SnackBar(
+                                    duration: const Duration(minutes: 60),
+                                    content: Text("Senha: " +
+                                        _editedFuncionario.password),
+                                    action: SnackBarAction(
+                                      label: 'Copiar',
+                                      onPressed: () async {
+                                        Clipboard.setData(new ClipboardData(
+                                            text: _editedFuncionario.password));
+                                        Logado logado =
+                                            await helper.getLogado();
+                                        Navigator.pop(context);
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TabBarFuncionario(
+                                                        logado.logado_login_id,
+                                                        logado.nome,
+                                                        logado.email,
+                                                        logado.status,
+                                                        Api(
+                                                            token: logado
+                                                                .token))));
+                                      },
+                                    ),
+                                  );
+                                  Scaffold.of(context).showSnackBar(snackBar);
+                                } else {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  dialog.showAlertDialog(context, 'Aviso',
+                                      'Preencher com CPF válido');
+                                }
+                              } else {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                                dialog.showAlertDialog(context, 'Aviso',
+                                    'Preencher somente número');
+                              }
+                            } else {
+                              setState(() {
+                                isLoading = false;
+                              });
+                              dialog.showAlertDialog(context, 'Aviso',
+                                  'Preencher com E-mail válido');
+                            }
                           }
-                        } else {
-                          dialog.showAlertDialog(
-                              context, 'Aviso', 'Preencher somente número');
-                        }
-                      } else {
-                        dialog.showAlertDialog(
-                            context, 'Aviso', 'Preencher com E-mail válido');
-                      }
-                    }
-                  },
-                ),
+                        },
+                      ),
               ],
             )),
       ),
