@@ -11,8 +11,8 @@ class _AlterarPedidoState extends State<AlterarPedido> {
   final _modeloController = TextEditingController();
   final _defeitoController = TextEditingController();
   final _descricaoController = TextEditingController();
-  final _servicesController = TextEditingController();
-  final _precosController = TextEditingController();
+
+  bool _userEdited = false;
 
   //DropDown
   List<String> _locations = ['Notebook', 'Celular'];
@@ -60,6 +60,7 @@ class _AlterarPedidoState extends State<AlterarPedido> {
                     ),
                     value: _selectedLocation,
                     onChanged: (value) {
+                      _userEdited = true;
                       setState(() {
                         _selectedLocation = value;
                       });
@@ -88,6 +89,7 @@ class _AlterarPedidoState extends State<AlterarPedido> {
                     ),
                     value: _selectedStatus,
                     onChanged: (value) {
+                      _userEdited = true;
                       setState(() {
                         _selectedStatus = value;
                       });
@@ -124,6 +126,9 @@ class _AlterarPedidoState extends State<AlterarPedido> {
                       color: Colors.blue,
                     ),
                   ),
+                  onChanged: (text) {
+                    _userEdited = true;
+                  },
                   controller: _marcaController,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -156,6 +161,9 @@ class _AlterarPedidoState extends State<AlterarPedido> {
                       color: Colors.blue,
                     ),
                   ),
+                  onChanged: (text) {
+                    _userEdited = true;
+                  },
                   controller: _modeloController,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -189,6 +197,9 @@ class _AlterarPedidoState extends State<AlterarPedido> {
                       color: Colors.blue,
                     ),
                   ),
+                  onChanged: (text) {
+                    _userEdited = true;
+                  },
                   controller: _defeitoController,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -222,86 +233,10 @@ class _AlterarPedidoState extends State<AlterarPedido> {
                       color: Colors.blue,
                     ),
                   ),
+                  onChanged: (text) {
+                    _userEdited = true;
+                  },
                   controller: _descricaoController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Row(
-                children: <Widget>[
-                  Expanded(child: Divider(color: Colors.blueGrey)),
-                ],
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 5),
-                child: Text(
-                  "Serviço feitos",
-                  style: TextStyle(fontSize: 20, color: Colors.blueGrey),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  maxLines: 5,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " Descrição dos Servicos",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.room_service,
-                        color: Colors.white,
-                      ),
-                      color: Colors.blue,
-                    ),
-                  ),
-                  controller: _servicesController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " Preço",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.attach_money,
-                        color: Colors.white,
-                      ),
-                      color: Colors.blue,
-                    ),
-                  ),
-                  controller: _precosController,
                   validator: (value) {
                     if (value.isEmpty) {
                       return "Campo obrigatório !";
@@ -312,7 +247,7 @@ class _AlterarPedidoState extends State<AlterarPedido> {
               ),
               RaisedButton(
                 padding: EdgeInsets.symmetric(vertical: 15.0),
-                child: Text("Enviar"),
+                child: Text("Alterar"),
                 color: Colors.blueGrey,
                 textColor: Colors.white,
                 onPressed: () {
@@ -326,5 +261,36 @@ class _AlterarPedidoState extends State<AlterarPedido> {
         ),
       ),
     );
+  }
+
+  Future<bool> _requestPop() {
+    if (_userEdited) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Descartar alterações?'),
+              content: Text('Se sair as alterações serão perdidas.'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Sim'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                ),
+                FlatButton(
+                  child: Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            );
+          });
+      return Future.value(false);
+    } else {
+      return Future.value(true);
+    }
   }
 }

@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:ordem_services/helper/Api.dart';
+import 'package:ordem_services/helper/status_helper.dart';
+import 'package:ordem_services/helper/tipo_helper.dart';
 import 'package:ordem_services/tabbar.dart';
+import 'package:ordem_services/utils/Dialogs.dart';
+import 'package:ordem_services/utils/validator.dart';
+import 'package:validators/validators.dart';
 
 class CadastroPedido extends StatefulWidget {
+  final Api api;
+  int login_id;
+
+  CadastroPedido(this.api, this.login_id);
+
   @override
   _CadastroPedidoState createState() => _CadastroPedidoState();
 }
@@ -10,27 +22,41 @@ class _CadastroPedidoState extends State<CadastroPedido> {
   GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   final _nomeController = TextEditingController();
   final _emailController = TextEditingController();
-  final _cpfController = TextEditingController();
+  final _cpfController = MaskedTextController(mask: '000.000.000-00');
   final _telefoneController = TextEditingController();
   final _marcaController = TextEditingController();
   final _modeloController = TextEditingController();
   final _defeitoController = TextEditingController();
   final _descricaoController = TextEditingController();
+  Dialogs dialog = new Dialogs();
+  bool isLoading = false;
 
   //DropDown
-  List<String> _locations = ['Notebook', 'Celular'];
-  String _selectedLocation;
+  List<Tipo> type = List();
+  String _selectedtype;
+  List<Status> status = List();
   String _selectedStatus;
-  List<String> _status = [
-    'Em análise',
-    'Aguardando análise',
-    'Aguardando peça',
-    'Pronto',
-    'Sem solução'
-  ];
+
+  @override
+  void initState() {
+    super.initState();
+    isLoading = true;
+    _getAllType();
+    _getAllStatus();
+  }
 
   @override
   Widget build(BuildContext context) {
+    Widget loadingIndicator = isLoading
+        ? new Container(
+            child: new Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: new Center(
+                    child: new LinearProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                ))),
+          )
+        : new Container();
     return Scaffold(
       body: SingleChildScrollView(
         child: Form(
@@ -195,25 +221,30 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(3.0),
                     border: Border.all(color: Colors.blueGrey)),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton(
-                    hint: Text(
-                      'Seleciona uma tipo',
-                    ),
-                    value: _selectedLocation,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedLocation = value;
-                      });
-                    },
-                    items: _locations.map((location) {
-                      return DropdownMenuItem(
-                        child: new Text(location),
-                        value: location,
-                      );
-                    }).toList(),
-                  ),
-                ),
+                child: (isLoading)
+                    ? new Align(
+                        child: loadingIndicator,
+                        alignment: FractionalOffset.center,
+                      )
+                    : DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                          hint: Text(
+                            'Seleciona uma tipo',
+                          ),
+                          items: type.map((item) {
+                            return new DropdownMenuItem(
+                              child: Text(item.type.toString()),
+                              value: item.toString(),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedtype = value;
+                            });
+                          },
+                          value: _selectedtype,
+                        ),
+                      ),
               ),
               Padding(
                 padding: EdgeInsets.only(bottom: 10.0),
@@ -223,25 +254,30 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(3.0),
                     border: Border.all(color: Colors.blueGrey)),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton(
-                    hint: Text(
-                      'Selecione status do pedido',
-                    ),
-                    value: _selectedStatus,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedStatus = value;
-                      });
-                    },
-                    items: _status.map((location) {
-                      return DropdownMenuItem(
-                        child: new Text(location),
-                        value: location,
-                      );
-                    }).toList(),
-                  ),
-                ),
+                child: (isLoading)
+                    ? new Align(
+                        child: loadingIndicator,
+                        alignment: FractionalOffset.center,
+                      )
+                    : DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                          hint: Text(
+                            'Selecione status do pedido',
+                          ),
+                          items: status.map((item) {
+                            return new DropdownMenuItem(
+                              child: Text(item.status.toString()),
+                              value: item.toString(),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedStatus = value;
+                            });
+                          },
+                          value: _selectedStatus,
+                        ),
+                      ),
               ),
               Container(
                 padding: EdgeInsets.only(top: 10.0),
@@ -378,11 +414,65 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                 child: Text("Cadastrar"),
                 color: Colors.blueGrey,
                 textColor: Colors.white,
-                onPressed: () {
+                onPressed: () async {
                   if (_formkey.currentState.validate()) {
-                    Navigator.pop(context);
-//                    Navigator.pushReplacement(context,
-//                        MaterialPageRoute(builder: (context) => TabBarMenu()));
+                    if (isEmail(_emailController.text)) {
+                      if (isNumeric(_telefoneController.text)) {
+                        if (CPFValidator.isValid(_cpfController.text)) {
+                          //gerar senha aleatorio
+//                                _editedFuncionario.password =
+//                                    randomAlphaNumeric(8);
+                          //cadastro
+//                                await api
+//                                    .cadastrarFuncionario(_editedFuncionario);
+//                                final snackBar = SnackBar(
+//                                  duration: const Duration(minutes: 60),
+//                                  content: Text(
+//                                      "Senha: " + _editedFuncionario.password),
+//                                  action: SnackBarAction(
+//                                    label: 'Copiar',
+//                                    onPressed: () async {
+//                                      Clipboard.setData(new ClipboardData(
+//                                          text: _editedFuncionario.password));
+//                                      Logado logado = await helper.getLogado();
+//                                      Navigator.pop(context);
+//                                      Navigator.pushReplacement(
+//                                          context,
+//                                          MaterialPageRoute(
+//                                              builder: (context) =>
+//                                                  TabBarFuncionario(
+//                                                      logado.logado_login_id,
+//                                                      logado.nome,
+//                                                      logado.email,
+//                                                      logado.status,
+//                                                      Api(
+//                                                          token:
+//                                                              logado.token))));
+//                                    },
+//                                  ),
+//                                );
+//                                Scaffold.of(context).showSnackBar(snackBar);
+                        } else {
+                          setState(() {
+                            isLoading = false;
+                          });
+                          dialog.showAlertDialog(
+                              context, 'Aviso', 'Preencher com CPF válido');
+                        }
+                      } else {
+                        setState(() {
+                          isLoading = false;
+                        });
+                        dialog.showAlertDialog(
+                            context, 'Aviso', 'Preencher somente número');
+                      }
+                    } else {
+                      setState(() {
+                        isLoading = false;
+                      });
+                      dialog.showAlertDialog(
+                          context, 'Aviso', 'Preencher com E-mail válido');
+                    }
                   }
                 },
               ),
@@ -391,5 +481,25 @@ class _CadastroPedidoState extends State<CadastroPedido> {
         ),
       ),
     );
+  }
+
+  _getAllType() async {
+    widget.api.getType().then((list) {
+      setState(() {
+        isLoading = false;
+        type = list;
+        debugPrint(type.toString());
+      });
+    });
+  }
+
+  _getAllStatus() async {
+    widget.api.getStatus().then((list) {
+      setState(() {
+        isLoading = false;
+        status = list;
+        debugPrint(status.toString());
+      });
+    });
   }
 }

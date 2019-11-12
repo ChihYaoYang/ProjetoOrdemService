@@ -29,11 +29,11 @@ enum OrderOptions {
 }
 
 class _TabBarMenuState extends State<TabBarMenu> {
-  Api api = new Api();
-
-  //目前選擇頁索引值 index(Página) atual
   int _currentIndex = 0; //預設值
-  final pages = [HomePage(), CadastroPedido()];
+  List<Widget> pages() => [
+        HomePage(),
+        CadastroPedido(widget.api, widget.login_id),
+      ];
 
   @override
   void initState() {
@@ -43,12 +43,13 @@ class _TabBarMenuState extends State<TabBarMenu> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> page = pages();
     return Scaffold(
       appBar: AppBar(
         title: Text('OS'),
         centerTitle: true,
         actions: <Widget>[
-          (pages[0] == pages[_currentIndex])
+          (page[0] == page[_currentIndex])
               ? PopupMenuButton<OrderOptions>(
                   icon: Icon(Icons.arrow_drop_down),
                   itemBuilder: (context) => <PopupMenuEntry<OrderOptions>>[
@@ -77,7 +78,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
               : Container(),
         ],
       ),
-      body: pages[_currentIndex],
+      body: page[_currentIndex],
       drawer: DrawerMenu(widget.nome, widget.email, widget.status),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[

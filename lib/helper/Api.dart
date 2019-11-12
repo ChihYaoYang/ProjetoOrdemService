@@ -1,11 +1,13 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:ordem_services/helper/login_helper.dart';
+import 'package:ordem_services/helper/status_helper.dart';
+import 'package:ordem_services/helper/tipo_helper.dart';
 
 import 'cliente_helper.dart';
 import 'funcionario_helper.dart';
 
-const BASE_URL = "http://ordemservice.epizy.com/rest/";
+const BASE_URL = "https://ordemservices.000webhostapp.com/rest/";
 
 class Api {
   String token;
@@ -124,6 +126,34 @@ class Api {
         headers: {'token': token, 'Content-Type': 'application/json'});
     if (response.statusCode == 200) {
       return new Cliente.fromJson(json.decode(response.body));
+    } else {
+      return null;
+    }
+  }
+
+///////////////////////////////////Tipo//////////////////////////////////////////////
+  Future<List<Tipo>> getType() async {
+    http.Response response = await http.get(BASE_URL + 'Tipo',
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    if (response.statusCode == 200) {
+      List<Tipo> types = json.decode(response.body).map<Tipo>((map) {
+        return Tipo.fromJson(map);
+      }).toList();
+      return types;
+    } else {
+      return null;
+    }
+  }
+
+///////////////////////////////////Status//////////////////////////////////////////////
+  Future<List<Status>> getStatus() async {
+    http.Response response = await http.get(BASE_URL + 'Status',
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    if (response.statusCode == 200) {
+      List<Status> statuss = json.decode(response.body).map<Status>((map) {
+        return Status.fromJson(map);
+      }).toList();
+      return statuss;
     } else {
       return null;
     }
