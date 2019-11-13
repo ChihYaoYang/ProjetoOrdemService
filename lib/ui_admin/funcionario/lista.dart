@@ -40,20 +40,19 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
         : new Container();
     return Scaffold(
         body: WillPopScope(
-            child: (isLoading)
-                ? new Align(
-                    child: loadingIndicator,
-                    alignment: FractionalOffset.center,
-                  )
-                : ListView.builder(
-                    padding: EdgeInsets.all(10.0),
-                    itemCount: funcionario.length,
-                    itemBuilder: (context, index) {
-                      return _funcionarioCard(context, index);
-                    }),
-            onWillPop: () {
-              return null;
-            }));
+      child: (isLoading)
+          ? new Align(
+              child: loadingIndicator,
+              alignment: FractionalOffset.center,
+            )
+          : ListView.builder(
+              padding: EdgeInsets.all(10.0),
+              itemCount: funcionario.length,
+              itemBuilder: (context, index) {
+                return _funcionarioCard(context, index);
+              }),
+    )
+    );
   }
 
   Widget _funcionarioCard(BuildContext context, int index) {

@@ -28,6 +28,7 @@ class Cadastro_Pedido {
   String modelo;
   String defeito;
   String descricao;
+  dynamic data_pedido;
 
   Cadastro_Pedido(
       {this.id,
@@ -38,7 +39,8 @@ class Cadastro_Pedido {
       this.marca,
       this.modelo,
       this.defeito,
-      this.descricao});
+      this.descricao,
+      this.data_pedido});
 
   factory Cadastro_Pedido.fromJson(Map<String, dynamic> json) {
     return Cadastro_Pedido(
@@ -50,7 +52,8 @@ class Cadastro_Pedido {
         marca: json['marca'],
         modelo: json['modelo'],
         defeito: json['defeito'],
-        descricao: json['descricao']);
+        descricao: json['descricao'],
+        data_pedido: json['data_pedido']);
   }
 
   Map<String, dynamic> toJson() {
@@ -64,11 +67,12 @@ class Cadastro_Pedido {
     data['modelo'] = this.modelo;
     data['defeito'] = this.defeito;
     data['descricao'] = this.descricao;
+    data['data_pedido'] = this.data_pedido;
     return data;
   }
 
   @override
   String toString() {
-    return "Cadastro_Pedido(id: $id, cd_cliente: $cd_cliente, cd_tipo: $cd_tipo, cd_status: $cd_status, cd_funcionario: $cd_funcionario, marca: $marca, modelo: $modelo, defeito: $defeito, descricao: $descricao)";
+    return "Cadastro_Pedido(id: $id, cd_cliente: $cd_cliente, cd_tipo: $cd_tipo, cd_status: $cd_status, cd_funcionario: $cd_funcionario, marca: $marca, modelo: $modelo, defeito: $defeito, descricao: $descricao, data_pedido: $data_pedido)";
   }
 }

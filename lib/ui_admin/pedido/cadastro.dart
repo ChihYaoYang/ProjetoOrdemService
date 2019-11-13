@@ -122,6 +122,9 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                       color: Colors.blue,
                     ),
                   ),
+                  onChanged: (text) {
+                    _editedcliente.nome = text;
+                  },
                   controller: _nomeController,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -155,40 +158,10 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                       color: Colors.blue,
                     ),
                   ),
-                  controller: _emailController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
+                  onChanged: (text) {
+                    _editedcliente.email = text;
                   },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " CPF",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.assignment_ind,
-                        color: Colors.white,
-                      ),
-                      color: Colors.blue,
-                    ),
-                  ),
-                  controller: _cpfController,
+                  controller: _emailController,
                   validator: (value) {
                     if (value.isEmpty) {
                       return "Campo obrigatório !";
@@ -221,7 +194,46 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                       color: Colors.blue,
                     ),
                   ),
+                  onChanged: (text) {
+                    _editedcliente.telefone = text;
+                  },
                   controller: _telefoneController,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return "Campo obrigatório !";
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(top: 10.0),
+                margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  style: TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0)),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+                    filled: true,
+                    fillColor: Colors.blueGrey.withOpacity(0.45),
+                    hintText: " CPF",
+                    hintStyle: TextStyle(color: Colors.white),
+                    prefixIcon: Container(
+                      child: Icon(
+                        Icons.assignment_ind,
+                        color: Colors.white,
+                      ),
+                      color: Colors.blue,
+                    ),
+                  ),
+                  onChanged: (text) {
+                    _editedcliente.cpf = text;
+                  },
+                  controller: _cpfController,
                   validator: (value) {
                     if (value.isEmpty) {
                       return "Campo obrigatório !";
@@ -351,6 +363,9 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                       color: Colors.blue,
                     ),
                   ),
+                  onChanged: (text) {
+                    _editedpedido.marca = text;
+                  },
                   controller: _marcaController,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -383,6 +398,9 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                       color: Colors.blue,
                     ),
                   ),
+                  onChanged: (text) {
+                    _editedpedido.modelo = text;
+                  },
                   controller: _modeloController,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -416,6 +434,9 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                       color: Colors.blue,
                     ),
                   ),
+                  onChanged: (text) {
+                    _editedpedido.defeito = text;
+                  },
                   controller: _defeitoController,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -449,6 +470,9 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                       color: Colors.blue,
                     ),
                   ),
+                  onChanged: (text) {
+                    _editedpedido.descricao = text;
+                  },
                   controller: _descricaoController,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -543,7 +567,7 @@ class _CadastroPedidoState extends State<CadastroPedido> {
   }
 
   _getAllType() async {
-    widget.api.getType().then((list) {
+    await widget.api.getType().then((list) {
       setState(() {
         isLoading = false;
         type = list;
@@ -553,7 +577,7 @@ class _CadastroPedidoState extends State<CadastroPedido> {
   }
 
   _getAllStatus() async {
-    widget.api.getStatus().then((list) {
+    await widget.api.getStatus().then((list) {
       setState(() {
         isLoading = false;
         status = list;

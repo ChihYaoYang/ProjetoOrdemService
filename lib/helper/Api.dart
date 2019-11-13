@@ -133,6 +133,20 @@ class Api {
   }
 
 ///////////////////////////////////Pedido//////////////////////////////////////////////
+  Future<List<Cadastro_Pedido>> getPedido() async {
+    http.Response response = await http.get(BASE_URL + 'Pedido',
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    if (response.statusCode == 200) {
+      List<Cadastro_Pedido> pedidos =
+          json.decode(response.body).map<Cadastro_Pedido>((map) {
+        return Cadastro_Pedido.fromJson(map);
+      }).toList();
+      return pedidos;
+    } else {
+      return null;
+    }
+  }
+
   Future<Cadastro_Pedido> cadastrarPedido(
       Cliente cliente, Cadastro_Pedido pedido, int login_id) async {
     http.Response response = await http.post(BASE_URL + "Pedido/novo_pedido",
@@ -151,7 +165,6 @@ class Api {
           "descricao": pedido.descricao
         }),
         headers: {'token': token, 'Content-Type': 'application/json'});
-    print(response.body);
     if (response.statusCode == 200) {
       Cadastro_Pedido dadosJson =
           new Cadastro_Pedido.fromJson(json.decode(response.body));

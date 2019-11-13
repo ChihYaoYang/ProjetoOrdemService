@@ -1,28 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:ordem_services/helper/Api.dart';
+import 'package:ordem_services/helper/cadastro_pedido_helper.dart';
+import 'package:ordem_services/ui_admin/pedido/cadastro.dart';
 import 'package:ordem_services/ui_admin/pedido/update.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
 import 'package:ordem_services/ui_admin/pedido/cadastrar_servicos.dart';
 
 class HomePage extends StatefulWidget {
+  final Api api;
+  int login_id;
+
+  HomePage(this.api, this.login_id);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Cadastro_Pedido> pedido = List();
   Dialogs dialog = new Dialogs();
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    isLoading = true;
+    _getAllPedidos();
+  }
 
   @override
   Widget build(BuildContext context) {
+    Widget loadingIndicator = isLoading
+        ? new Container(
+            width: 70.0,
+            height: 70.0,
+            child: new Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: new Center(child: new CircularProgressIndicator())),
+          )
+        : new Container();
     return Scaffold(
-      body: Container(
-        child: ListView.builder(
-            padding: EdgeInsets.all(10.0),
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return _itemCard(context, index);
-            }),
-      ),
-    );
+        body: WillPopScope(
+      child: (isLoading)
+          ? new Align(
+              child: loadingIndicator,
+              alignment: FractionalOffset.center,
+            )
+          : ListView.builder(
+              padding: EdgeInsets.all(10.0),
+              itemCount: pedido.length,
+              itemBuilder: (context, index) {
+                return _itemCard(context, index);
+              }),
+    ));
   }
 
   Widget _itemCard(BuildContext context, int index) {
@@ -31,8 +61,21 @@ class _HomePageState extends State<HomePage> {
         child: Padding(
             padding: EdgeInsets.all(10.0),
             child: ListTile(
-              title: Text('Teste 1'),
-              subtitle: Text('Teste 1'),
+              title: Text('Nome: ' + pedido[index].cd_cliente),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Text('Tipo: ' + pedido[index].cd_tipo),
+                  Text('Status: ' + pedido[index].cd_status),
+                  Text('Cadastrado por: ' + pedido[index].cd_funcionario),
+                  Text('Marca: ' + pedido[index].marca),
+                  Text('Modelo: ' + pedido[index].modelo),
+                  Text('Defeito: ' + pedido[index].defeito),
+                  Text('Descrição: ' + pedido[index].descricao),
+                  Text('Data: ' + pedido[index].data_pedido),
+                ],
+              ),
               trailing: Text((index + 1).toString()),
             )),
       ),
@@ -119,9 +162,9 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       onPressed: () {
-        Navigator.pop(context);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => AlterarPedido()));
+//        Navigator.pop(context);
+//        Navigator.push(
+//            context, MaterialPageRoute(builder: (context) => AlterarPedido()));
       },
     ));
 
@@ -142,32 +185,42 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       onPressed: () {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text('Aviso !'),
-                content: Text('Você realmente deseja excluir ?'),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('Sim'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                    },
-                  ),
-                  FlatButton(
-                    child: Text('Cancelar'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                    },
-                  )
-                ],
-              );
-            });
+//        showDialog(
+//            context: context,
+//            builder: (context) {
+//              return AlertDialog(
+//                title: Text('Aviso !'),
+//                content: Text('Você realmente deseja excluir ?'),
+//                actions: <Widget>[
+//                  FlatButton(
+//                    child: Text('Sim'),
+//                    onPressed: () {
+//                      Navigator.pop(context);
+//                      Navigator.pop(context);
+//                    },
+//                  ),
+//                  FlatButton(
+//                    child: Text('Cancelar'),
+//                    onPressed: () {
+//                      Navigator.pop(context);
+//                      Navigator.pop(context);
+//                    },
+//                  )
+//                ],
+//              );
+//            });
       },
     ));
     dialog.showBottomOptions(context, botoes);
+  }
+
+  _getAllPedidos() async {
+    widget.api.getPedido().then((list) {
+      setState(() {
+        isLoading = false;
+        pedido = list;
+        debugPrint(pedido.toString());
+      });
+    });
   }
 }

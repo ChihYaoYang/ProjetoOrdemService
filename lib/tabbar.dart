@@ -31,7 +31,7 @@ enum OrderOptions {
 class _TabBarMenuState extends State<TabBarMenu> {
   int _currentIndex = 0; //預設值
   List<Widget> pages() => [
-        HomePage(),
+        HomePage(widget.api, widget.login_id),
         CadastroPedido(widget.api, widget.login_id),
       ];
 
