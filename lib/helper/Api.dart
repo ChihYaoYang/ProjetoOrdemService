@@ -4,6 +4,7 @@ import 'package:ordem_services/helper/login_helper.dart';
 import 'package:ordem_services/helper/status_helper.dart';
 import 'package:ordem_services/helper/tipo_helper.dart';
 
+import 'cadastro_pedido_helper.dart';
 import 'cliente_helper.dart';
 import 'funcionario_helper.dart';
 
@@ -126,6 +127,35 @@ class Api {
         headers: {'token': token, 'Content-Type': 'application/json'});
     if (response.statusCode == 200) {
       return new Cliente.fromJson(json.decode(response.body));
+    } else {
+      return null;
+    }
+  }
+
+///////////////////////////////////Pedido//////////////////////////////////////////////
+  Future<Cadastro_Pedido> cadastrarPedido(
+      Cliente cliente, Cadastro_Pedido pedido, int login_id) async {
+    http.Response response = await http.post(BASE_URL + "Pedido/novo_pedido",
+        body: jsonEncode({
+          "nome": cliente.nome,
+          "email": cliente.email,
+          "password": cliente.password,
+          "telefone": cliente.telefone,
+          "cpf": cliente.cpf,
+          "cd_tipo": pedido.cd_tipo,
+          "cd_status": pedido.cd_status,
+          "cd_funcionario": login_id,
+          "marca": pedido.marca,
+          "modelo": pedido.modelo,
+          "defeito": pedido.defeito,
+          "descricao": pedido.descricao
+        }),
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
+    if (response.statusCode == 200) {
+      Cadastro_Pedido dadosJson =
+          new Cadastro_Pedido.fromJson(json.decode(response.body));
+      return dadosJson;
     } else {
       return null;
     }

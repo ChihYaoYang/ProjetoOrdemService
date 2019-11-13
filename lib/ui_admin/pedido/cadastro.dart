@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:ordem_services/helper/Api.dart';
+import 'package:ordem_services/helper/Api.dart';
+import 'package:ordem_services/helper/cadastro_pedido_helper.dart';
+import 'package:ordem_services/helper/cliente_helper.dart';
+import 'package:ordem_services/helper/login_helper.dart';
 import 'package:ordem_services/helper/status_helper.dart';
 import 'package:ordem_services/helper/tipo_helper.dart';
 import 'package:ordem_services/tabbar.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
 import 'package:ordem_services/utils/validator.dart';
+import 'package:random_string/random_string.dart';
 import 'package:validators/validators.dart';
 
 class CadastroPedido extends StatefulWidget {
@@ -29,9 +35,15 @@ class _CadastroPedidoState extends State<CadastroPedido> {
   final _defeitoController = TextEditingController();
   final _descricaoController = TextEditingController();
   Dialogs dialog = new Dialogs();
+  LoginHelper helper = LoginHelper();
+  Cadastro_Pedido pedido;
+  Cadastro_Pedido _editedpedido;
+  Cliente cliente;
+  Cliente _editedcliente;
   bool isLoading = false;
 
   //DropDown
+  String _dropdownError;
   List<Tipo> type = List();
   String _selectedtype;
   List<Status> status = List();
@@ -40,6 +52,21 @@ class _CadastroPedidoState extends State<CadastroPedido> {
   @override
   void initState() {
     super.initState();
+    if (pedido == null || cliente == null) {
+      _editedpedido = Cadastro_Pedido();
+      _editedcliente = Cliente();
+    } else {
+      _editedpedido = Cadastro_Pedido.fromJson(pedido.toJson());
+      _editedcliente = Cliente.fromJson(cliente.toJson());
+      _nomeController.text = _editedcliente.nome;
+      _emailController.text = _editedcliente.email;
+      _telefoneController.text = _editedcliente.telefone;
+      _cpfController.text = _editedcliente.cpf;
+      _marcaController.text = _editedpedido.marca;
+      _modeloController.text = _editedpedido.modelo;
+      _defeitoController.text = _editedpedido.defeito;
+      _descricaoController.text = _editedpedido.descricao;
+    }
     isLoading = true;
     _getAllType();
     _getAllStatus();
@@ -234,18 +261,29 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                           items: type.map((item) {
                             return new DropdownMenuItem(
                               child: Text(item.type.toString()),
-                              value: item.toString(),
+                              value: item.id.toString(),
                             );
                           }).toList(),
                           onChanged: (value) {
                             setState(() {
                               _selectedtype = value;
+                              _editedpedido.cd_tipo = _selectedtype;
+                              _dropdownError = null;
                             });
                           },
                           value: _selectedtype,
                         ),
                       ),
               ),
+              _dropdownError == null
+                  ? SizedBox.shrink()
+                  : Container(
+                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: Text(
+                        _dropdownError ?? "",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
               Padding(
                 padding: EdgeInsets.only(bottom: 10.0),
               ),
@@ -267,18 +305,29 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                           items: status.map((item) {
                             return new DropdownMenuItem(
                               child: Text(item.status.toString()),
-                              value: item.toString(),
+                              value: item.id.toString(),
                             );
                           }).toList(),
                           onChanged: (value) {
                             setState(() {
                               _selectedStatus = value;
+                              _editedpedido.cd_status = _selectedStatus;
+                              _dropdownError = null;
                             });
                           },
                           value: _selectedStatus,
                         ),
                       ),
               ),
+              _dropdownError == null
+                  ? SizedBox.shrink()
+                  : Container(
+                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: Text(
+                        _dropdownError ?? "",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
               Container(
                 padding: EdgeInsets.only(top: 10.0),
                 margin: EdgeInsets.only(left: 20.0, right: 20.0),
@@ -409,78 +458,88 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                   },
                 ),
               ),
-              RaisedButton(
-                padding: EdgeInsets.symmetric(vertical: 15.0),
-                child: Text("Cadastrar"),
-                color: Colors.blueGrey,
-                textColor: Colors.white,
-                onPressed: () async {
-                  if (_formkey.currentState.validate()) {
-                    if (isEmail(_emailController.text)) {
-                      if (isNumeric(_telefoneController.text)) {
-                        if (CPFValidator.isValid(_cpfController.text)) {
-                          //gerar senha aleatorio
-//                                _editedFuncionario.password =
-//                                    randomAlphaNumeric(8);
-                          //cadastro
-//                                await api
-//                                    .cadastrarFuncionario(_editedFuncionario);
-//                                final snackBar = SnackBar(
-//                                  duration: const Duration(minutes: 60),
-//                                  content: Text(
-//                                      "Senha: " + _editedFuncionario.password),
-//                                  action: SnackBarAction(
-//                                    label: 'Copiar',
-//                                    onPressed: () async {
-//                                      Clipboard.setData(new ClipboardData(
-//                                          text: _editedFuncionario.password));
-//                                      Logado logado = await helper.getLogado();
-//                                      Navigator.pop(context);
-//                                      Navigator.pushReplacement(
-//                                          context,
-//                                          MaterialPageRoute(
-//                                              builder: (context) =>
-//                                                  TabBarFuncionario(
-//                                                      logado.logado_login_id,
-//                                                      logado.nome,
-//                                                      logado.email,
-//                                                      logado.status,
-//                                                      Api(
-//                                                          token:
-//                                                              logado.token))));
-//                                    },
-//                                  ),
-//                                );
-//                                Scaffold.of(context).showSnackBar(snackBar);
-                        } else {
-                          setState(() {
-                            isLoading = false;
-                          });
-                          dialog.showAlertDialog(
-                              context, 'Aviso', 'Preencher com CPF válido');
+              (isLoading)
+                  ? new Align(
+                      child: loadingIndicator,
+                      alignment: FractionalOffset.center,
+                    )
+                  : RaisedButton(
+                      padding: EdgeInsets.symmetric(vertical: 15.0),
+                      child: Text("Cadastrar"),
+                      color: Colors.blueGrey,
+                      textColor: Colors.white,
+                      onPressed: () async {
+                        if (_formkey.currentState.validate()) {
+                          if (isEmail(_emailController.text)) {
+                            if (isNumeric(_telefoneController.text)) {
+                              if (CPFValidator.isValid(_cpfController.text)) {
+                                _validateForm();
+                              } else {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                                dialog.showAlertDialog(context, 'Aviso',
+                                    'Preencher com CPF válido');
+                              }
+                            } else {
+                              setState(() {
+                                isLoading = false;
+                              });
+                              dialog.showAlertDialog(
+                                  context, 'Aviso', 'Preencher somente número');
+                            }
+                          } else {
+                            setState(() {
+                              isLoading = false;
+                            });
+                            dialog.showAlertDialog(context, 'Aviso',
+                                'Preencher com E-mail válido');
+                          }
                         }
-                      } else {
-                        setState(() {
-                          isLoading = false;
-                        });
-                        dialog.showAlertDialog(
-                            context, 'Aviso', 'Preencher somente número');
-                      }
-                    } else {
-                      setState(() {
-                        isLoading = false;
-                      });
-                      dialog.showAlertDialog(
-                          context, 'Aviso', 'Preencher com E-mail válido');
-                    }
-                  }
-                },
-              ),
+                      },
+                    ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  _validateForm() async {
+    bool _isValid = _formkey.currentState.validate();
+    if (_selectedtype == null || _selectedStatus == null) {
+      setState(() => _dropdownError = "Campo obrigatório !");
+      _isValid = false;
+    }
+    if (_isValid) {
+      //gerar senha aleatorio
+      _editedcliente.password = randomAlphaNumeric(8);
+      //cadastro
+      await widget.api
+          .cadastrarPedido(_editedcliente, _editedpedido, widget.login_id);
+      final snackBar = SnackBar(
+        duration: const Duration(minutes: 60),
+        content: Text("Senha: " + _editedcliente.password),
+        action: SnackBarAction(
+          label: 'Copiar',
+          onPressed: () async {
+            Clipboard.setData(new ClipboardData(text: _editedcliente.password));
+            Logado logado = await helper.getLogado();
+            Navigator.pop(context);
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TabBarMenu(
+                        logado.logado_login_id,
+                        logado.nome,
+                        logado.email,
+                        logado.status,
+                        Api(token: logado.token))));
+          },
+        ),
+      );
+      Scaffold.of(context).showSnackBar(snackBar);
+    }
   }
 
   _getAllType() async {
