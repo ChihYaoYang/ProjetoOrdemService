@@ -40,7 +40,7 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
         : new Container();
     return Scaffold(
         body: WillPopScope(
-      child: (isLoading)
+      child: (isLoading || funcionario == null)
           ? new Align(
               child: loadingIndicator,
               alignment: FractionalOffset.center,
@@ -51,8 +51,7 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
               itemBuilder: (context, index) {
                 return _funcionarioCard(context, index);
               }),
-    )
-    );
+    ));
   }
 
   Widget _funcionarioCard(BuildContext context, int index) {

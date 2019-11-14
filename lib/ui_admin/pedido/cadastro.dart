@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:ordem_services/helper/Api.dart';
-import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/helper/cadastro_pedido_helper.dart';
 import 'package:ordem_services/helper/cliente_helper.dart';
 import 'package:ordem_services/helper/login_helper.dart';
@@ -52,6 +51,9 @@ class _CadastroPedidoState extends State<CadastroPedido> {
   @override
   void initState() {
     super.initState();
+    isLoading = true;
+    _getAllType();
+    _getAllStatus();
     if (pedido == null || cliente == null) {
       _editedpedido = Cadastro_Pedido();
       _editedcliente = Cliente();
@@ -67,9 +69,6 @@ class _CadastroPedidoState extends State<CadastroPedido> {
       _defeitoController.text = _editedpedido.defeito;
       _descricaoController.text = _editedpedido.descricao;
     }
-    isLoading = true;
-    _getAllType();
-    _getAllStatus();
   }
 
   @override
@@ -270,12 +269,13 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                           hint: Text(
                             'Seleciona uma tipo',
                           ),
-                          items: type.map((item) {
-                            return new DropdownMenuItem(
-                              child: Text(item.type.toString()),
-                              value: item.id.toString(),
-                            );
-                          }).toList(),
+                          items: type?.map((item) {
+                                return new DropdownMenuItem(
+                                  child: Text(item.type.toString()),
+                                  value: item.id.toString(),
+                                );
+                              }).toList() ??
+                              [],
                           onChanged: (value) {
                             setState(() {
                               _selectedtype = value;
@@ -314,12 +314,13 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                           hint: Text(
                             'Selecione status do pedido',
                           ),
-                          items: status.map((item) {
-                            return new DropdownMenuItem(
-                              child: Text(item.status.toString()),
-                              value: item.id.toString(),
-                            );
-                          }).toList(),
+                          items: status?.map((item) {
+                                return new DropdownMenuItem(
+                                  child: Text(item.status.toString()),
+                                  value: item.id.toString(),
+                                );
+                              }).toList() ??
+                              [],
                           onChanged: (value) {
                             setState(() {
                               _selectedStatus = value;

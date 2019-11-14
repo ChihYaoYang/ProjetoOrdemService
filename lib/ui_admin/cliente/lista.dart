@@ -50,7 +50,7 @@ class _ListaClienteState extends State<ListaCliente> {
         ),
         drawer: DrawerMenu(widget.nome, widget.email, widget.status),
         body: WillPopScope(
-          child: (isLoading)
+          child: (isLoading || cliente == null)
               ? new Align(
                   child: loadingIndicator,
                   alignment: FractionalOffset.center,

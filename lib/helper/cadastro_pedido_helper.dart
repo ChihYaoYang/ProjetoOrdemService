@@ -28,6 +28,12 @@ class Cadastro_Pedido {
   String modelo;
   String defeito;
   String descricao;
+
+  //Rename inner join
+  String Cliente;
+  String Tipo;
+  String Status;
+  String Funcionario;
   dynamic data_pedido;
 
   Cadastro_Pedido(
@@ -40,6 +46,11 @@ class Cadastro_Pedido {
       this.modelo,
       this.defeito,
       this.descricao,
+      //Rename inner join
+      this.Cliente,
+      this.Tipo,
+      this.Status,
+      this.Funcionario,
       this.data_pedido});
 
   factory Cadastro_Pedido.fromJson(Map<String, dynamic> json) {
@@ -53,6 +64,11 @@ class Cadastro_Pedido {
         modelo: json['modelo'],
         defeito: json['defeito'],
         descricao: json['descricao'],
+        //Rename inner join
+        Cliente: json['Cliente'],
+        Tipo: json['Tipo'],
+        Status: json['Status'],
+        Funcionario: json['Funcionario'],
         data_pedido: json['data_pedido']);
   }
 
@@ -67,12 +83,17 @@ class Cadastro_Pedido {
     data['modelo'] = this.modelo;
     data['defeito'] = this.defeito;
     data['descricao'] = this.descricao;
+    //Rename inner join
+    data['Cliente'] = this.Cliente;
+    data['Tipo'] = this.Tipo;
+    data['Status'] = this.Status;
+    data['Funcionario'] = this.Funcionario;
     data['data_pedido'] = this.data_pedido;
     return data;
   }
 
   @override
   String toString() {
-    return "Cadastro_Pedido(id: $id, cd_cliente: $cd_cliente, cd_tipo: $cd_tipo, cd_status: $cd_status, cd_funcionario: $cd_funcionario, marca: $marca, modelo: $modelo, defeito: $defeito, descricao: $descricao, data_pedido: $data_pedido)";
+    return "Cadastro_Pedido(id: $id, cd_cliente: $cd_cliente, cd_tipo: $cd_tipo, cd_status: $cd_status, cd_funcionario: $cd_funcionario, marca: $marca, modelo: $modelo, defeito: $defeito, descricao: $descricao,Cliente: $Cliente,Tipo: $Tipo,Status: $Status,Funcionario: $Funcionario, data_pedido: $data_pedido)";
   }
 }
