@@ -36,6 +36,8 @@ class _HomePageState extends State<HomePage> {
   Dialogs dialog = new Dialogs();
   bool isLoading = false;
 
+  List<Cadastro_Pedido> _queryResults = new List();
+
   @override
   void initState() {
     super.initState();
@@ -88,7 +90,7 @@ class _HomePageState extends State<HomePage> {
       ),
       drawer: DrawerMenu(widget.nome, widget.email, widget.status),
       body: WillPopScope(
-        child: (isLoading || pedido == null)
+        child: (isLoading)
             ? new Align(
                 child: loadingIndicator,
                 alignment: FractionalOffset.center,
@@ -287,7 +289,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         isLoading = false;
         pedido = list;
-        debugPrint(pedido.toString());
+//        debugPrint(pedido.toString());
       });
     });
   }
@@ -295,30 +297,32 @@ class _HomePageState extends State<HomePage> {
   void _orderList(OrderOptions result) async {
     switch (result) {
       case OrderOptions.em_analise:
-        pedido =
+        _queryResults =
             pedido.where((status) => status.Status == 'Em análise').toList();
-
         break;
       case OrderOptions.aguard_analise:
-        pedido = pedido
+        _queryResults = pedido
             .where((status) => status.Status == 'Aguardando análise')
             .toList();
         break;
       case OrderOptions.aguard_peca:
-        pedido = pedido
+        _queryResults = pedido
             .where((status) => status.Status == 'Aguardando peça')
             .toList();
         break;
       case OrderOptions.entrega:
-        pedido = pedido
+        _queryResults = pedido
             .where((status) => status.Status == 'Pronto a entrega')
             .toList();
         break;
       case OrderOptions.sem_solucao:
-        pedido =
+        _queryResults =
             pedido.where((status) => status.Status == 'Sem solução').toList();
         break;
     }
-    setState(() {});
+    setState(() {
+      pedido = _queryResults;
+      print(_queryResults);
+    });
   }
 }

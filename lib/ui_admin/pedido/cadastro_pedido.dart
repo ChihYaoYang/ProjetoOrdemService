@@ -126,6 +126,15 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
                           ),
                         ),
                 ),
+                _dropdownError == null
+                    ? SizedBox.shrink()
+                    : Container(
+                        margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                        child: Text(
+                          _dropdownError ?? "",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
                 Row(
                   children: <Widget>[
                     Expanded(child: Divider(color: Colors.blueGrey)),
@@ -386,6 +395,9 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
                         textColor: Colors.white,
                         onPressed: () async {
                           if (_formkey.currentState.validate()) {
+                            setState(() {
+                              isLoading = true;
+                            });
                             _validateForm();
                           }
                         },
@@ -420,6 +432,10 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
                   logado.email,
                   logado.status,
                   Api(token: logado.token))));
+    } else {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
