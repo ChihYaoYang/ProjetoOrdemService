@@ -147,7 +147,7 @@ class Api {
     }
   }
 
-  Future<Cadastro_Pedido> cadastrarPedido(
+  Future<Cadastro_Pedido> cadastrarNewPedido(
       Cliente cliente, Cadastro_Pedido pedido, int login_id) async {
     http.Response response = await http.post(BASE_URL + "Pedido/novo_pedido",
         body: jsonEncode({
@@ -156,6 +156,29 @@ class Api {
           "password": cliente.password,
           "telefone": cliente.telefone,
           "cpf": cliente.cpf,
+          "cd_tipo": pedido.cd_tipo,
+          "cd_status": pedido.cd_status,
+          "cd_funcionario": login_id,
+          "marca": pedido.marca,
+          "modelo": pedido.modelo,
+          "defeito": pedido.defeito,
+          "descricao": pedido.descricao
+        }),
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    if (response.statusCode == 200) {
+      Cadastro_Pedido dadosJson =
+          new Cadastro_Pedido.fromJson(json.decode(response.body));
+      return dadosJson;
+    } else {
+      return null;
+    }
+  }
+
+  Future<Cadastro_Pedido> cadastrarPedido(
+      Cadastro_Pedido pedido, int login_id) async {
+    http.Response response = await http.post(BASE_URL + "Pedido",
+        body: jsonEncode({
+          "cd_cliente": pedido.cd_cliente,
           "cd_tipo": pedido.cd_tipo,
           "cd_status": pedido.cd_status,
           "cd_funcionario": login_id,

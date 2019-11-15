@@ -70,14 +70,18 @@ class _ListaClienteState extends State<ListaCliente> {
         child: Padding(
             padding: EdgeInsets.all(10.0),
             child: ListTile(
-              title: Text('Nome: ' + cliente[index].nome),
+              title: Text('Nome: ' + cliente[index].nome,
+                  overflow: TextOverflow.ellipsis),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  Text('E-mail: ' + cliente[index].email),
-                  Text('Telefone: ' + cliente[index].telefone),
-                  Text('CPF: ' + cliente[index].cpf),
+                  Text('E-mail: ' + cliente[index].email,
+                      overflow: TextOverflow.ellipsis),
+                  Text('Telefone: ' + cliente[index].telefone,
+                      overflow: TextOverflow.ellipsis),
+                  Text('CPF: ' + cliente[index].cpf,
+                      overflow: TextOverflow.ellipsis),
                 ],
               ),
               trailing: Text((index + 1).toString()),

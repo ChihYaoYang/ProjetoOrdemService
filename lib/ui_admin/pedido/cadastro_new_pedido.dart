@@ -9,6 +9,7 @@ import 'package:ordem_services/helper/status_helper.dart';
 import 'package:ordem_services/helper/tipo_helper.dart';
 import 'package:ordem_services/tabbar.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
+import 'package:ordem_services/utils/menu.dart';
 import 'package:ordem_services/utils/validator.dart';
 import 'package:random_string/random_string.dart';
 import 'package:validators/validators.dart';
@@ -16,8 +17,11 @@ import 'package:validators/validators.dart';
 class CadastroPedido extends StatefulWidget {
   final Api api;
   int login_id;
+  String nome;
+  String email;
+  dynamic status;
 
-  CadastroPedido(this.api, this.login_id);
+  CadastroPedido(this.api, this.login_id, this.nome, this.email, this.status);
 
   @override
   _CadastroPedidoState createState() => _CadastroPedidoState();
@@ -84,6 +88,11 @@ class _CadastroPedidoState extends State<CadastroPedido> {
           )
         : new Container();
     return Scaffold(
+      appBar: AppBar(
+        title: Text('OS'),
+        centerTitle: true,
+      ),
+      drawer: DrawerMenu(widget.nome, widget.email, widget.status),
       body: SingleChildScrollView(
         child: Form(
           key: _formkey,
@@ -259,7 +268,7 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(3.0),
                     border: Border.all(color: Colors.blueGrey)),
-                child: (isLoading)
+                child: (isLoading || type == null)
                     ? new Align(
                         child: loadingIndicator,
                         alignment: FractionalOffset.center,
@@ -304,7 +313,7 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(3.0),
                     border: Border.all(color: Colors.blueGrey)),
-                child: (isLoading)
+                child: (isLoading || status == null)
                     ? new Align(
                         child: loadingIndicator,
                         alignment: FractionalOffset.center,
@@ -541,7 +550,7 @@ class _CadastroPedidoState extends State<CadastroPedido> {
       _editedcliente.password = randomAlphaNumeric(8);
       //cadastro
       await widget.api
-          .cadastrarPedido(_editedcliente, _editedpedido, widget.login_id);
+          .cadastrarNewPedido(_editedcliente, _editedpedido, widget.login_id);
       final snackBar = SnackBar(
         duration: const Duration(minutes: 60),
         content: Text("Senha: " + _editedcliente.password),

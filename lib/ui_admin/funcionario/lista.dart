@@ -60,14 +60,18 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
         child: Padding(
             padding: EdgeInsets.all(10.0),
             child: ListTile(
-              title: Text('Nome: ' + funcionario[index].nome),
+              title: Text('Nome: ' + funcionario[index].nome,
+                  overflow: TextOverflow.ellipsis),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  Text('E-mail: ' + funcionario[index].email),
-                  Text('Telefone: ' + funcionario[index].telefone),
-                  Text('CPF: ' + funcionario[index].cpf),
+                  Text('E-mail: ' + funcionario[index].email,
+                      overflow: TextOverflow.ellipsis),
+                  Text('Telefone: ' + funcionario[index].telefone,
+                      overflow: TextOverflow.ellipsis),
+                  Text('CPF: ' + funcionario[index].cpf,
+                      overflow: TextOverflow.ellipsis),
                 ],
               ),
               trailing: Text((index + 1).toString()),
