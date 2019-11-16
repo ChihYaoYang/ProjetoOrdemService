@@ -23,6 +23,7 @@ class HomePage extends StatefulWidget {
 }
 
 enum OrderOptions {
+  show_all,
   em_analise,
   aguard_analise,
   aguard_peca,
@@ -36,7 +37,8 @@ class _HomePageState extends State<HomePage> {
   Dialogs dialog = new Dialogs();
   bool isLoading = false;
 
-  List<Cadastro_Pedido> _queryResults = new List();
+  List<Cadastro_Pedido> _queryResults = [];
+  List<Cadastro_Pedido> _filter = [];
 
   @override
   void initState() {
@@ -65,6 +67,10 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(Icons.arrow_drop_down),
               itemBuilder: (context) => <PopupMenuEntry<OrderOptions>>[
                     const PopupMenuItem<OrderOptions>(
+                      child: Text('Show All'),
+                      value: OrderOptions.show_all,
+                    ),
+                    const PopupMenuItem<OrderOptions>(
                       child: Text('Em Análise'),
                       value: OrderOptions.em_analise,
                     ),
@@ -90,7 +96,7 @@ class _HomePageState extends State<HomePage> {
       ),
       drawer: DrawerMenu(widget.nome, widget.email, widget.status),
       body: WillPopScope(
-        child: (isLoading)
+        child: (isLoading || pedido == null)
             ? new Align(
                 child: loadingIndicator,
                 alignment: FractionalOffset.center,
@@ -175,112 +181,116 @@ class _HomePageState extends State<HomePage> {
         );
       },
     ));
-//    botoes.add(FlatButton(
-//      child: Row(
-//        children: <Widget>[
-//          Icon(Icons.edit, color: Colors.blueAccent),
-//          Padding(
-//              padding: EdgeInsets.only(left: 10),
-//              child: Column(
-//                children: <Widget>[
-//                  Text(
-//                    'Cadastrar Serviço',
-//                    style: TextStyle(color: Colors.blueAccent, fontSize: 20.0),
-//                  )
-//                ],
-//              ))
-//        ],
-//      ),
-//      onPressed: () {
+    botoes.add(FlatButton(
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.edit, color: Colors.blueAccent),
+          Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    'Cadastrar Serviço',
+                    style: TextStyle(color: Colors.blueAccent, fontSize: 20.0),
+                  )
+                ],
+              ))
+        ],
+      ),
+      onPressed: () {
+        Navigator.pop(context);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => CadastrarServicos()));
+      },
+    ));
+    botoes.add(FlatButton(
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.edit, color: Colors.blueAccent),
+          Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    'Update Serviço',
+                    style: TextStyle(color: Colors.blueAccent, fontSize: 20.0),
+                  )
+                ],
+              ))
+        ],
+      ),
+      onPressed: () {},
+    ));
+    botoes.add(FlatButton(
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.edit, color: Colors.blueAccent),
+          Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    'Update Pedido',
+                    style: TextStyle(color: Colors.blueAccent, fontSize: 20.0),
+                  )
+                ],
+              ))
+        ],
+      ),
+      onPressed: () {
 //        Navigator.pop(context);
-//        Navigator.push(context,
-//            MaterialPageRoute(builder: (context) => CadastrarServicos()));
-//      },
-//    ));
-//    botoes.add(FlatButton(
-//      child: Row(
-//        children: <Widget>[
-//          Icon(Icons.edit, color: Colors.blueAccent),
-//          Padding(
-//              padding: EdgeInsets.only(left: 10),
-//              child: Column(
-//                children: <Widget>[
-//                  Text(
-//                    'Update Serviço',
-//                    style: TextStyle(color: Colors.blueAccent, fontSize: 20.0),
-//                  )
-//                ],
-//              ))
-//        ],
-//      ),
-//      onPressed: () {},
-//    ));
-//    botoes.add(FlatButton(
-//      child: Row(
-//        children: <Widget>[
-//          Icon(Icons.edit, color: Colors.blueAccent),
-//          Padding(
-//              padding: EdgeInsets.only(left: 10),
-//              child: Column(
-//                children: <Widget>[
-//                  Text(
-//                    'Update Pedido',
-//                    style: TextStyle(color: Colors.blueAccent, fontSize: 20.0),
-//                  )
-//                ],
-//              ))
-//        ],
-//      ),
-//      onPressed: () {
-////        Navigator.pop(context);
-////        Navigator.push(
-////            context, MaterialPageRoute(builder: (context) => AlterarPedido()));
-//      },
-//    ));
-//
-//    botoes.add(FlatButton(
-//      child: Row(
-//        children: <Widget>[
-//          Icon(Icons.delete, color: Colors.blueAccent),
-//          Padding(
-//              padding: EdgeInsets.only(left: 10),
-//              child: Column(
-//                children: <Widget>[
-//                  Text(
-//                    'Deletar',
-//                    style: TextStyle(color: Colors.blueAccent, fontSize: 20.0),
-//                  )
-//                ],
-//              ))
-//        ],
-//      ),
-//      onPressed: () {
-////        showDialog(
-////            context: context,
-////            builder: (context) {
-////              return AlertDialog(
-////                title: Text('Aviso !'),
-////                content: Text('Você realmente deseja excluir ?'),
-////                actions: <Widget>[
-////                  FlatButton(
-////                    child: Text('Sim'),
-////                    onPressed: () {
-////                      Navigator.pop(context);
-////                      Navigator.pop(context);
-////                    },
-////                  ),
-////                  FlatButton(
-////                    child: Text('Cancelar'),
-////                    onPressed: () {
-////                      Navigator.pop(context);
-////                      Navigator.pop(context);
-////                    },
-////                  )
-////                ],
-////              );
-////            });
-//      },
-//    ));
+//        Navigator.push(
+//            context, MaterialPageRoute(builder: (context) => AlterarPedido()));
+      },
+    ));
+
+    botoes.add(FlatButton(
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.delete, color: Colors.blueAccent),
+          Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    'Deletar',
+                    style: TextStyle(color: Colors.blueAccent, fontSize: 20.0),
+                  )
+                ],
+              ))
+        ],
+      ),
+      onPressed: () {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Aviso !'),
+                content: Text('Você realmente deseja excluir ?'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Sim'),
+                    onPressed: () {
+                      widget.api.deletarPedido(pedido[index].id);
+                      setState(() {
+                        Navigator.pop(context);
+                        pedido.removeAt(index);
+                        Navigator.pop(context);
+                      });
+                    },
+                  ),
+                  FlatButton(
+                    child: Text('Cancelar'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              );
+            });
+      },
+    ));
     dialog.showBottomOptions(context, botoes);
   }
 
@@ -289,40 +299,43 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         isLoading = false;
         pedido = list;
-//        debugPrint(pedido.toString());
+        _filter = list;
       });
     });
   }
 
   void _orderList(OrderOptions result) async {
     switch (result) {
+      case OrderOptions.show_all:
+        _queryResults = _filter;
+        break;
       case OrderOptions.em_analise:
-        _queryResults =
-            pedido.where((status) => status.Status == 'Em análise').toList();
+        _queryResults = _filter
+            .where((status) => status.Status.contains('Em análise'))
+            .toList();
         break;
       case OrderOptions.aguard_analise:
-        _queryResults = pedido
-            .where((status) => status.Status == 'Aguardando análise')
+        _queryResults = _filter
+            .where((status) => status.Status.contains('Aguardando análise'))
             .toList();
         break;
       case OrderOptions.aguard_peca:
-        _queryResults = pedido
-            .where((status) => status.Status == 'Aguardando peça')
+        _queryResults = _filter
+            .where((status) => status.Status.contains('Aguardando peça'))
             .toList();
         break;
       case OrderOptions.entrega:
-        _queryResults = pedido
-            .where((status) => status.Status == 'Pronto a entrega')
+        _queryResults = _filter
+            .where((status) => status.Status.contains('Pronto a entrega'))
             .toList();
         break;
       case OrderOptions.sem_solucao:
-        _queryResults =
-            pedido.where((status) => status.Status == 'Sem solução').toList();
+        _queryResults = _filter
+            .where((status) => status.Status.contains('Sem solução'))
+            .toList();
         break;
     }
-    setState(() {
-      pedido = _queryResults;
-      print(_queryResults);
-    });
+    pedido = _queryResults;
+    setState(() {});
   }
 }

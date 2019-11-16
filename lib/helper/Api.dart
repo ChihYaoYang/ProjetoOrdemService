@@ -104,9 +104,8 @@ class Api {
     }
   }
 
-  Future<bool> deletarCliente(String codigoFuncionario) async {
-    http.Response response = await http.delete(
-        BASE_URL + "Cliente/" + codigoFuncionario,
+  Future<bool> deletarCliente(String codigo) async {
+    http.Response response = await http.delete(BASE_URL + "Cliente/" + codigo,
         headers: {'token': token, 'Content-Type': 'application/json'});
     if (response.statusCode == 200) {
       return true;
@@ -194,6 +193,17 @@ class Api {
       return dadosJson;
     } else {
       return null;
+    }
+  }
+
+  Future<bool> deletarPedido(String codigo) async {
+    http.Response response = await http.delete(BASE_URL + "Pedido/" + codigo,
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
     }
   }
 
