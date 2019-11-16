@@ -37,9 +37,17 @@ class _HomePageState extends State<HomePage> {
   Dialogs dialog = new Dialogs();
   bool isLoading = false;
 
+  //filtro dropwdown
   List<Cadastro_Pedido> _queryResults = [];
   List<Cadastro_Pedido> _filter = [];
 
+  //Filtro Search
+  final _key = new GlobalKey<ScaffoldState>();
+  Widget appBarTitle = new Text("OS");
+  Icon actionIcon = new Icon(Icons.search);
+  final _search = TextEditingController();
+
+  //////////////////////////////////////////////////
   @override
   void initState() {
     super.initState();
@@ -59,10 +67,36 @@ class _HomePageState extends State<HomePage> {
           )
         : new Container();
     return Scaffold(
+      key: _key,
       appBar: AppBar(
-        title: Text('OS'),
+        title: appBarTitle,
         centerTitle: true,
         actions: <Widget>[
+          new IconButton(
+            icon: actionIcon,
+            onPressed: () {
+              setState(() {
+                if (this.actionIcon.icon == Icons.search) {
+                  this.actionIcon = new Icon(Icons.close);
+                  this.appBarTitle = new TextField(
+                    style: new TextStyle(
+                      color: Colors.white,
+                    ),
+                    controller: _search,
+                    decoration: new InputDecoration(
+                      prefixIcon: new Icon(Icons.search, color: Colors.white),
+                      hintText: "Search Client...",
+                      hintStyle: new TextStyle(color: Colors.white),
+                    ),
+                  );
+                } else {
+                  _search.text = "";
+                  this.actionIcon = new Icon(Icons.search);
+                  this.appBarTitle = new Text("OS");
+                }
+              });
+            },
+          ),
           PopupMenuButton<OrderOptions>(
               icon: Icon(Icons.arrow_drop_down),
               itemBuilder: (context) => <PopupMenuEntry<OrderOptions>>[
@@ -337,5 +371,24 @@ class _HomePageState extends State<HomePage> {
     }
     pedido = _queryResults;
     setState(() {});
+  }
+
+  //Filtro Seach
+  _HomePageState() {
+    _search.addListener(() {
+      if (_search.text.isEmpty) {
+        setState(() {
+          _queryResults = _filter;
+        });
+      } else {
+        setState(() {
+          _queryResults = _filter
+              .where((status) => status.Cliente.toLowerCase()
+                  .contains(_search.text.toLowerCase()))
+              .toList();
+        });
+      }
+      pedido = _queryResults;
+    });
   }
 }
