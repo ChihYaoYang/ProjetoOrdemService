@@ -269,6 +269,9 @@ class _UpdateClienteState extends State<UpdateCliente> {
                   ),
                   RaisedButton(
                     padding: EdgeInsets.symmetric(vertical: 15.0),
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(10.0),
+                        side: BorderSide(color: Colors.transparent)),
                     child: Text("Alterar"),
                     color: Colors.blueGrey,
                     textColor: Colors.white,

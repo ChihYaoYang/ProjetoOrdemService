@@ -499,6 +499,9 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                     )
                   : RaisedButton(
                       padding: EdgeInsets.symmetric(vertical: 15.0),
+                      shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(10.0),
+                          side: BorderSide(color: Colors.transparent)),
                       child: Text("Cadastrar"),
                       color: Colors.blueGrey,
                       textColor: Colors.white,
