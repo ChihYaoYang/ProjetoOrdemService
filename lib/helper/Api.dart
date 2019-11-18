@@ -1,6 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:ordem_services/helper/login_helper.dart';
+import 'package:ordem_services/helper/servicos_helper.dart';
 import 'package:ordem_services/helper/status_helper.dart';
 import 'package:ordem_services/helper/tipo_helper.dart';
 
@@ -204,6 +205,20 @@ class Api {
       return true;
     } else {
       return false;
+    }
+  }
+
+///////////////////////////////////Serviços//////////////////////////////////////////
+  Future<Servicos> cadastrarServicos(Servicos servico, String id) async {
+    http.Response response = await http.post(BASE_URL + "Servico/" + id,
+        body:
+            jsonEncode({"servico": servico.servico, "precos": servico.precos}),
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    if (response.statusCode == 200) {
+      Servicos dadosJson = new Servicos.fromJson(json.decode(response.body));
+      return dadosJson;
+    } else {
+      return null;
     }
   }
 

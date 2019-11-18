@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:ordem_services/helper/Api.dart';
+import 'package:ordem_services/helper/servicos_helper.dart';
 
 class CadastrarServicos extends StatefulWidget {
+  final dynamic id;
+  final Api api;
+  int login_id;
+
+  CadastrarServicos(this.id, this.api, this.login_id);
+
   @override
   _CadastrarServicosState createState() => _CadastrarServicosState();
 }
@@ -11,115 +19,180 @@ class _CadastrarServicosState extends State<CadastrarServicos> {
   final _servicesController = TextEditingController();
   final _precosController =
       MoneyMaskedTextController(decimalSeparator: ',', thousandSeparator: '.');
+  bool _userEdited = false;
+  Servicos servico;
+  Servicos _editedservico;
+
+  @override
+  void initState() {
+    super.initState();
+    if (servico == null) {
+      _editedservico = Servicos();
+    } else {
+      _editedservico = Servicos.fromJson(servico.toJson());
+      _servicesController.text = _editedservico.servico;
+      _precosController.text = _editedservico.precos;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
-        title: Text('Cadastrar Serviços'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formkey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(top: 5),
-                child: Text(
-                  "Serviço feitos",
-                  style: TextStyle(fontSize: 20, color: Colors.blueGrey),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-              Row(
-                children: <Widget>[
-                  Expanded(child: Divider(color: Colors.blueGrey)),
-                ],
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  maxLines: 5,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " Descrição dos Servicos",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.room_service,
-                        color: Colors.white,
-                      ),
-                      color: Colors.blue,
-                    ),
+    return WillPopScope(
+      onWillPop: _requestPop,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.blueAccent,
+          title: Text('Cadastrar Serviços'),
+          centerTitle: true,
+        ),
+        body: SingleChildScrollView(
+          child: Form(
+            key: _formkey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(top: 5),
+                  child: Text(
+                    "Serviço feitos",
+                    style: TextStyle(fontSize: 20, color: Colors.blueGrey),
+                    textAlign: TextAlign.left,
                   ),
-                  controller: _servicesController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
                 ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " Preço",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.attach_money,
-                        color: Colors.white,
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Divider(color: Colors.blueGrey)),
+                  ],
+                ),
+                Container(
+                  padding: EdgeInsets.only(top: 10.0),
+                  margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                  child: TextFormField(
+                    maxLines: 5,
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0)),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.transparent),
                       ),
-                      color: Colors.blue,
+                      filled: true,
+                      fillColor: Colors.blueGrey.withOpacity(0.45),
+                      hintText: " Descrição dos Servicos",
+                      hintStyle: TextStyle(color: Colors.white),
+                      prefixIcon: Container(
+                        child: Icon(
+                          Icons.room_service,
+                          color: Colors.white,
+                        ),
+                        color: Colors.blue,
+                      ),
                     ),
+                    onChanged: (text) {
+                      _userEdited = true;
+                      _editedservico.servico = text;
+                    },
+                    controller: _servicesController,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return "Campo obrigatório !";
+                      }
+                      return null;
+                    },
                   ),
-                  controller: _precosController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
                 ),
-              ),
-              RaisedButton(
-                padding: EdgeInsets.symmetric(vertical: 15.0),
-                child: Text("Cadastrar Serviço"),
-                color: Colors.blueGrey,
-                textColor: Colors.white,
-                onPressed: () {
-                  if (_formkey.currentState.validate()) {
-                    Navigator.pop(context);
-                  }
-                },
-              ),
-            ],
+                Container(
+                  padding: EdgeInsets.only(top: 10.0),
+                  margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                  child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0)),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.transparent),
+                      ),
+                      filled: true,
+                      fillColor: Colors.blueGrey.withOpacity(0.45),
+                      hintText: " Preço",
+                      hintStyle: TextStyle(color: Colors.white),
+                      prefixIcon: Container(
+                        child: Icon(
+                          Icons.attach_money,
+                          color: Colors.white,
+                        ),
+                        color: Colors.blue,
+                      ),
+                    ),
+                    onChanged: (text) {
+                      _userEdited = true;
+                      _editedservico.precos = text;
+                    },
+                    controller: _precosController,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return "Campo obrigatório !";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(top: 10.0),
+                  child: RaisedButton(
+                    padding: EdgeInsets.symmetric(vertical: 15.0),
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(10.0),
+                        side: BorderSide(color: Colors.transparent)),
+                    child: Text("Cadastrar Serviço"),
+                    color: Colors.blueGrey,
+                    textColor: Colors.white,
+                    onPressed: () async {
+                      if (_formkey.currentState.validate()) {
+                        Navigator.pop(context);
+                        await widget.api
+                            .cadastrarServicos(_editedservico, widget.id);
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  Future<bool> _requestPop() {
+    if (_userEdited) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Descartar alterações?'),
+              content: Text('Se sair as alterações serão perdidas.'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Sim'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                ),
+                FlatButton(
+                  child: Text('Cancelar'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            );
+          });
+      return Future.value(false);
+    } else {
+      return Future.value(true);
+    }
   }
 }

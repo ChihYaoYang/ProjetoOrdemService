@@ -233,8 +233,11 @@ class _HomePageState extends State<HomePage> {
       ),
       onPressed: () {
         Navigator.pop(context);
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => CadastrarServicos()));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CadastrarServicos(
+                    pedido[index].id, widget.api, widget.login_id)));
       },
     ));
     botoes.add(FlatButton(

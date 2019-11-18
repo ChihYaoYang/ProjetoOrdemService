@@ -388,22 +388,25 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
                         child: loadingIndicator,
                         alignment: FractionalOffset.center,
                       )
-                    : RaisedButton(
-                        padding: EdgeInsets.symmetric(vertical: 15.0),
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(10.0),
-                            side: BorderSide(color: Colors.transparent)),
-                        child: Text("Cadastrar"),
-                        color: Colors.blueGrey,
-                        textColor: Colors.white,
-                        onPressed: () async {
-                          if (_formkey.currentState.validate()) {
-                            setState(() {
-                              isLoading = true;
-                            });
-                            _validateForm();
-                          }
-                        },
+                    : Container(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: RaisedButton(
+                          padding: EdgeInsets.symmetric(vertical: 15.0),
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(10.0),
+                              side: BorderSide(color: Colors.transparent)),
+                          child: Text("Cadastrar"),
+                          color: Colors.blueGrey,
+                          textColor: Colors.white,
+                          onPressed: () async {
+                            if (_formkey.currentState.validate()) {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              _validateForm();
+                            }
+                          },
+                        ),
                       ),
               ],
             ),

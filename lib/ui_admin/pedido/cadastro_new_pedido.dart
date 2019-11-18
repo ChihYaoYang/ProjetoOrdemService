@@ -497,43 +497,46 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                       child: loadingIndicator,
                       alignment: FractionalOffset.center,
                     )
-                  : RaisedButton(
-                      padding: EdgeInsets.symmetric(vertical: 15.0),
-                      shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(10.0),
-                          side: BorderSide(color: Colors.transparent)),
-                      child: Text("Cadastrar"),
-                      color: Colors.blueGrey,
-                      textColor: Colors.white,
-                      onPressed: () async {
-                        if (_formkey.currentState.validate()) {
-                          if (isEmail(_emailController.text)) {
-                            if (isNumeric(_telefoneController.text)) {
-                              if (CPFValidator.isValid(_cpfController.text)) {
-                                _validateForm();
+                  : Container(
+                      padding: EdgeInsets.only(top: 10.0),
+                      child: RaisedButton(
+                        padding: EdgeInsets.symmetric(vertical: 15.0),
+                        shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(10.0),
+                            side: BorderSide(color: Colors.transparent)),
+                        child: Text("Cadastrar"),
+                        color: Colors.blueGrey,
+                        textColor: Colors.white,
+                        onPressed: () async {
+                          if (_formkey.currentState.validate()) {
+                            if (isEmail(_emailController.text)) {
+                              if (isNumeric(_telefoneController.text)) {
+                                if (CPFValidator.isValid(_cpfController.text)) {
+                                  _validateForm();
+                                } else {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  dialog.showAlertDialog(context, 'Aviso',
+                                      'Preencher com CPF válido');
+                                }
                               } else {
                                 setState(() {
                                   isLoading = false;
                                 });
                                 dialog.showAlertDialog(context, 'Aviso',
-                                    'Preencher com CPF válido');
+                                    'Preencher somente número');
                               }
                             } else {
                               setState(() {
                                 isLoading = false;
                               });
-                              dialog.showAlertDialog(
-                                  context, 'Aviso', 'Preencher somente número');
+                              dialog.showAlertDialog(context, 'Aviso',
+                                  'Preencher com E-mail válido');
                             }
-                          } else {
-                            setState(() {
-                              isLoading = false;
-                            });
-                            dialog.showAlertDialog(context, 'Aviso',
-                                'Preencher com E-mail válido');
                           }
-                        }
-                      },
+                        },
+                      ),
                     ),
             ],
           ),
