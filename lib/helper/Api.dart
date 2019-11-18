@@ -8,6 +8,7 @@ import 'package:ordem_services/helper/tipo_helper.dart';
 import 'cadastro_pedido_helper.dart';
 import 'cliente_helper.dart';
 import 'funcionario_helper.dart';
+import 'item_pedido_helper.dart';
 
 const BASE_URL = "https://ordemservices.000webhostapp.com/rest/";
 
@@ -43,6 +44,7 @@ class Api {
     }
   }
 
+///////////////////////////////////Funcionario//////////////////////////////////////////////
   Future<Funcionario> cadastrarFuncionario(Funcionario funcionario) async {
     http.Response response = await http.post(BASE_URL + "Login/cadastro",
         body: jsonEncode({
@@ -208,6 +210,24 @@ class Api {
     }
   }
 
+///////////////////////////////////Item Pedido///////////////////////////////////////
+  Future<List<Item_Pedido>> getItem(String codigo) async {
+    http.Response response = await http.get(BASE_URL + 'Itempedido/' + codigo,
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      List<Item_Pedido> itens =
+          json.decode(response.body).map<Item_Pedido>((map) {
+        return Item_Pedido.fromJson(map);
+      }).toList();
+      print(response.body);
+      return itens;
+    } else {
+      return null;
+    }
+  }
+
 ///////////////////////////////////Serviços//////////////////////////////////////////
   Future<Servicos> cadastrarServicos(Servicos servico, String id) async {
     http.Response response = await http.post(BASE_URL + "Servico/" + id,
@@ -216,6 +236,7 @@ class Api {
         headers: {'token': token, 'Content-Type': 'application/json'});
     if (response.statusCode == 200) {
       Servicos dadosJson = new Servicos.fromJson(json.decode(response.body));
+      print(response.body);
       return dadosJson;
     } else {
       return null;

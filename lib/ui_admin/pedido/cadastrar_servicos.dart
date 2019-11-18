@@ -18,8 +18,9 @@ class _CadastrarServicosState extends State<CadastrarServicos> {
   GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   final _servicesController = TextEditingController();
   final _precosController =
-      MoneyMaskedTextController(decimalSeparator: ',', thousandSeparator: '.');
+      MoneyMaskedTextController(decimalSeparator: '.', thousandSeparator: ',');
   bool _userEdited = false;
+  bool isLoading = false;
   Servicos servico;
   Servicos _editedservico;
 
@@ -37,6 +38,15 @@ class _CadastrarServicosState extends State<CadastrarServicos> {
 
   @override
   Widget build(BuildContext context) {
+    Widget loadingIndicator = isLoading
+        ? new Container(
+            width: 70.0,
+            height: 70.0,
+            child: new Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: new Center(child: new CircularProgressIndicator())),
+          )
+        : new Container();
     return WillPopScope(
       onWillPop: _requestPop,
       child: Scaffold(
@@ -127,35 +137,51 @@ class _CadastrarServicosState extends State<CadastrarServicos> {
                     ),
                     onChanged: (text) {
                       _userEdited = true;
-                      _editedservico.precos = text;
                     },
                     controller: _precosController,
                     validator: (value) {
                       if (value.isEmpty) {
                         return "Campo obrigatório !";
+                      } else {
+                        setState(() {
+                          _editedservico.precos = value;
+                        });
                       }
-                      return null;
                     },
                   ),
                 ),
                 Container(
                   padding: EdgeInsets.only(top: 10.0),
-                  child: RaisedButton(
-                    padding: EdgeInsets.symmetric(vertical: 15.0),
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(10.0),
-                        side: BorderSide(color: Colors.transparent)),
-                    child: Text("Cadastrar Serviço"),
-                    color: Colors.blueGrey,
-                    textColor: Colors.white,
-                    onPressed: () async {
-                      if (_formkey.currentState.validate()) {
-                        Navigator.pop(context);
-                        await widget.api
-                            .cadastrarServicos(_editedservico, widget.id);
-                      }
-                    },
-                  ),
+                  child: (isLoading)
+                      ? new Align(
+                          child: loadingIndicator,
+                          alignment: FractionalOffset.center,
+                        )
+                      : RaisedButton(
+                          padding: EdgeInsets.symmetric(vertical: 15.0),
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(10.0),
+                              side: BorderSide(color: Colors.transparent)),
+                          child: Text("Cadastrar Serviço"),
+                          color: Colors.blueGrey,
+                          textColor: Colors.white,
+                          onPressed: () async {
+                            FocusScope.of(context)
+                                .requestFocus(new FocusNode());
+                            if (_formkey.currentState.validate()) {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              await widget.api
+                                  .cadastrarServicos(_editedservico, widget.id);
+                              Navigator.pop(context);
+                            } else {
+                              setState(() {
+                                isLoading = false;
+                              });
+                            }
+                          },
+                        ),
                 ),
               ],
             ),

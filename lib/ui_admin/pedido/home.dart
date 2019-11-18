@@ -8,6 +8,7 @@ import 'package:ordem_services/ui_admin/pedido/cadastrar_servicos.dart';
 import 'package:ordem_services/utils/menu.dart';
 
 import 'infor_pedido.dart';
+import 'infor_servico.dart';
 
 class HomePage extends StatefulWidget {
   final Api api;
@@ -34,6 +35,7 @@ enum OrderOptions {
 class _HomePageState extends State<HomePage> {
   List<Cadastro_Pedido> pedido = List();
   List<Tipo> type = List();
+
   Dialogs dialog = new Dialogs();
   bool isLoading = false;
 
@@ -174,6 +176,14 @@ class _HomePageState extends State<HomePage> {
       onTap: () {
         _showOptions(context, index);
       },
+      onLongPress: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Information_Servico(
+                  widget.api, pedido[index].id, pedido[index].Cliente)),
+        );
+      },
     );
   }
 
@@ -201,17 +211,16 @@ class _HomePageState extends State<HomePage> {
           context,
           MaterialPageRoute(
               builder: (context) => Information_Pedido(
-                    pedido[index].id,
-                    pedido[index].Cliente,
-                    pedido[index].Tipo,
-                    pedido[index].Status,
-                    pedido[index].Funcionario,
-                    pedido[index].marca,
-                    pedido[index].modelo,
-                    pedido[index].defeito,
-                    pedido[index].descricao,
-                    pedido[index].data_pedido,
-                  )),
+                  pedido[index].id,
+                  pedido[index].Cliente,
+                  pedido[index].Tipo,
+                  pedido[index].Status,
+                  pedido[index].Funcionario,
+                  pedido[index].marca,
+                  pedido[index].modelo,
+                  pedido[index].defeito,
+                  pedido[index].descricao,
+                  pedido[index].data_pedido)),
         );
       },
     ));
@@ -332,7 +341,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   _getAllPedidos() async {
-    widget.api.getPedido().then((list) {
+    await widget.api.getPedido().then((list) {
       setState(() {
         isLoading = false;
         pedido = list;

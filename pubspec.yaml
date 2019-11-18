@@ -27,7 +27,7 @@ dependencies:
   sqflite: any
   http: any
   validators: ^2.0.0
-  flutter_masked_text: any
+  flutter_masked_text: ^0.7.0
   random_string: ^1.1.0
 
 dev_dependencies:
