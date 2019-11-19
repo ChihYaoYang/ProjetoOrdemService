@@ -314,6 +314,7 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
                   margin: EdgeInsets.only(left: 20.0, right: 20.0),
                   child: TextFormField(
                     maxLines: 5,
+                    maxLength: 200,
                     style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       border: UnderlineInputBorder(
@@ -351,6 +352,7 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
                   margin: EdgeInsets.only(left: 20.0, right: 20.0),
                   child: TextFormField(
                     maxLines: 5,
+                    maxLength: 200,
                     style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       border: UnderlineInputBorder(

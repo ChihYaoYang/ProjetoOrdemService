@@ -18,7 +18,7 @@ class _CadastrarServicosState extends State<CadastrarServicos> {
   GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   final _servicesController = TextEditingController();
   final _precosController =
-      MoneyMaskedTextController(decimalSeparator: '.', thousandSeparator: ',');
+      MoneyMaskedTextController(decimalSeparator: ',', thousandSeparator: '.');
   bool _userEdited = false;
   bool isLoading = false;
   Servicos servico;
@@ -79,6 +79,7 @@ class _CadastrarServicosState extends State<CadastrarServicos> {
                   margin: EdgeInsets.only(left: 20.0, right: 20.0),
                   child: TextFormField(
                     maxLines: 5,
+                    maxLength: 200,
                     style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       border: UnderlineInputBorder(

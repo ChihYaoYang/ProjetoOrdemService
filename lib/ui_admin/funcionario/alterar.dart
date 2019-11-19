@@ -228,6 +228,7 @@ class _UpdateFunconarioState extends State<UpdateFunconario> {
                     padding: EdgeInsets.only(top: 10.0),
                     margin: EdgeInsets.only(left: 20.0, right: 20.0),
                     child: TextFormField(
+                      maxLength: 14,
                       keyboardType: TextInputType.number,
                       style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(

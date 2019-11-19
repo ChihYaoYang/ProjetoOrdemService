@@ -218,6 +218,7 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                 padding: EdgeInsets.only(top: 10.0),
                 margin: EdgeInsets.only(left: 20.0, right: 20.0),
                 child: TextFormField(
+                  maxLength: 14,
                   keyboardType: TextInputType.number,
                   style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
@@ -425,6 +426,7 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                 margin: EdgeInsets.only(left: 20.0, right: 20.0),
                 child: TextFormField(
                   maxLines: 5,
+                  maxLength: 200,
                   style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     border: UnderlineInputBorder(
@@ -461,6 +463,7 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                 margin: EdgeInsets.only(left: 20.0, right: 20.0),
                 child: TextFormField(
                   maxLines: 5,
+                  maxLength: 200,
                   style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     border: UnderlineInputBorder(
@@ -509,6 +512,9 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                         textColor: Colors.white,
                         onPressed: () async {
                           if (_formkey.currentState.validate()) {
+                            setState(() {
+                              isLoading = true;
+                            });
                             if (isEmail(_emailController.text)) {
                               if (isNumeric(_telefoneController.text)) {
                                 if (CPFValidator.isValid(_cpfController.text)) {

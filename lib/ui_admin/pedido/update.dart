@@ -33,8 +33,6 @@ class _AlterarPedidoState extends State<AlterarPedido> {
 
   //DropDown
   String _dropdownError;
-  List<Cliente> client = List();
-  String _selectedClient;
   List<Tipo> type = List();
   String _selectedtype;
   List<Status> status = List();
@@ -46,7 +44,6 @@ class _AlterarPedidoState extends State<AlterarPedido> {
     isLoading = true;
     _getAllType();
     _getAllStatus();
-    _getAllClientes();
     if (widget.pedidos == null) {
       _editedpedido = Cadastro_Pedido();
     } else {
@@ -56,9 +53,6 @@ class _AlterarPedidoState extends State<AlterarPedido> {
       _defeitoController.text = _editedpedido.defeito;
       _descricaoController.text = _editedpedido.descricao;
     }
-//    print(_editedpedido.cd_cliente);
-//    print(_editedpedido.cd_status);
-//    print(_editedpedido.cd_tipo);
   }
 
   @override
@@ -73,344 +67,297 @@ class _AlterarPedidoState extends State<AlterarPedido> {
                 ))),
           )
         : new Container();
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
-        title: Text('Update Pedido'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formkey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(top: 5),
-                child: Text(
-                  "Cliente",
-                  style: TextStyle(fontSize: 20, color: Colors.blueGrey),
-                  textAlign: TextAlign.left,
+    return WillPopScope(
+      onWillPop: _requestPop,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.blueAccent,
+          title: Text('Update Pedido'),
+          centerTitle: true,
+        ),
+        body: SingleChildScrollView(
+          child: Form(
+            key: _formkey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Divider(color: Colors.blueGrey)),
+                  ],
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(3.0),
-                    border: Border.all(color: Colors.blueGrey)),
-                child: (isLoading || client == null)
+                Container(
+                  padding: EdgeInsets.only(top: 5),
+                  child: Text(
+                    "Dados do Pedido",
+                    style: TextStyle(fontSize: 20, color: Colors.blueGrey),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(3.0),
+                      border: Border.all(color: Colors.blueGrey)),
+                  child: (isLoading || type == null)
+                      ? new Align(
+                          child: loadingIndicator,
+                          alignment: FractionalOffset.center,
+                        )
+                      : DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            hint: Text(
+                              'Seleciona uma tipo',
+                            ),
+                            items: type?.map((item) {
+                                  return new DropdownMenuItem(
+                                    child: Text(item.type.toString()),
+                                    value: item.id.toString(),
+                                  );
+                                }).toList() ??
+                                [],
+                            onChanged: (value) {
+                              setState(() {
+                                _userEdited = true;
+                                _selectedtype = value;
+                                _editedpedido.cd_tipo = _selectedtype;
+                                _dropdownError = null;
+                              });
+                            },
+                            value: _editedpedido.cd_tipo,
+                          ),
+                        ),
+                ),
+                _dropdownError == null
+                    ? SizedBox.shrink()
+                    : Container(
+                        margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                        child: Text(
+                          _dropdownError ?? "",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 10.0),
+                ),
+                Container(
+                  margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(3.0),
+                      border: Border.all(color: Colors.blueGrey)),
+                  child: (isLoading || status == null)
+                      ? new Align(
+                          child: loadingIndicator,
+                          alignment: FractionalOffset.center,
+                        )
+                      : DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            hint: Text(
+                              'Selecione status do pedido',
+                            ),
+                            items: status?.map((item) {
+                                  return new DropdownMenuItem(
+                                    child: Text(item.status.toString()),
+                                    value: item.id.toString(),
+                                  );
+                                }).toList() ??
+                                [],
+                            onChanged: (value) {
+                              setState(() {
+                                _userEdited = true;
+                                _selectedStatus = value;
+                                _editedpedido.cd_status = _selectedStatus;
+                                _dropdownError = null;
+                              });
+                            },
+                            value: _editedpedido.cd_status,
+                          ),
+                        ),
+                ),
+                _dropdownError == null
+                    ? SizedBox.shrink()
+                    : Container(
+                        margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                        child: Text(
+                          _dropdownError ?? "",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                Container(
+                  padding: EdgeInsets.only(top: 10.0),
+                  margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                  child: TextFormField(
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0)),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.transparent),
+                      ),
+                      filled: true,
+                      fillColor: Colors.blueGrey.withOpacity(0.45),
+                      hintText: " Marca",
+                      hintStyle: TextStyle(color: Colors.white),
+                      prefixIcon: Container(
+                        child: Icon(
+                          Icons.collections_bookmark,
+                          color: Colors.white,
+                        ),
+                        color: Colors.blue,
+                      ),
+                    ),
+                    onChanged: (text) {
+                      _userEdited = true;
+                      _editedpedido.marca = text;
+                    },
+                    controller: _marcaController,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return "Campo obrigatório !";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(top: 10.0),
+                  margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                  child: TextFormField(
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0)),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.transparent),
+                      ),
+                      filled: true,
+                      fillColor: Colors.blueGrey.withOpacity(0.45),
+                      hintText: " Modelo",
+                      hintStyle: TextStyle(color: Colors.white),
+                      prefixIcon: Container(
+                        child: Icon(
+                          Icons.mobile_screen_share,
+                          color: Colors.white,
+                        ),
+                        color: Colors.blue,
+                      ),
+                    ),
+                    onChanged: (text) {
+                      _userEdited = true;
+                      _editedpedido.modelo = text;
+                    },
+                    controller: _modeloController,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return "Campo obrigatório !";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                  child: TextFormField(
+                    maxLines: 5,
+                    maxLength: 200,
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0)),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.transparent),
+                      ),
+                      filled: true,
+                      fillColor: Colors.blueGrey.withOpacity(0.45),
+                      hintText: " Defeito",
+                      hintStyle: TextStyle(color: Colors.white),
+                      prefixIcon: Container(
+                        child: Icon(
+                          Icons.report_problem,
+                          color: Colors.white,
+                        ),
+                        color: Colors.blue,
+                      ),
+                    ),
+                    onChanged: (text) {
+                      _userEdited = true;
+                      _editedpedido.defeito = text;
+                    },
+                    controller: _defeitoController,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return "Campo obrigatório !";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(top: 10.0),
+                  margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                  child: TextFormField(
+                    maxLines: 5,
+                    maxLength: 200,
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0)),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.transparent),
+                      ),
+                      filled: true,
+                      fillColor: Colors.blueGrey.withOpacity(0.45),
+                      hintText: " Descrição",
+                      hintStyle: TextStyle(color: Colors.white),
+                      prefixIcon: Container(
+                        child: Icon(
+                          Icons.text_fields,
+                          color: Colors.white,
+                        ),
+                        color: Colors.blue,
+                      ),
+                    ),
+                    onChanged: (text) {
+                      _userEdited = true;
+                      _editedpedido.descricao = text;
+                    },
+                    controller: _descricaoController,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return "Campo obrigatório !";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                (isLoading)
                     ? new Align(
                         child: loadingIndicator,
                         alignment: FractionalOffset.center,
                       )
-                    : DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          hint: Text(
-                            _editedpedido.Email ?? 'Seleciona o Cliente',
-                          ),
-                          items: client?.map((item) {
-                                return new DropdownMenuItem(
-                                  child: Text(item.email.toString()),
-                                  value: item.id.toString(),
-                                );
-                              }).toList() ??
-                              [],
-                          onChanged: (value) {
-                            setState(() {
-                              _userEdited = true;
-                              _selectedClient = value;
-                              _editedpedido.cd_cliente = _selectedClient;
-                              _dropdownError = null;
-                            });
+                    : Container(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: RaisedButton(
+                          padding: EdgeInsets.symmetric(vertical: 15.0),
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(10.0),
+                              side: BorderSide(color: Colors.transparent)),
+                          child: Text("Alterar"),
+                          color: Colors.blueGrey,
+                          textColor: Colors.white,
+                          onPressed: () async {
+                            if (_formkey.currentState.validate()) {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              _validateForm();
+                            }
                           },
-                          value: _selectedClient,
                         ),
                       ),
-              ),
-              _dropdownError == null
-                  ? SizedBox.shrink()
-                  : Container(
-                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                      child: Text(
-                        _dropdownError ?? "",
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ),
-              Row(
-                children: <Widget>[
-                  Expanded(child: Divider(color: Colors.blueGrey)),
-                ],
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 5),
-                child: Text(
-                  "Dados do Pedido",
-                  style: TextStyle(fontSize: 20, color: Colors.blueGrey),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(3.0),
-                    border: Border.all(color: Colors.blueGrey)),
-                child: (isLoading || type == null)
-                    ? new Align(
-                        child: loadingIndicator,
-                        alignment: FractionalOffset.center,
-                      )
-                    : DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          hint: Text(
-                            _editedpedido.Tipo ?? 'Seleciona uma tipo',
-                          ),
-                          items: type?.map((item) {
-                                return new DropdownMenuItem(
-                                  child: Text(item.type.toString()),
-                                  value: item.id.toString(),
-                                );
-                              }).toList() ??
-                              [],
-                          onChanged: (value) {
-                            setState(() {
-                              _userEdited = true;
-                              _selectedtype = value;
-                              _editedpedido.cd_tipo = _selectedtype;
-                              _dropdownError = null;
-                            });
-                          },
-                          value: _selectedtype,
-                        ),
-                      ),
-              ),
-              _dropdownError == null
-                  ? SizedBox.shrink()
-                  : Container(
-                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                      child: Text(
-                        _dropdownError ?? "",
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ),
-              Padding(
-                padding: EdgeInsets.only(bottom: 10.0),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(3.0),
-                    border: Border.all(color: Colors.blueGrey)),
-                child: (isLoading || status == null)
-                    ? new Align(
-                        child: loadingIndicator,
-                        alignment: FractionalOffset.center,
-                      )
-                    : DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          hint: Text(
-                            _editedpedido.Status ??
-                                'Selecione status do pedido',
-                          ),
-                          items: status?.map((item) {
-                                return new DropdownMenuItem(
-                                  child: Text(item.status.toString()),
-                                  value: item.id.toString(),
-                                );
-                              }).toList() ??
-                              [],
-                          onChanged: (value) {
-                            setState(() {
-                              _userEdited = true;
-                              _selectedStatus = value;
-                              _editedpedido.cd_status = _selectedStatus;
-                              _dropdownError = null;
-                            });
-                          },
-                          value: _selectedStatus,
-                        ),
-                      ),
-              ),
-              _dropdownError == null
-                  ? SizedBox.shrink()
-                  : Container(
-                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                      child: Text(
-                        _dropdownError ?? "",
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " Marca",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.collections_bookmark,
-                        color: Colors.white,
-                      ),
-                      color: Colors.blue,
-                    ),
-                  ),
-                  onChanged: (text) {
-                    _userEdited = true;
-                    _editedpedido.marca = text;
-                  },
-                  controller: _marcaController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " Modelo",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.mobile_screen_share,
-                        color: Colors.white,
-                      ),
-                      color: Colors.blue,
-                    ),
-                  ),
-                  onChanged: (text) {
-                    _userEdited = true;
-                    _editedpedido.modelo = text;
-                  },
-                  controller: _modeloController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  maxLines: 5,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " Defeito",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.report_problem,
-                        color: Colors.white,
-                      ),
-                      color: Colors.blue,
-                    ),
-                  ),
-                  onChanged: (text) {
-                    _userEdited = true;
-                    _editedpedido.defeito = text;
-                  },
-                  controller: _defeitoController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  maxLines: 5,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " Descrição",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.text_fields,
-                        color: Colors.white,
-                      ),
-                      color: Colors.blue,
-                    ),
-                  ),
-                  onChanged: (text) {
-                    _userEdited = true;
-                    _editedpedido.descricao = text;
-                  },
-                  controller: _descricaoController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              (isLoading)
-                  ? new Align(
-                      child: loadingIndicator,
-                      alignment: FractionalOffset.center,
-                    )
-                  : Container(
-                      padding: EdgeInsets.only(top: 10.0),
-                      child: RaisedButton(
-                        padding: EdgeInsets.symmetric(vertical: 15.0),
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(10.0),
-                            side: BorderSide(color: Colors.transparent)),
-                        child: Text("Cadastrar"),
-                        color: Colors.blueGrey,
-                        textColor: Colors.white,
-                        onPressed: () async {
-                          if (_formkey.currentState.validate()) {
-                            setState(() {
-                              isLoading = true;
-                            });
-                            _validateForm();
-                          }
-                        },
-                      ),
-                    ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -419,14 +366,16 @@ class _AlterarPedidoState extends State<AlterarPedido> {
 
   _validateForm() async {
     bool _isValid = _formkey.currentState.validate();
-    if (_selectedClient == null ||
-        _selectedtype == null ||
-        _selectedStatus == null) {
+    if (_editedpedido == null) {
       setState(() => _dropdownError = "Campo obrigatório !");
       _isValid = false;
     }
     if (_isValid) {
       Navigator.pop(context, _editedpedido);
+    } else {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -444,15 +393,6 @@ class _AlterarPedidoState extends State<AlterarPedido> {
       setState(() {
         isLoading = false;
         status = list;
-      });
-    });
-  }
-
-  _getAllClientes() async {
-    await widget.api.getCliente().then((list) {
-      setState(() {
-        isLoading = false;
-        client = list;
       });
     });
   }

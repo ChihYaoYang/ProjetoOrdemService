@@ -133,7 +133,7 @@ class _HomePageState extends State<HomePage> {
       ),
       drawer: DrawerMenu(widget.nome, widget.email, widget.status),
       body: WillPopScope(
-        child: (isLoading || pedido == null)
+        child: (isLoading)
             ? new Align(
                 child: loadingIndicator,
                 alignment: FractionalOffset.center,
@@ -199,7 +199,7 @@ class _HomePageState extends State<HomePage> {
         isLoading = true;
       });
       if (pedido != null) {
-//        await widget.api.atualizarContato(recContact, widget.login_id, widget.token);
+        await widget.api.atualizarPedido(recContact,widget.login_id);
       }
       _getAllPedidos();
     }
