@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/helper/funcionario_helper.dart';
 import 'package:ordem_services/helper/login_helper.dart';
+import 'package:ordem_services/utils/menu.dart';
 import 'package:ordem_services/utils/validator.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
 import 'package:validators/validators.dart';
@@ -11,6 +12,12 @@ import 'package:random_string/random_string.dart';
 import 'package:ordem_services/tabbar_funcionario.dart';
 
 class CadastroFuncionario extends StatefulWidget {
+  String nome;
+  String email;
+  dynamic status;
+
+  CadastroFuncionario(this.nome, this.email, this.status);
+
   @override
   _CadastroFuncionarioState createState() => _CadastroFuncionarioState();
 }
@@ -57,6 +64,11 @@ class _CadastroFuncionarioState extends State<CadastroFuncionario> {
           )
         : new Container();
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Cadastro de Funcionários'),
+        centerTitle: true,
+      ),
+      drawer: DrawerMenu(widget.nome, widget.email, widget.status),
       body: SingleChildScrollView(
         child: Form(
             key: _formkey,

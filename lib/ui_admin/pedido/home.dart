@@ -7,6 +7,7 @@ import 'package:ordem_services/utils/Dialogs.dart';
 import 'package:ordem_services/ui_admin/pedido/cadastrar_servicos.dart';
 import 'package:ordem_services/utils/menu.dart';
 
+import 'cadastro_pedido.dart';
 import 'infor_pedido.dart';
 import 'infor_servico.dart';
 
@@ -187,6 +188,23 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _showContactPage({Cadastro_Pedido pedido}) async {
+    final recContact = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                AlterarPedido(pedido, widget.api, widget.login_id)));
+    if (recContact != null) {
+      setState(() {
+        isLoading = true;
+      });
+      if (pedido != null) {
+//        await widget.api.atualizarContato(recContact, widget.login_id, widget.token);
+      }
+      _getAllPedidos();
+    }
+  }
+
   void _showOptions(BuildContext context, int index) {
     List<Widget> botoes = [];
     botoes.add(FlatButton(
@@ -284,9 +302,8 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       onPressed: () {
-//        Navigator.pop(context);
-//        Navigator.push(
-//            context, MaterialPageRoute(builder: (context) => AlterarPedido()));
+        Navigator.pop(context);
+        _showContactPage(pedido: pedido[index]);
       },
     ));
 

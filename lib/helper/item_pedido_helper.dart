@@ -21,23 +21,52 @@ class Item_Pedido {
   dynamic id;
   dynamic cd_cadastro_pedido;
   dynamic cd_servicos;
-  String servico;
-  dynamic precos;
+
+  //inner join table
+  String Cliente;
+  String Tipo;
+  String Status;
+  String Funcionario;
+  String Marca;
+  String Modelo;
+  String Defeito;
+  String Descricao;
+  dynamic Data_Cadastrado;
+  String Servico;
+  dynamic Precos;
 
   Item_Pedido(
       {this.id,
       this.cd_cadastro_pedido,
       this.cd_servicos,
-      this.servico,
-      this.precos});
+      this.Cliente,
+      this.Tipo,
+      this.Status,
+      this.Funcionario,
+      this.Marca,
+      this.Modelo,
+      this.Defeito,
+      this.Descricao,
+      this.Data_Cadastrado,
+      this.Servico,
+      this.Precos});
 
   factory Item_Pedido.fromJson(Map<String, dynamic> json) {
     return Item_Pedido(
         id: json['id'],
         cd_cadastro_pedido: json['cd_cadastro_pedido'],
         cd_servicos: json['cd_servicos'],
-        servico: json['servico'],
-        precos: json['precos']);
+        Cliente: json['Cliente'],
+        Tipo: json['Tipo'],
+        Status: json['Status'],
+        Funcionario: json['Funcionario'],
+        Marca: json['Marca'],
+        Modelo: json['Modelo'],
+        Defeito: json['Defeito'],
+        Descricao: json['Descricao'],
+        Data_Cadastrado: json['Data_Cadastrado'],
+        Servico: json['Servico'],
+        Precos: json['Precos']);
   }
 
   Map<String, dynamic> toJson() {
@@ -45,13 +74,22 @@ class Item_Pedido {
     data['id'] = this.id;
     data['cd_cadastro_pedido'] = this.cd_cadastro_pedido;
     data['cd_servicos'] = this.cd_servicos;
-    data['servico'] = this.servico;
-    data['precos'] = this.precos;
+    data['Cliente'] = this.Cliente;
+    data['Tipo'] = this.Tipo;
+    data['Status'] = this.Status;
+    data['Funcionario'] = this.Funcionario;
+    data['Marca'] = this.Marca;
+    data['Modelo'] = this.Modelo;
+    data['Defeito'] = this.Defeito;
+    data['Descricao'] = this.Descricao;
+    data['Data_Cadastrado'] = this.Data_Cadastrado;
+    data['Servico'] = this.Servico;
+    data['Precos'] = this.Precos;
     return data;
   }
 
   @override
   String toString() {
-    return "Item_Pedido(id: $id, cd_cadastro_pedido: $cd_cadastro_pedido, cd_servicos: $cd_servicos, servico: $servico, precos: $precos)";
+    return "Item_Pedido(id: $id, cd_cadastro_pedido: $cd_cadastro_pedido, cd_servicos: $cd_servicos,Cliente: $Cliente,Tipo: $Tipo,Status: $Status,Funcionario: $Funcionario,Marca: $Marca,Modelo: $Modelo,Defeito: $Defeito,Descricao: $Descricao,Data_Cadastrado: $Data_Cadastrado, Servico: $Servico, Precos: $Precos)";
   }
 }

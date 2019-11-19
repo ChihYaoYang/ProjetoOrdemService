@@ -1,6 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:ordem_services/helper/Api.dart';
+import 'package:ordem_services/helper/cadastro_pedido_helper.dart';
+import 'package:ordem_services/helper/cliente_helper.dart';
+import 'package:ordem_services/helper/login_helper.dart';
+import 'package:ordem_services/helper/status_helper.dart';
+import 'package:ordem_services/helper/tipo_helper.dart';
+import 'package:ordem_services/utils/Dialogs.dart';
 
 class AlterarPedido extends StatefulWidget {
+  final Cadastro_Pedido pedidos;
+  final Api api;
+  final login_id;
+
+  AlterarPedido(this.pedidos, this.api, this.login_id);
+
   @override
   _AlterarPedidoState createState() => _AlterarPedidoState();
 }
@@ -11,23 +24,55 @@ class _AlterarPedidoState extends State<AlterarPedido> {
   final _modeloController = TextEditingController();
   final _defeitoController = TextEditingController();
   final _descricaoController = TextEditingController();
-
+  Dialogs dialog = new Dialogs();
+  LoginHelper helper = LoginHelper();
+  Cadastro_Pedido pedido;
+  Cadastro_Pedido _editedpedido;
+  bool isLoading = false;
   bool _userEdited = false;
 
   //DropDown
-  List<String> _locations = ['Notebook', 'Celular'];
-  String _selectedLocation;
+  String _dropdownError;
+  List<Cliente> client = List();
+  String _selectedClient;
+  List<Tipo> type = List();
+  String _selectedtype;
+  List<Status> status = List();
   String _selectedStatus;
-  List<String> _status = [
-    'Em análise',
-    'Aguardando análise',
-    'Aguardando peça',
-    'Pronto',
-    'Sem solução'
-  ];
+
+  @override
+  void initState() {
+    super.initState();
+    isLoading = true;
+    _getAllType();
+    _getAllStatus();
+    _getAllClientes();
+    if (widget.pedidos == null) {
+      _editedpedido = Cadastro_Pedido();
+    } else {
+      _editedpedido = Cadastro_Pedido.fromJson(widget.pedidos.toJson());
+      _marcaController.text = _editedpedido.marca;
+      _modeloController.text = _editedpedido.modelo;
+      _defeitoController.text = _editedpedido.defeito;
+      _descricaoController.text = _editedpedido.descricao;
+    }
+//    print(_editedpedido.cd_cliente);
+//    print(_editedpedido.cd_status);
+//    print(_editedpedido.cd_tipo);
+  }
 
   @override
   Widget build(BuildContext context) {
+    Widget loadingIndicator = isLoading
+        ? new Container(
+            child: new Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: new Center(
+                    child: new LinearProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                ))),
+          )
+        : new Container();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
@@ -43,6 +88,62 @@ class _AlterarPedidoState extends State<AlterarPedido> {
               Container(
                 padding: EdgeInsets.only(top: 5),
                 child: Text(
+                  "Cliente",
+                  style: TextStyle(fontSize: 20, color: Colors.blueGrey),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(3.0),
+                    border: Border.all(color: Colors.blueGrey)),
+                child: (isLoading || client == null)
+                    ? new Align(
+                        child: loadingIndicator,
+                        alignment: FractionalOffset.center,
+                      )
+                    : DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                          hint: Text(
+                            _editedpedido.Email ?? 'Seleciona o Cliente',
+                          ),
+                          items: client?.map((item) {
+                                return new DropdownMenuItem(
+                                  child: Text(item.email.toString()),
+                                  value: item.id.toString(),
+                                );
+                              }).toList() ??
+                              [],
+                          onChanged: (value) {
+                            setState(() {
+                              _userEdited = true;
+                              _selectedClient = value;
+                              _editedpedido.cd_cliente = _selectedClient;
+                              _dropdownError = null;
+                            });
+                          },
+                          value: _selectedClient,
+                        ),
+                      ),
+              ),
+              _dropdownError == null
+                  ? SizedBox.shrink()
+                  : Container(
+                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: Text(
+                        _dropdownError ?? "",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+              Row(
+                children: <Widget>[
+                  Expanded(child: Divider(color: Colors.blueGrey)),
+                ],
+              ),
+              Container(
+                padding: EdgeInsets.only(top: 5),
+                child: Text(
                   "Dados do Pedido",
                   style: TextStyle(fontSize: 20, color: Colors.blueGrey),
                   textAlign: TextAlign.left,
@@ -53,27 +154,44 @@ class _AlterarPedidoState extends State<AlterarPedido> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(3.0),
                     border: Border.all(color: Colors.blueGrey)),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton(
-                    hint: Text(
-                      'Seleciona uma tipo',
-                    ),
-                    value: _selectedLocation,
-                    onChanged: (value) {
-                      _userEdited = true;
-                      setState(() {
-                        _selectedLocation = value;
-                      });
-                    },
-                    items: _locations.map((location) {
-                      return DropdownMenuItem(
-                        child: new Text(location),
-                        value: location,
-                      );
-                    }).toList(),
-                  ),
-                ),
+                child: (isLoading || type == null)
+                    ? new Align(
+                        child: loadingIndicator,
+                        alignment: FractionalOffset.center,
+                      )
+                    : DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                          hint: Text(
+                            _editedpedido.Tipo ?? 'Seleciona uma tipo',
+                          ),
+                          items: type?.map((item) {
+                                return new DropdownMenuItem(
+                                  child: Text(item.type.toString()),
+                                  value: item.id.toString(),
+                                );
+                              }).toList() ??
+                              [],
+                          onChanged: (value) {
+                            setState(() {
+                              _userEdited = true;
+                              _selectedtype = value;
+                              _editedpedido.cd_tipo = _selectedtype;
+                              _dropdownError = null;
+                            });
+                          },
+                          value: _selectedtype,
+                        ),
+                      ),
               ),
+              _dropdownError == null
+                  ? SizedBox.shrink()
+                  : Container(
+                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: Text(
+                        _dropdownError ?? "",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
               Padding(
                 padding: EdgeInsets.only(bottom: 10.0),
               ),
@@ -82,27 +200,45 @@ class _AlterarPedidoState extends State<AlterarPedido> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(3.0),
                     border: Border.all(color: Colors.blueGrey)),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton(
-                    hint: Text(
-                      'Selecione status do pedido',
-                    ),
-                    value: _selectedStatus,
-                    onChanged: (value) {
-                      _userEdited = true;
-                      setState(() {
-                        _selectedStatus = value;
-                      });
-                    },
-                    items: _status.map((location) {
-                      return DropdownMenuItem(
-                        child: new Text(location),
-                        value: location,
-                      );
-                    }).toList(),
-                  ),
-                ),
+                child: (isLoading || status == null)
+                    ? new Align(
+                        child: loadingIndicator,
+                        alignment: FractionalOffset.center,
+                      )
+                    : DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                          hint: Text(
+                            _editedpedido.Status ??
+                                'Selecione status do pedido',
+                          ),
+                          items: status?.map((item) {
+                                return new DropdownMenuItem(
+                                  child: Text(item.status.toString()),
+                                  value: item.id.toString(),
+                                );
+                              }).toList() ??
+                              [],
+                          onChanged: (value) {
+                            setState(() {
+                              _userEdited = true;
+                              _selectedStatus = value;
+                              _editedpedido.cd_status = _selectedStatus;
+                              _dropdownError = null;
+                            });
+                          },
+                          value: _selectedStatus,
+                        ),
+                      ),
               ),
+              _dropdownError == null
+                  ? SizedBox.shrink()
+                  : Container(
+                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: Text(
+                        _dropdownError ?? "",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
               Container(
                 padding: EdgeInsets.only(top: 10.0),
                 margin: EdgeInsets.only(left: 20.0, right: 20.0),
@@ -128,6 +264,7 @@ class _AlterarPedidoState extends State<AlterarPedido> {
                   ),
                   onChanged: (text) {
                     _userEdited = true;
+                    _editedpedido.marca = text;
                   },
                   controller: _marcaController,
                   validator: (value) {
@@ -163,6 +300,7 @@ class _AlterarPedidoState extends State<AlterarPedido> {
                   ),
                   onChanged: (text) {
                     _userEdited = true;
+                    _editedpedido.modelo = text;
                   },
                   controller: _modeloController,
                   validator: (value) {
@@ -199,6 +337,7 @@ class _AlterarPedidoState extends State<AlterarPedido> {
                   ),
                   onChanged: (text) {
                     _userEdited = true;
+                    _editedpedido.defeito = text;
                   },
                   controller: _defeitoController,
                   validator: (value) {
@@ -235,6 +374,7 @@ class _AlterarPedidoState extends State<AlterarPedido> {
                   ),
                   onChanged: (text) {
                     _userEdited = true;
+                    _editedpedido.descricao = text;
                   },
                   controller: _descricaoController,
                   validator: (value) {
@@ -245,22 +385,76 @@ class _AlterarPedidoState extends State<AlterarPedido> {
                   },
                 ),
               ),
-              RaisedButton(
-                padding: EdgeInsets.symmetric(vertical: 15.0),
-                child: Text("Alterar"),
-                color: Colors.blueGrey,
-                textColor: Colors.white,
-                onPressed: () {
-                  if (_formkey.currentState.validate()) {
-                    Navigator.pop(context);
-                  }
-                },
-              ),
+              (isLoading)
+                  ? new Align(
+                      child: loadingIndicator,
+                      alignment: FractionalOffset.center,
+                    )
+                  : Container(
+                      padding: EdgeInsets.only(top: 10.0),
+                      child: RaisedButton(
+                        padding: EdgeInsets.symmetric(vertical: 15.0),
+                        shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(10.0),
+                            side: BorderSide(color: Colors.transparent)),
+                        child: Text("Cadastrar"),
+                        color: Colors.blueGrey,
+                        textColor: Colors.white,
+                        onPressed: () async {
+                          if (_formkey.currentState.validate()) {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            _validateForm();
+                          }
+                        },
+                      ),
+                    ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  _validateForm() async {
+    bool _isValid = _formkey.currentState.validate();
+    if (_selectedClient == null ||
+        _selectedtype == null ||
+        _selectedStatus == null) {
+      setState(() => _dropdownError = "Campo obrigatório !");
+      _isValid = false;
+    }
+    if (_isValid) {
+      Navigator.pop(context, _editedpedido);
+    }
+  }
+
+  _getAllType() async {
+    await widget.api.getType().then((list) {
+      setState(() {
+        isLoading = false;
+        type = list;
+      });
+    });
+  }
+
+  _getAllStatus() async {
+    await widget.api.getStatus().then((list) {
+      setState(() {
+        isLoading = false;
+        status = list;
+      });
+    });
+  }
+
+  _getAllClientes() async {
+    await widget.api.getCliente().then((list) {
+      setState(() {
+        isLoading = false;
+        client = list;
+      });
+    });
   }
 
   Future<bool> _requestPop() {

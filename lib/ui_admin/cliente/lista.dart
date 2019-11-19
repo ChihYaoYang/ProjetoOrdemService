@@ -24,6 +24,14 @@ class _ListaClienteState extends State<ListaCliente> {
   Dialogs dialog = new Dialogs();
   bool isLoading = false;
 
+  //Filtro Search
+  final _key = new GlobalKey<ScaffoldState>();
+  Widget appBarTitle = new Text("Lista de Cliente");
+  Icon actionIcon = new Icon(Icons.search);
+  final _search = TextEditingController();
+  List<Cliente> _queryResults = [];
+  List<Cliente> _filter = [];
+
   @override
   void initState() {
     super.initState();
@@ -43,10 +51,37 @@ class _ListaClienteState extends State<ListaCliente> {
           )
         : new Container();
     return Scaffold(
+        key: _key,
         appBar: AppBar(
-          backgroundColor: Colors.blueAccent,
-          title: Text('Lista de Cliente'),
+          title: appBarTitle,
           centerTitle: true,
+          actions: <Widget>[
+            new IconButton(
+              icon: actionIcon,
+              onPressed: () {
+                setState(() {
+                  if (this.actionIcon.icon == Icons.search) {
+                    this.actionIcon = new Icon(Icons.close);
+                    this.appBarTitle = new TextField(
+                      style: new TextStyle(
+                        color: Colors.white,
+                      ),
+                      controller: _search,
+                      decoration: new InputDecoration(
+                        prefixIcon: new Icon(Icons.search, color: Colors.white),
+                        hintText: "Search Name...",
+                        hintStyle: new TextStyle(color: Colors.white),
+                      ),
+                    );
+                  } else {
+                    _search.text = "";
+                    this.actionIcon = new Icon(Icons.search);
+                    this.appBarTitle = new Text("Lista de Cliente");
+                  }
+                });
+              },
+            ),
+          ],
         ),
         drawer: DrawerMenu(widget.nome, widget.email, widget.status),
         body: WillPopScope(
@@ -97,9 +132,7 @@ class _ListaClienteState extends State<ListaCliente> {
     final recContact = await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => UpdateCliente(
-                  client: cliente,
-                )));
+            builder: (context) => UpdateCliente(cliente, widget.login_id)));
     if (recContact != null) {
       setState(() {
         isLoading = true;
@@ -231,8 +264,27 @@ class _ListaClienteState extends State<ListaCliente> {
       setState(() {
         isLoading = false;
         cliente = list;
-        debugPrint(cliente.toString());
+        _filter = list;
       });
+    });
+  }
+
+  //Filtro Seach
+  _ListaClienteState() {
+    _search.addListener(() {
+      if (_search.text.isEmpty) {
+        setState(() {
+          _queryResults = _filter;
+        });
+      } else {
+        setState(() {
+          _queryResults = _filter
+              .where((name) =>
+                  name.nome.toLowerCase().contains(_search.text.toLowerCase()))
+              .toList();
+        });
+      }
+      cliente = _queryResults;
     });
   }
 }

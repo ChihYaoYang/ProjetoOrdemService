@@ -10,7 +10,7 @@ class UpdateCliente extends StatefulWidget {
   final Cliente client;
   final login_id;
 
-  UpdateCliente({this.client, this.login_id});
+  UpdateCliente(this.client, this.login_id);
 
   @override
   _UpdateClienteState createState() => _UpdateClienteState();

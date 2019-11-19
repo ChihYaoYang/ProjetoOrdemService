@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/helper/funcionario_helper.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
+import 'package:ordem_services/utils/menu.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ordem_services/ui_admin/funcionario/alterar.dart';
 
 class ListaFuncionario extends StatefulWidget {
   final Api api;
   int login_id;
+  String nome;
+  String email;
+  dynamic status;
 
-  ListaFuncionario(this.api, this.login_id);
+  ListaFuncionario(this.api, this.login_id, this.nome, this.email, this.status);
 
   @override
   _ListaFuncionarioState createState() => _ListaFuncionarioState();
@@ -19,6 +23,14 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
   List<Funcionario> funcionario = List();
   Dialogs dialog = new Dialogs();
   bool isLoading = false;
+
+  //Filtro Search
+  final _key = new GlobalKey<ScaffoldState>();
+  Widget appBarTitle = new Text("Lista de Funcionários");
+  Icon actionIcon = new Icon(Icons.search);
+  final _search = TextEditingController();
+  List<Funcionario> _queryResults = [];
+  List<Funcionario> _filter = [];
 
   @override
   void initState() {
@@ -39,19 +51,52 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
           )
         : new Container();
     return Scaffold(
+        key: _key,
+        appBar: AppBar(
+          title: appBarTitle,
+          centerTitle: true,
+          actions: <Widget>[
+            new IconButton(
+              icon: actionIcon,
+              onPressed: () {
+                setState(() {
+                  if (this.actionIcon.icon == Icons.search) {
+                    this.actionIcon = new Icon(Icons.close);
+                    this.appBarTitle = new TextField(
+                      style: new TextStyle(
+                        color: Colors.white,
+                      ),
+                      controller: _search,
+                      decoration: new InputDecoration(
+                        prefixIcon: new Icon(Icons.search, color: Colors.white),
+                        hintText: "Search Name...",
+                        hintStyle: new TextStyle(color: Colors.white),
+                      ),
+                    );
+                  } else {
+                    _search.text = "";
+                    this.actionIcon = new Icon(Icons.search);
+                    this.appBarTitle = new Text("Lista de Funcionários");
+                  }
+                });
+              },
+            ),
+          ],
+        ),
+        drawer: DrawerMenu(widget.nome, widget.email, widget.status),
         body: WillPopScope(
-      child: (isLoading || funcionario == null)
-          ? new Align(
-              child: loadingIndicator,
-              alignment: FractionalOffset.center,
-            )
-          : ListView.builder(
-              padding: EdgeInsets.all(10.0),
-              itemCount: funcionario.length,
-              itemBuilder: (context, index) {
-                return _funcionarioCard(context, index);
-              }),
-    ));
+          child: (isLoading || funcionario == null)
+              ? new Align(
+                  child: loadingIndicator,
+                  alignment: FractionalOffset.center,
+                )
+              : ListView.builder(
+                  padding: EdgeInsets.all(10.0),
+                  itemCount: funcionario.length,
+                  itemBuilder: (context, index) {
+                    return _funcionarioCard(context, index);
+                  }),
+        ));
   }
 
   Widget _funcionarioCard(BuildContext context, int index) {
@@ -87,9 +132,8 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
     final recContact = await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => UpdateFunconario(
-                  funcionarios: funcionario,
-                )));
+            builder: (context) =>
+                UpdateFunconario(funcionario, widget.login_id)));
     if (recContact != null) {
       setState(() {
         isLoading = true;
@@ -222,8 +266,27 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
       setState(() {
         isLoading = false;
         funcionario = list;
-        debugPrint(funcionario.toString());
+        _filter = list;
       });
+    });
+  }
+
+  //Filtro Seach
+  _ListaFuncionarioState() {
+    _search.addListener(() {
+      if (_search.text.isEmpty) {
+        setState(() {
+          _queryResults = _filter;
+        });
+      } else {
+        setState(() {
+          _queryResults = _filter
+              .where((name) =>
+                  name.nome.toLowerCase().contains(_search.text.toLowerCase()))
+              .toList();
+        });
+      }
+      funcionario = _queryResults;
     });
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ordem_services/helper/funcionario_helper.dart';
-import 'package:ordem_services/utils/menu.dart';
 import 'package:ordem_services/ui_admin/funcionario/cadastro.dart';
 import 'package:ordem_services/ui_admin/funcionario/lista.dart';
 
@@ -27,8 +26,9 @@ class _TabBarFuncionarioState extends State<TabBarFuncionario> {
   //目前選擇頁索引值 index(Página) atual
   int _currentIndex = 0; //預設值
   List<Widget> pages() => [
-        ListaFuncionario(widget.api, widget.login_id),
-        CadastroFuncionario(),
+        ListaFuncionario(widget.api, widget.login_id, widget.nome, widget.email,
+            widget.status),
+        CadastroFuncionario(widget.nome, widget.email, widget.status),
       ];
 
   @override
@@ -42,12 +42,7 @@ class _TabBarFuncionarioState extends State<TabBarFuncionario> {
   Widget build(BuildContext context) {
     final List<Widget> page = pages();
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Cadastro de Funcionários'),
-        centerTitle: true,
-      ),
       body: page[_currentIndex],
-      drawer: DrawerMenu(widget.nome, widget.email, widget.status),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(

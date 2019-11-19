@@ -88,14 +88,50 @@ class _Information_ServicoState extends State<Information_Servico> {
                     children: <Widget>[
                       Container(
                         padding: EdgeInsets.only(top: 10.0),
-                        child:
-                            Text('cadastro: ' + item[index].cd_cadastro_pedido),
+                        child: Text('Tipo: ' + item[index].Tipo),
                       ),
                       Container(
                         padding: EdgeInsets.only(top: 10.0),
                         child: Text(
-                          'servico: ' + item[index].cd_servicos,
+                          'Status: ' + item[index].Status,
                         ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Text(
+                            'Cadastrado por: ' + item[index].Funcionario,
+                            style: TextStyle(color: Colors.indigoAccent)),
+                      ),
+                      Divider(),
+                      Container(
+                        child: Text('Marca: ' + item[index].Marca),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Text('Modelo: ' + item[index].Modelo),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Text('Defeito: ' + item[index].Defeito,
+                            style: TextStyle(color: Colors.indigoAccent)),
+                      ),
+                      Divider(),
+                      Container(
+                          child: Text('Descricao: ' + item[index].Descricao)),
+                      Container(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Text('Data: ' + item[index].Data_Cadastrado,
+                            style: TextStyle(color: Colors.indigoAccent)),
+                      ),
+                      Divider(),
+                      Container(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Text('Serviço feitos: ' + item[index].Servico),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Text('Valor: ' + item[index].Precos,
+                            style: TextStyle(color: Colors.indigoAccent)),
                       ),
                     ],
                   ),

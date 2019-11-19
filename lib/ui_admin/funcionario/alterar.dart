@@ -10,7 +10,7 @@ class UpdateFunconario extends StatefulWidget {
   final Funcionario funcionarios;
   final login_id;
 
-  UpdateFunconario({this.funcionarios, this.login_id});
+  UpdateFunconario(this.funcionarios, this.login_id);
 
   @override
   _UpdateFunconarioState createState() => _UpdateFunconarioState();

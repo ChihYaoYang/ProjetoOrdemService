@@ -31,6 +31,7 @@ class Cadastro_Pedido {
 
   //Rename inner join
   String Cliente;
+  String Email;
   String Tipo;
   String Status;
   String Funcionario;
@@ -48,6 +49,7 @@ class Cadastro_Pedido {
       this.descricao,
       //Rename inner join
       this.Cliente,
+      this.Email,
       this.Tipo,
       this.Status,
       this.Funcionario,
@@ -66,6 +68,7 @@ class Cadastro_Pedido {
         descricao: json['descricao'],
         //Rename inner join
         Cliente: json['Cliente'],
+        Email: json['Email'],
         Tipo: json['Tipo'],
         Status: json['Status'],
         Funcionario: json['Funcionario'],
@@ -85,6 +88,7 @@ class Cadastro_Pedido {
     data['descricao'] = this.descricao;
     //Rename inner join
     data['Cliente'] = this.Cliente;
+    data['Email'] = this.Email;
     data['Tipo'] = this.Tipo;
     data['Status'] = this.Status;
     data['Funcionario'] = this.Funcionario;
@@ -94,6 +98,6 @@ class Cadastro_Pedido {
 
   @override
   String toString() {
-    return "Cadastro_Pedido(id: $id, cd_cliente: $cd_cliente, cd_tipo: $cd_tipo, cd_status: $cd_status, cd_funcionario: $cd_funcionario, marca: $marca, modelo: $modelo, defeito: $defeito, descricao: $descricao,Cliente: $Cliente,Tipo: $Tipo,Status: $Status,Funcionario: $Funcionario, data_pedido: $data_pedido)";
+    return "Cadastro_Pedido(id: $id, cd_cliente: $cd_cliente, cd_tipo: $cd_tipo, cd_status: $cd_status, cd_funcionario: $cd_funcionario, marca: $marca, modelo: $modelo, defeito: $defeito, descricao: $descricao,Cliente: $Cliente,Email: $Email,Tipo: $Tipo,Status: $Status,Funcionario: $Funcionario, data_pedido: $data_pedido)";
   }
 }
