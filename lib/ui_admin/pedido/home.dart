@@ -182,7 +182,7 @@ class _HomePageState extends State<HomePage> {
           context,
           MaterialPageRoute(
               builder: (context) => Information_Servico(
-                  widget.api, pedido[index].id, pedido[index].Cliente)),
+                  widget.api,pedido[index].id, pedido[index].Cliente)),
         );
       },
     );
@@ -199,7 +199,7 @@ class _HomePageState extends State<HomePage> {
         isLoading = true;
       });
       if (pedido != null) {
-        await widget.api.atualizarPedido(recContact,widget.login_id);
+        await widget.api.atualizarPedido(recContact, widget.login_id);
       }
       _getAllPedidos();
     }
@@ -266,24 +266,6 @@ class _HomePageState extends State<HomePage> {
                 builder: (context) => CadastrarServicos(
                     pedido[index].id, widget.api, widget.login_id)));
       },
-    ));
-    botoes.add(FlatButton(
-      child: Row(
-        children: <Widget>[
-          Icon(Icons.edit, color: Colors.blueAccent),
-          Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    'Update Serviço',
-                    style: TextStyle(color: Colors.blueAccent, fontSize: 20.0),
-                  )
-                ],
-              ))
-        ],
-      ),
-      onPressed: () {},
     ));
     botoes.add(FlatButton(
       child: Row(

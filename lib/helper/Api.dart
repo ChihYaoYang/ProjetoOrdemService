@@ -11,6 +11,7 @@ import 'funcionario_helper.dart';
 import 'item_pedido_helper.dart';
 
 const BASE_URL = "https://ordemservices.000webhostapp.com/rest/";
+
 class Api {
   String token;
 
@@ -209,7 +210,9 @@ class Api {
       return false;
     }
   }
-  Future<Cadastro_Pedido> atualizarPedido(Cadastro_Pedido pedido,int login_id) async {
+
+  Future<Cadastro_Pedido> atualizarPedido(
+      Cadastro_Pedido pedido, int login_id) async {
     http.Response response = await http.put(BASE_URL + "Pedido/" + pedido.id,
         body: jsonEncode({
           "cd_tipo": pedido.cd_tipo,
@@ -227,6 +230,7 @@ class Api {
       return null;
     }
   }
+
 ///////////////////////////////////Item Pedido///////////////////////////////////////
   Future<List<Item_Pedido>> getItem(String codigo) async {
     http.Response response = await http.get(BASE_URL + 'Itempedido/' + codigo,
@@ -255,6 +259,29 @@ class Api {
     if (response.statusCode == 200) {
       Servicos dadosJson = new Servicos.fromJson(json.decode(response.body));
       return dadosJson;
+    } else {
+      return null;
+    }
+  }
+
+  Future<bool> deletarServico(String codigo) async {
+    http.Response response = await http.delete(BASE_URL + "Servico/" + codigo,
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<Item_Pedido> atualizarServicos(Item_Pedido item) async {
+    http.Response response = await http.put(
+        BASE_URL + "Servico/" + item.cd_servicos,
+        body: jsonEncode({"servico": item.Servico, "precos": item.Precos}),
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
+    if (response.statusCode == 200) {
+      return new Item_Pedido.fromJson(json.decode(response.body));
     } else {
       return null;
     }
