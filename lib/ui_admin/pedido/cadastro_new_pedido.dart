@@ -14,6 +14,7 @@ import 'package:ordem_services/utils/validator.dart';
 import 'package:random_string/random_string.dart';
 import 'package:validators/validators.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:io';
 
 class CadastroPedido extends StatefulWidget {
   final Api api;
@@ -62,6 +63,7 @@ class _CadastroPedidoState extends State<CadastroPedido> {
   @override
   void initState() {
     super.initState();
+    check();
     isLoading = true;
     _getAllType();
     _getAllStatus();
@@ -520,6 +522,7 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                         color: Colors.blueGrey,
                         textColor: Colors.white,
                         onPressed: () async {
+                          check();
                           if (_formkey.currentState.validate()) {
                             setState(() {
                               isLoading = true;
@@ -592,6 +595,25 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                   logado.status,
                   Api(token: logado.token))));
     }
+  }
+
+//Check connection
+  void check() async {
+    setState(() async {
+      try {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          print('connected');
+        }
+      } on SocketException catch (_) {
+        print("no connection ");
+        dialog.showAlertDialog(
+            context, 'Aviso', 'Please check your connection internet !');
+        setState(() {
+          isLoading = false;
+        });
+      }
+    });
   }
 
   _getAllType() async {

@@ -7,6 +7,7 @@ import 'package:ordem_services/helper/status_helper.dart';
 import 'package:ordem_services/helper/tipo_helper.dart';
 import 'package:ordem_services/tabbar.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
+import 'dart:io';
 
 class CadasrarPedido extends StatefulWidget {
   final Api api;
@@ -44,6 +45,7 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
   void initState() {
     super.initState();
     isLoading = true;
+    check();
     _getAllType();
     _getAllStatus();
     _getAllClientes();
@@ -401,6 +403,7 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
                           color: Colors.blueGrey,
                           textColor: Colors.white,
                           onPressed: () async {
+                            check();
                             if (_formkey.currentState.validate()) {
                               setState(() {
                                 isLoading = true;
@@ -454,6 +457,25 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
         type = list;
         debugPrint(type.toString());
       });
+    });
+  }
+
+  //Check connection
+  void check() async {
+    setState(() async {
+      try {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          print('connected');
+        }
+      } on SocketException catch (_) {
+        print("no connection ");
+        dialog.showAlertDialog(
+            context, 'Aviso', 'Please check your connection internet !');
+        setState(() {
+          isLoading = false;
+        });
+      }
     });
   }
 

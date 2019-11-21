@@ -6,10 +6,9 @@ import 'package:ordem_services/ui_admin/pedido/update.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
 import 'package:ordem_services/ui_admin/pedido/cadastrar_servicos.dart';
 import 'package:ordem_services/utils/menu.dart';
-
-import 'cadastro_pedido.dart';
 import 'infor_pedido.dart';
 import 'infor_servico.dart';
+import 'dart:io';
 
 class HomePage extends StatefulWidget {
   final Api api;
@@ -55,6 +54,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     isLoading = true;
+    check();
     _getAllPedidos();
   }
 
@@ -346,6 +346,24 @@ class _HomePageState extends State<HomePage> {
         pedido = list;
         _filter = list;
       });
+    });
+  }
+
+//  //Check connection
+  void check() async {
+    setState(() async {
+      try {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          print('connected');
+        }
+      } on SocketException catch (_) {
+        dialog.showAlertDialog(
+            context, 'Aviso', 'Please check your connection internet !');
+        setState(() {
+          isLoading = false;
+        });
+      }
     });
   }
 

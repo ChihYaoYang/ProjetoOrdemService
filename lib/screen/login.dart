@@ -6,6 +6,7 @@ import 'package:ordem_services/tabbar.dart';
 import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/ui_cliente/home_cliente.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
+import 'dart:io';
 
 class LoginPage extends StatefulWidget {
   final Login login;
@@ -33,6 +34,24 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     passwordVisible = true;
+  }
+
+  void check() async {
+    setState(() async {
+      try {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          print('connected');
+        }
+      } on SocketException catch (_) {
+        print("no connection ");
+        dialog.showAlertDialog(
+            context, 'Aviso', 'Please check your connection internet !');
+        setState(() {
+          isLoading = false;
+        });
+      }
+    });
   }
 
   @override
@@ -162,6 +181,8 @@ class _LoginPageState extends State<LoginPage> {
                               setState(() {
                                 isLoading = true;
                               });
+                              //check connection
+                              check();
                               Login user = await api.login(
                                   _emailController.text, _senhaController.text);
                               if (user != null) {

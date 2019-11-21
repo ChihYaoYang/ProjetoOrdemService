@@ -85,7 +85,7 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
         ),
         drawer: DrawerMenu(widget.nome, widget.email, widget.status),
         body: WillPopScope(
-          child: (isLoading || funcionario == null)
+          child: (isLoading)
               ? new Align(
                   child: loadingIndicator,
                   alignment: FractionalOffset.center,
