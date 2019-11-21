@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/helper/item_pedido_helper.dart';
-import 'package:ordem_services/helper/servicos_helper.dart';
 import 'package:ordem_services/ui_admin/pedido/updateservico.dart';
 
 class Information_Servico extends StatefulWidget {
@@ -29,7 +28,6 @@ class _Information_ServicoState extends State<Information_Servico> {
   void initState() {
     super.initState();
     isLoading = true;
-    print(widget.id);
     _getItem();
   }
 
@@ -175,7 +173,6 @@ class _Information_ServicoState extends State<Information_Servico> {
       setState(() {
         isLoading = false;
         item = list;
-//        debugPrint(item.toString());
       });
     });
   }

@@ -10,6 +10,7 @@ import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:flutter/services.dart';
 import 'package:random_string/random_string.dart';
 import 'package:ordem_services/tabbar_funcionario.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CadastroFuncionario extends StatefulWidget {
   String nome;
@@ -34,6 +35,11 @@ class _CadastroFuncionarioState extends State<CadastroFuncionario> {
   Funcionario funcionario;
   Funcionario _editedFuncionario;
   bool isLoading = false;
+
+//Enviar msg pelo whatsapp
+  var email;
+  var telefone;
+  var password;
 
   @override
   void initState() {
@@ -137,6 +143,7 @@ class _CadastroFuncionarioState extends State<CadastroFuncionario> {
                       ),
                     ),
                     onChanged: (text) {
+                      email = text;
                       _editedFuncionario.email = text;
                     },
                     controller: _emailController,
@@ -176,6 +183,7 @@ class _CadastroFuncionarioState extends State<CadastroFuncionario> {
                       ),
                     ),
                     onChanged: (text) {
+                      telefone = text;
                       _editedFuncionario.telefone = text;
                     },
                     controller: _telefoneController,
@@ -252,37 +260,29 @@ class _CadastroFuncionarioState extends State<CadastroFuncionario> {
                                 if (CPFValidator.isValid(_cpfController.text)) {
                                   _editedFuncionario.password =
                                       randomAlphaNumeric(8);
+                                  password = _editedFuncionario.password;
                                   //cadastro
                                   await api
                                       .cadastrarFuncionario(_editedFuncionario);
-                                  final snackBar = SnackBar(
-                                    duration: const Duration(minutes: 60),
-                                    content: Text("Senha: " +
-                                        _editedFuncionario.password),
-                                    action: SnackBarAction(
-                                      label: 'Copiar',
-                                      onPressed: () async {
-                                        Clipboard.setData(new ClipboardData(
-                                            text: _editedFuncionario.password));
-                                        Logado logado =
-                                            await helper.getLogado();
-                                        Navigator.pop(context);
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    TabBarFuncionario(
-                                                        logado.logado_login_id,
-                                                        logado.nome,
-                                                        logado.email,
-                                                        logado.status,
-                                                        Api(
-                                                            token: logado
-                                                                .token))));
-                                      },
-                                    ),
-                                  );
-                                  Scaffold.of(context).showSnackBar(snackBar);
+                                  //Enviar password pelo whatsapp
+                                  launch(
+                                      "whatsapp://send?text=Olá, aqui é o OS, baixe nosso aplicativo e faça login com seguintes dados: \n"
+                                      "Email: $email\n"
+                                      "Senha: $password\n"
+                                      "Ou Faça login pelo telefone\n"
+                                      "&phone=+55$telefone");
+                                  Logado logado = await helper.getLogado();
+                                  Navigator.pop(context);
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              TabBarFuncionario(
+                                                  logado.logado_login_id,
+                                                  logado.nome,
+                                                  logado.email,
+                                                  logado.status,
+                                                  Api(token: logado.token))));
                                 } else {
                                   setState(() {
                                     isLoading = false;

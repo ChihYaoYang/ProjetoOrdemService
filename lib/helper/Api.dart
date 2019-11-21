@@ -11,7 +11,6 @@ import 'funcionario_helper.dart';
 import 'item_pedido_helper.dart';
 
 const BASE_URL = "https://ordemservices.000webhostapp.com/rest/";
-
 class Api {
   String token;
 
@@ -111,6 +110,7 @@ class Api {
     http.Response response = await http.delete(BASE_URL + "Cliente/" + codigo,
         headers: {'token': token, 'Content-Type': 'application/json'});
     if (response.statusCode == 200) {
+      print(response.body);
       return true;
     } else {
       return false;

@@ -13,6 +13,7 @@ import 'package:ordem_services/utils/menu.dart';
 import 'package:ordem_services/utils/validator.dart';
 import 'package:random_string/random_string.dart';
 import 'package:validators/validators.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CadastroPedido extends StatefulWidget {
   final Api api;
@@ -37,6 +38,7 @@ class _CadastroPedidoState extends State<CadastroPedido> {
   final _modeloController = TextEditingController();
   final _defeitoController = TextEditingController();
   final _descricaoController = TextEditingController();
+
   Dialogs dialog = new Dialogs();
   LoginHelper helper = LoginHelper();
   Cadastro_Pedido pedido;
@@ -44,6 +46,11 @@ class _CadastroPedidoState extends State<CadastroPedido> {
   Cliente cliente;
   Cliente _editedcliente;
   bool isLoading = false;
+
+//Enviar msg pelo whatsapp
+  var email;
+  var telefone;
+  var password;
 
   //DropDown
   String _dropdownError;
@@ -167,6 +174,7 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                     ),
                   ),
                   onChanged: (text) {
+                    email = text;
                     _editedcliente.email = text;
                   },
                   controller: _emailController,
@@ -203,6 +211,7 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                     ),
                   ),
                   onChanged: (text) {
+                    telefone = text;
                     _editedcliente.telefone = text;
                   },
                   controller: _telefoneController,
@@ -560,31 +569,28 @@ class _CadastroPedidoState extends State<CadastroPedido> {
     if (_isValid) {
       //gerar senha aleatorio
       _editedcliente.password = randomAlphaNumeric(8);
+      password = _editedcliente.password;
       //cadastro
       await widget.api
           .cadastrarNewPedido(_editedcliente, _editedpedido, widget.login_id);
-      final snackBar = SnackBar(
-        duration: const Duration(minutes: 60),
-        content: Text("Senha: " + _editedcliente.password),
-        action: SnackBarAction(
-          label: 'Copiar',
-          onPressed: () async {
-            Clipboard.setData(new ClipboardData(text: _editedcliente.password));
-            Logado logado = await helper.getLogado();
-            Navigator.pop(context);
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => TabBarMenu(
-                        logado.logado_login_id,
-                        logado.nome,
-                        logado.email,
-                        logado.status,
-                        Api(token: logado.token))));
-          },
-        ),
-      );
-      Scaffold.of(context).showSnackBar(snackBar);
+//      Enviar password pelo whatsapp
+      launch(
+          "whatsapp://send?text=Olá, aqui é o OS, baixe nosso aplicativo e faça login com seguintes dados: \n"
+          "Email: $email\n"
+          "Senha: $password\n"
+          "Ou Faça login pelo telefone\n"
+          "&phone=+55$telefone");
+      Logado logado = await helper.getLogado();
+      Navigator.pop(context);
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => TabBarMenu(
+                  logado.logado_login_id,
+                  logado.nome,
+                  logado.email,
+                  logado.status,
+                  Api(token: logado.token))));
     }
   }
 

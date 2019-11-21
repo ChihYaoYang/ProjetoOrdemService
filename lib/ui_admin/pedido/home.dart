@@ -182,7 +182,7 @@ class _HomePageState extends State<HomePage> {
           context,
           MaterialPageRoute(
               builder: (context) => Information_Servico(
-                  widget.api,pedido[index].id, pedido[index].Cliente)),
+                  widget.api, pedido[index].id, pedido[index].Cliente)),
         );
       },
     );
@@ -276,7 +276,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: <Widget>[
                   Text(
-                    'Update Pedido',
+                    'Editar Pedido',
                     style: TextStyle(color: Colors.blueAccent, fontSize: 20.0),
                   )
                 ],
