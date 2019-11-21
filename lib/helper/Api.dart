@@ -10,16 +10,33 @@ import 'cliente_helper.dart';
 import 'funcionario_helper.dart';
 import 'item_pedido_helper.dart';
 
-const BASE_URL = "https://ordemservices.000webhostapp.com/rest/";
+//const BASE_URL = "https://ordemservices.000webhostapp.com/rest/";
+const BASE_URL = "http://192.168.0.152/REST_OS/rest/";
 class Api {
   String token;
 
   Api({this.token});
 
+///////////////////////////////////Login//////////////////////////////////////////////
   Future<Login> login(String email, String senha) async {
     http.Response response = await http.post(BASE_URL + "Login/login",
         body: jsonEncode({"password": senha, "email": email}),
         headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
+    if (response.statusCode == 200) {
+      print(response.body);
+      Login dadosJson = new Login.fromMap(json.decode(response.body));
+      return dadosJson;
+    } else {
+      return null;
+    }
+  }
+
+  Future<Login> loginPhone(String telefone) async {
+    http.Response response = await http.post(BASE_URL + "Login/loginphone",
+        body: jsonEncode({"telefone": telefone}),
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
     if (response.statusCode == 200) {
       print(response.body);
       Login dadosJson = new Login.fromMap(json.decode(response.body));

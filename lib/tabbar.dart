@@ -4,6 +4,7 @@ import 'package:ordem_services/ui_admin/pedido/cadastro_pedido.dart';
 import 'package:ordem_services/ui_admin/pedido/home.dart';
 import 'package:ordem_services/ui_admin/pedido/cadastro_new_pedido.dart';
 import 'package:ordem_services/helper/Api.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 class TabBarMenu extends StatefulWidget {
   final Api api;
@@ -40,21 +41,19 @@ class _TabBarMenuState extends State<TabBarMenu> {
     final List<Widget> page = pages();
     return Scaffold(
       body: page[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: Icon(Icons.list), title: Text('Lista de Pedido')),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.edit), title: Text('New Pedido')),
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: Colors.white,
+        items: <Widget>[
+          Icon(Icons.list, size: 30),
+          Icon(Icons.edit, size: 30),
         ],
-        currentIndex: _currentIndex, //目前選擇頁索引值 index(Página) atual
-        fixedColor: Colors.amber, //選擇頁顏色
+        color: Colors.blueAccent,
         onTap: (int index) {
-          //BottomNavigationBar 按下處理事件，更新設定當下索引值
           setState(() {
             _currentIndex = index;
+            print(_currentIndex);
           });
-        }, //BottomNavigationBar 按下處理事件
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: (page[0] == page[_currentIndex])

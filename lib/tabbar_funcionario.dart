@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ordem_services/helper/funcionario_helper.dart';
 import 'package:ordem_services/ui_admin/funcionario/cadastro.dart';
 import 'package:ordem_services/ui_admin/funcionario/lista.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 import 'helper/Api.dart';
 
@@ -43,21 +44,19 @@ class _TabBarFuncionarioState extends State<TabBarFuncionario> {
     final List<Widget> page = pages();
     return Scaffold(
       body: page[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: Icon(Icons.list), title: Text('Lista de Funcionário')),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.edit), title: Text('Cadastrar Funcionário')),
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: Colors.white,
+        items: <Widget>[
+          Icon(Icons.list, size: 30),
+          Icon(Icons.edit, size: 30),
         ],
-        currentIndex: _currentIndex, //目前選擇頁索引值 index(Página) atual
-        fixedColor: Colors.green, //選擇頁顏色
+        color: Colors.greenAccent,
         onTap: (int index) {
-          //BottomNavigationBar 按下處理事件，更新設定當下索引值
           setState(() {
             _currentIndex = index;
+            print(_currentIndex);
           });
-        }, //BottomNavigationBar 按下處理事件
+        },
       ),
     );
   }

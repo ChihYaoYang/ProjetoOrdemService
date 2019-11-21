@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
 
   //Filtro Search
   final _key = new GlobalKey<ScaffoldState>();
-  Widget appBarTitle = new Text("OS");
+  Widget appBarTitle = new Text("Lista de Pedido");
   Icon actionIcon = new Icon(Icons.search);
   final _search = TextEditingController();
 
@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                 } else {
                   _search.text = "";
                   this.actionIcon = new Icon(Icons.search);
-                  this.appBarTitle = new Text("OS");
+                  this.appBarTitle = new Text("Lista de Pedido");
                 }
               });
             },

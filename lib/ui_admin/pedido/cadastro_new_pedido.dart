@@ -96,7 +96,7 @@ class _CadastroPedidoState extends State<CadastroPedido> {
         : new Container();
     return Scaffold(
       appBar: AppBar(
-        title: Text('OS'),
+        title: Text('New Pedido'),
         centerTitle: true,
       ),
       drawer: DrawerMenu(widget.nome, widget.email, widget.status),

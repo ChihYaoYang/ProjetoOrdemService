@@ -1,27 +1,24 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:ordem_services/helper/login_helper.dart';
-import 'package:ordem_services/tabbar.dart';
 import 'package:ordem_services/helper/Api.dart';
+import 'package:ordem_services/helper/login_helper.dart';
 import 'package:ordem_services/ui_cliente/home_cliente.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
 
-class LoginPage extends StatefulWidget {
+import '../tabbar.dart';
+
+class LoginPage2 extends StatefulWidget {
   final Login login;
   final Api api;
 
-  LoginPage({this.login, this.api});
+  LoginPage2({this.login, this.api});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginPage2State createState() => _LoginPage2State();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPage2State extends State<LoginPage2> {
   GlobalKey<FormState> _formkey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _senhaController = TextEditingController();
-  bool passwordVisible;
+  final _phoneController = TextEditingController();
   bool isLoading = false;
 
   LoginHelper helper = LoginHelper();
@@ -32,7 +29,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    passwordVisible = true;
   }
 
   @override
@@ -61,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
                 padding: EdgeInsets.only(top: 10.0),
                 margin: EdgeInsets.only(left: 20.0, right: 20.0),
                 child: TextFormField(
-                  keyboardType: TextInputType.emailAddress,
+                  keyboardType: TextInputType.number,
                   style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     enabledBorder: UnderlineInputBorder(
@@ -69,63 +65,17 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     filled: true,
                     fillColor: Colors.red.withOpacity(0.25),
-                    hintText: " Digite seu email",
+                    hintText: " Digite seu Telefone",
                     hintStyle: TextStyle(color: Colors.white),
                     prefixIcon: Container(
                       child: Icon(
-                        Icons.account_circle,
+                        Icons.phone,
                         color: Colors.white,
                       ),
                       color: Colors.redAccent,
                     ),
                   ),
-                  controller: _emailController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  style: TextStyle(color: Colors.white),
-                  obscureText: passwordVisible,
-                  decoration: InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.red.withOpacity(0.25),
-                    hintText: " Digite a Senha",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.vpn_key,
-                        color: Colors.white,
-                      ),
-                      color: Colors.redAccent,
-                    ),
-                    suffixIcon: Container(
-                      child: IconButton(
-                        icon: Icon(
-                          passwordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            passwordVisible = !passwordVisible;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                  controller: _senhaController,
+                  controller: _phoneController,
                   validator: (value) {
                     if (value.isEmpty) {
                       return "Campo obrigatório !";
@@ -162,8 +112,8 @@ class _LoginPageState extends State<LoginPage> {
                               setState(() {
                                 isLoading = true;
                               });
-                              Login user = await api.login(
-                                  _emailController.text, _senhaController.text);
+                              Login user =
+                                  await api.loginPhone(_phoneController.text);
                               if (user != null) {
                                 helper.saveLogado(user.id, user.nome,
                                     user.email, user.status, user.token);

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ordem_services/helper/Api.dart';
-import 'package:ordem_services/screen/login.dart';
 import 'package:ordem_services/tabbar.dart';
 import 'package:ordem_services/tabbar_funcionario.dart';
 import 'package:ordem_services/helper/login_helper.dart';
+import 'package:ordem_services/tabbar_login.dart';
 import 'package:ordem_services/ui_admin/cliente/lista.dart';
 
 class DrawerMenu extends StatefulWidget {
@@ -159,7 +159,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
               await helperLog.deleteLogado();
               Navigator.pop(context);
               await Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => LoginPage()));
+                  MaterialPageRoute(builder: (context) => TabBarLogin()));
             },
           ),
         ],
