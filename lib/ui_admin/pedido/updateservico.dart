@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/helper/item_pedido_helper.dart';
+import 'package:ordem_services/utils/Dialogs.dart';
+import 'package:ordem_services/utils/connect.dart';
 
 class AlterarServico extends StatefulWidget {
   final Item_Pedido itens;
@@ -21,6 +23,9 @@ class _AlterarServicoState extends State<AlterarServico> {
   bool _userEdited = false;
   Item_Pedido itens;
   Item_Pedido _editeditens;
+
+  Dialogs dialog = new Dialogs();
+  Connect connect = new Connect();
 
   @override
   void initState() {
@@ -153,7 +158,16 @@ class _AlterarServicoState extends State<AlterarServico> {
                     onPressed: () async {
                       FocusScope.of(context).requestFocus(new FocusNode());
                       if (_formkey.currentState.validate()) {
-                        Navigator.pop(context, _editeditens);
+                        connect.check().then((intenet) {
+                          if (intenet != null && intenet) {
+                            print("connect");
+                            Navigator.pop(context, _editeditens);
+                          } else {
+                            print("no connect");
+                            dialog.showAlertDialog(context, 'Aviso',
+                                'Please check your connection and try again !');
+                          }
+                        });
                       }
                     },
                   ),

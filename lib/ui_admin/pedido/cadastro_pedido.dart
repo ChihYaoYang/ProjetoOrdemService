@@ -46,11 +46,21 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
   void initState() {
     super.initState();
     isLoading = true;
-    //Check connection
-    check();
-    _getAllType();
-    _getAllStatus();
-    _getAllClientes();
+    connect.check().then((intenet) {
+      if (intenet != null && intenet) {
+        print("connect");
+        _getAllType();
+        _getAllStatus();
+        _getAllClientes();
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        print("no connect");
+        dialog.showAlertDialog(
+            context, 'Aviso', 'Please check your connection and try again !');
+      }
+    });
     if (pedido == null) {
       _editedpedido = Cadastro_Pedido();
     } else {
@@ -422,7 +432,7 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
     );
   }
 
-  _validateForm() async {
+  _validateForm() {
     bool _isValid = _formkey.currentState.validate();
     if (_selectedClient == null ||
         _selectedtype == null ||
@@ -431,28 +441,38 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
       _isValid = false;
     }
     if (_isValid) {
-      if (await widget.api.cadastrarPedido(_editedpedido, widget.login_id) !=
-          null) {
-        Logado logado = await helper.getLogado();
-        Navigator.pop(context);
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => TabBarMenu(
-                    logado.logado_login_id,
-                    logado.nome,
-                    logado.email,
-                    logado.status,
-                    Api(token: logado.token))));
-      } else {
-        setState(() {
-          isLoading = false;
-        });
-        dialog.showAlertDialog(context, 'Aviso', 'Falhao ao cadastrar pedidos');
-      }
-    } else {
-      setState(() {
-        isLoading = false;
+      connect.check().then((intenet) async {
+        if (intenet != null && intenet) {
+          print("connect");
+          if (await widget.api
+                  .cadastrarPedido(_editedpedido, widget.login_id) !=
+              null) {
+            Logado logado = await helper.getLogado();
+            Navigator.pop(context);
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TabBarMenu(
+                        logado.logado_login_id,
+                        logado.nome,
+                        logado.email,
+                        logado.status,
+                        Api(token: logado.token))));
+          } else {
+            setState(() {
+              isLoading = false;
+            });
+            dialog.showAlertDialog(
+                context, 'Aviso', 'Falhao ao cadastrar pedidos');
+          }
+        } else {
+          setState(() {
+            isLoading = false;
+          });
+          print("no connect");
+          dialog.showAlertDialog(
+              context, 'Aviso', 'Please check your connection and try again !');
+        }
       });
     }
   }
@@ -460,32 +480,17 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
   _getAllType() async {
     await widget.api.getType().then((list) {
       setState(() {
-        isLoading = false;
         type = list;
-        debugPrint(type.toString());
+        isLoading = false;
       });
-    });
-  }
-
-  //Check connection
-  void check() {
-    connect.check().then((intenet) {
-      if (intenet != null && intenet) {
-        print("connect");
-      } else {
-        print("no connect");
-        dialog.showAlertDialog(
-            context, 'Aviso', 'Please check your connection internet !');
-      }
     });
   }
 
   _getAllStatus() async {
     await widget.api.getStatus().then((list) {
       setState(() {
-        isLoading = false;
         status = list;
-        debugPrint(status.toString());
+        isLoading = false;
       });
     });
   }
@@ -493,9 +498,8 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
   _getAllClientes() async {
     await widget.api.getCliente().then((list) {
       setState(() {
-        isLoading = false;
         client = list;
-        debugPrint(client.toString());
+        isLoading = false;
       });
     });
   }

@@ -5,6 +5,7 @@ import 'package:ordem_services/helper/login_helper.dart';
 import 'package:ordem_services/helper/status_helper.dart';
 import 'package:ordem_services/helper/tipo_helper.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
+import 'package:ordem_services/utils/connect.dart';
 
 class AlterarPedido extends StatefulWidget {
   final Cadastro_Pedido pedidos;
@@ -24,6 +25,7 @@ class _AlterarPedidoState extends State<AlterarPedido> {
   final _defeitoController = TextEditingController();
   final _descricaoController = TextEditingController();
   Dialogs dialog = new Dialogs();
+  Connect connect = new Connect();
   LoginHelper helper = LoginHelper();
   Cadastro_Pedido pedido;
   Cadastro_Pedido _editedpedido;
@@ -41,8 +43,20 @@ class _AlterarPedidoState extends State<AlterarPedido> {
   void initState() {
     super.initState();
     isLoading = true;
-    _getAllType();
-    _getAllStatus();
+    connect.check().then((intenet) {
+      if (intenet != null && intenet) {
+        print("connect");
+        _getAllType();
+        _getAllStatus();
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        print("no connect");
+        dialog.showAlertDialog(
+            context, 'Aviso', 'Please check your connection and try again !');
+      }
+    });
     if (widget.pedidos == null) {
       _editedpedido = Cadastro_Pedido();
     } else {
@@ -370,10 +384,18 @@ class _AlterarPedidoState extends State<AlterarPedido> {
       _isValid = false;
     }
     if (_isValid) {
-      Navigator.pop(context, _editedpedido);
-    } else {
-      setState(() {
-        isLoading = false;
+      connect.check().then((intenet) {
+        if (intenet != null && intenet) {
+          print("connect");
+          Navigator.pop(context, _editedpedido);
+        } else {
+          setState(() {
+            isLoading = false;
+          });
+          print("no connect");
+          dialog.showAlertDialog(
+              context, 'Aviso', 'Please check your connection and try again !');
+        }
       });
     }
   }
@@ -381,8 +403,8 @@ class _AlterarPedidoState extends State<AlterarPedido> {
   _getAllType() async {
     await widget.api.getType().then((list) {
       setState(() {
-        isLoading = false;
         type = list;
+        isLoading = false;
       });
     });
   }
@@ -390,8 +412,8 @@ class _AlterarPedidoState extends State<AlterarPedido> {
   _getAllStatus() async {
     await widget.api.getStatus().then((list) {
       setState(() {
-        isLoading = false;
         status = list;
+        isLoading = false;
       });
     });
   }

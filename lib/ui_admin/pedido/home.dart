@@ -55,8 +55,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     isLoading = true;
-    //check connection
-    check();
     _getAllPedidos();
   }
 
@@ -208,15 +206,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showOptions(BuildContext context, int index) {
-    Widget loadingIndicator = isLoading
-        ? new Container(
-            width: 70.0,
-            height: 70.0,
-            child: new Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: new Center(child: new CircularProgressIndicator())),
-          )
-        : new Container();
     List<Widget> botoes = [];
     botoes.add(FlatButton(
       child: Row(
@@ -326,18 +315,34 @@ class _HomePageState extends State<HomePage> {
                 actions: <Widget>[
                   FlatButton(
                     child: Text('Sim'),
-                    onPressed: () async {
-                      if (await widget.api.deletarPedido(pedido[index].id) ==
-                          true) {
-                        setState(() {
-                          Navigator.pop(context);
-                          pedido.removeAt(index);
-                          Navigator.pop(context);
-                        });
-                      } else {
-                        dialog.showAlertDialog(
-                            context, 'Aviso', 'Falha ao deletar');
-                      }
+                    onPressed: () {
+                      connect.check().then((intenet) async {
+                        if (intenet != null && intenet) {
+                          print("connect");
+                          dialog.msg(context, 'Aviso', 'Aguarde ...');
+                          if (await widget.api
+                                  .deletarPedido(pedido[index].id) ==
+                              true) {
+                            setState(() {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              pedido.removeAt(index);
+                              Navigator.pop(context);
+                            });
+                          } else {
+                            Navigator.pop(context);
+                            dialog.showAlertDialog(
+                                context, 'Aviso', 'Falha ao deletar');
+                          }
+                        } else {
+                          setState(() {
+                            isLoading = false;
+                          });
+                          print("no connect");
+                          dialog.showAlertDialog(context, 'Aviso',
+                              'Please check your connection and try again !');
+                        }
+                      });
                     },
                   ),
                   FlatButton(
@@ -355,25 +360,24 @@ class _HomePageState extends State<HomePage> {
     dialog.showBottomOptions(context, botoes);
   }
 
-  _getAllPedidos() async {
-    await widget.api.getPedido().then((list) {
-      setState(() {
-        isLoading = false;
-        pedido = list;
-        _filter = list;
-      });
-    });
-  }
-
-//  //Check connection
-  void check() {
-    connect.check().then((intenet) {
+  _getAllPedidos() {
+    connect.check().then((intenet) async {
       if (intenet != null && intenet) {
         print("connect");
+        await widget.api.getPedido().then((list) {
+          setState(() {
+            pedido = list;
+            _filter = list;
+            isLoading = false;
+          });
+        });
       } else {
+        setState(() {
+          isLoading = false;
+        });
         print("no connect");
         dialog.showAlertDialog(
-            context, 'Aviso', 'Please check your connection internet !');
+            context, 'Aviso', 'Please check your connection and try again !');
       }
     });
   }

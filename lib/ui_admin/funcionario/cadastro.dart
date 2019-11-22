@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/helper/funcionario_helper.dart';
 import 'package:ordem_services/helper/login_helper.dart';
+import 'package:ordem_services/utils/connect.dart';
 import 'package:ordem_services/utils/menu.dart';
 import 'package:ordem_services/utils/validator.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
@@ -31,6 +32,7 @@ class _CadastroFuncionarioState extends State<CadastroFuncionario> {
   final _cpfController = MaskedTextController(mask: '000.000.000-00');
   LoginHelper helper = LoginHelper();
   Dialogs dialog = new Dialogs();
+  Connect connect = new Connect();
   Api api = new Api();
   Funcionario funcionario;
   Funcionario _editedFuncionario;
@@ -250,7 +252,7 @@ class _CadastroFuncionarioState extends State<CadastroFuncionario> {
                         child: Text("Cadastrar"),
                         color: Colors.blueGrey,
                         textColor: Colors.white,
-                        onPressed: () async {
+                        onPressed: () {
                           if (_formkey.currentState.validate()) {
                             setState(() {
                               isLoading = true;
@@ -258,39 +260,54 @@ class _CadastroFuncionarioState extends State<CadastroFuncionario> {
                             if (isEmail(_emailController.text)) {
                               if (isNumeric(_telefoneController.text)) {
                                 if (CPFValidator.isValid(_cpfController.text)) {
-                                  _editedFuncionario.password =
-                                      randomAlphaNumeric(8);
-                                  password = _editedFuncionario.password;
-                                  //cadastro
-                                  if (await api.cadastrarFuncionario(
-                                          _editedFuncionario) !=
-                                      null) {
-                                    //Enviar password pelo whatsapp
-                                    launch(
-                                        "whatsapp://send?text=Olá, aqui é o OS, baixe nosso aplicativo e faça login com seguintes dados: \n"
-                                        "Email: $email\n"
-                                        "Senha: $password\n"
-                                        "Ou Faça login pelo telefone\n"
-                                        "&phone=+55$telefone");
-                                    Logado logado = await helper.getLogado();
-                                    Navigator.pop(context);
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                TabBarFuncionario(
-                                                    logado.logado_login_id,
-                                                    logado.nome,
-                                                    logado.email,
-                                                    logado.status,
-                                                    Api(token: logado.token))));
-                                  } else {
-                                    setState(() {
-                                      isLoading = false;
-                                    });
-                                    dialog.showAlertDialog(context, 'Aviso',
-                                        'Funcionário não cadastrado verifica se o email já está cadastrado');
-                                  }
+                                  connect.check().then((intenet) async {
+                                    if (intenet != null && intenet) {
+                                      print("connect");
+                                      _editedFuncionario.password =
+                                          randomAlphaNumeric(8);
+                                      password = _editedFuncionario.password;
+                                      //cadastro
+                                      if (await api.cadastrarFuncionario(
+                                              _editedFuncionario) !=
+                                          null) {
+                                        //Enviar password pelo whatsapp
+                                        launch(
+                                            "whatsapp://send?text=Olá, aqui é o OS, baixe nosso aplicativo e faça login com seguintes dados: \n"
+                                            "Email: $email\n"
+                                            "Senha: $password\n"
+                                            "Ou Faça login pelo telefone\n"
+                                            "&phone=+55$telefone");
+                                        Logado logado =
+                                            await helper.getLogado();
+                                        Navigator.pop(context);
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TabBarFuncionario(
+                                                        logado.logado_login_id,
+                                                        logado.nome,
+                                                        logado.email,
+                                                        logado.status,
+                                                        Api(
+                                                            token: logado
+                                                                .token))));
+                                      } else {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                        dialog.showAlertDialog(context, 'Aviso',
+                                            'Funcionário não cadastrado verifica se o email já está cadastrado');
+                                      }
+                                    } else {
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                      print("no connect");
+                                      dialog.showAlertDialog(context, 'Aviso',
+                                          'Please check your connection and try again !');
+                                    }
+                                  });
                                 } else {
                                   setState(() {
                                     isLoading = false;

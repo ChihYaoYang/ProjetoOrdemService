@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:ordem_services/helper/cliente_helper.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
+import 'package:ordem_services/utils/connect.dart';
 import 'package:ordem_services/utils/validator.dart';
 import 'package:validators/validators.dart';
 
@@ -25,6 +26,7 @@ class _UpdateClienteState extends State<UpdateCliente> {
   final _cpfController = MaskedTextController(mask: '000.000.000-00');
 
   Dialogs dialog = new Dialogs();
+  Connect connect = new Connect();
   Cliente _editedCliente;
   bool passwordVisible;
   bool _userEdited = false;
@@ -281,7 +283,16 @@ class _UpdateClienteState extends State<UpdateCliente> {
                         if (isEmail(_emailController.text)) {
                           if (isNumeric(_telefoneController.text)) {
                             if (CPFValidator.isValid(_cpfController.text)) {
-                              Navigator.pop(context, _editedCliente);
+                              connect.check().then((intenet) {
+                                if (intenet != null && intenet) {
+                                  print("connect");
+                                  Navigator.pop(context, _editedCliente);
+                                } else {
+                                  print("no connect");
+                                  dialog.showAlertDialog(context, 'Aviso',
+                                      'Please check your connection and try again !');
+                                }
+                              });
                             } else {
                               dialog.showAlertDialog(
                                   context, 'Aviso', 'Preencher com CPF válido');

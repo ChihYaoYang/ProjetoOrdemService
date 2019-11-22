@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/helper/funcionario_helper.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
+import 'package:ordem_services/utils/connect.dart';
 import 'package:ordem_services/utils/menu.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ordem_services/ui_admin/funcionario/alterar.dart';
@@ -22,6 +23,7 @@ class ListaFuncionario extends StatefulWidget {
 class _ListaFuncionarioState extends State<ListaFuncionario> {
   List<Funcionario> funcionario = List();
   Dialogs dialog = new Dialogs();
+  Connect connect = new Connect();
   bool isLoading = false;
 
   //Filtro Search
@@ -36,7 +38,19 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
   void initState() {
     super.initState();
     isLoading = true;
-    _getAllFuncionarios();
+    connect.check().then((intenet) {
+      if (intenet != null && intenet) {
+        print("connect");
+        _getAllFuncionarios();
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        print("no connect");
+        dialog.showAlertDialog(
+            context, 'Aviso', 'Please check your connection and try again !');
+      }
+    });
   }
 
   @override
@@ -237,19 +251,34 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
                 actions: <Widget>[
                   FlatButton(
                     child: Text('Sim'),
-                    onPressed: () async {
-                      if (await widget.api
-                              .deletarFuncionario(funcionario[index].id) ==
-                          true) {
-                        setState(() {
-                          Navigator.pop(context);
-                          funcionario.removeAt(index);
-                          Navigator.pop(context);
-                        });
-                      } else {
-                        dialog.showAlertDialog(
-                            context, 'Aviso', 'Falha ao deletar');
-                      }
+                    onPressed: () {
+                      connect.check().then((intenet) async {
+                        if (intenet != null && intenet) {
+                          print("connect");
+                          dialog.msg(context, 'Aviso', 'Aguarde ...');
+                          if (await widget.api
+                                  .deletarFuncionario(funcionario[index].id) ==
+                              true) {
+                            setState(() {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              funcionario.removeAt(index);
+                              Navigator.pop(context);
+                            });
+                          } else {
+                            Navigator.pop(context);
+                            dialog.showAlertDialog(
+                                context, 'Aviso', 'Falha ao deletar');
+                          }
+                        } else {
+                          setState(() {
+                            isLoading = false;
+                          });
+                          print("no connect");
+                          dialog.showAlertDialog(context, 'Aviso',
+                              'Please check your connection and try again !');
+                        }
+                      });
                     },
                   ),
                   FlatButton(
@@ -270,9 +299,9 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
   _getAllFuncionarios() async {
     widget.api.getfuncionario().then((list) {
       setState(() {
-        isLoading = false;
         funcionario = list;
         _filter = list;
+        isLoading = false;
       });
     });
   }

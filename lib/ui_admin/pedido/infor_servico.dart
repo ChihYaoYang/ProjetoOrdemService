@@ -4,6 +4,7 @@ import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/helper/item_pedido_helper.dart';
 import 'package:ordem_services/ui_admin/pedido/updateservico.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
+import 'package:ordem_services/utils/connect.dart';
 
 class Information_Servico extends StatefulWidget {
   final Api api;
@@ -23,13 +24,26 @@ class Information_Servico extends StatefulWidget {
 class _Information_ServicoState extends State<Information_Servico> {
   List<Item_Pedido> item = List();
   Dialogs dialog = new Dialogs();
+  Connect connect = new Connect();
   bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
     isLoading = true;
-    _getItem();
+    connect.check().then((intenet) {
+      if (intenet != null && intenet) {
+        print("connect");
+        _getItem();
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        print("no connect");
+        dialog.showAlertDialog(
+            context, 'Aviso', 'Please check your connection and try again !');
+      }
+    });
   }
 
   @override
@@ -140,18 +154,36 @@ class _Information_ServicoState extends State<Information_Servico> {
                                   actions: <Widget>[
                                     FlatButton(
                                       child: Text('Sim'),
-                                      onPressed: () async {
-                                        if (await widget.api.deletarServico(
-                                                item[index].cd_servicos) ==
-                                            true) {
-                                          setState(() {
-                                            item.removeAt(index);
-                                            Navigator.pop(context);
-                                          });
-                                        } else {
-                                          dialog.showAlertDialog(context,
-                                              'Aviso', 'Falha ao deletar');
-                                        }
+                                      onPressed: () {
+                                        connect.check().then((intenet) async {
+                                          if (intenet != null && intenet) {
+                                            print("connect");
+                                            dialog.msg(context, 'Aviso',
+                                                'Aguarde ...');
+                                            if (await widget.api.deletarServico(
+                                                    item[index].cd_servicos) ==
+                                                true) {
+                                              setState(() {
+                                                Navigator.pop(context);
+                                                item.removeAt(index);
+                                                Navigator.pop(context);
+                                              });
+                                            } else {
+                                              Navigator.pop(context);
+                                              dialog.showAlertDialog(context,
+                                                  'Aviso', 'Falha ao deletar');
+                                            }
+                                          } else {
+                                            setState(() {
+                                              isLoading = false;
+                                            });
+                                            print("no connect");
+                                            dialog.showAlertDialog(
+                                                context,
+                                                'Aviso',
+                                                'Please check your connection and try again !');
+                                          }
+                                        });
                                       },
                                     ),
                                     FlatButton(
@@ -177,8 +209,8 @@ class _Information_ServicoState extends State<Information_Servico> {
   _getItem() async {
     await widget.api.getItem(widget.id).then((list) {
       setState(() {
-        isLoading = false;
         item = list;
+        isLoading = false;
       });
     });
   }

@@ -29,26 +29,15 @@ class _LoginPageState extends State<LoginPage> {
   Api api = new Api();
   List<Login> login = List();
 
-  //Connect
   Dialogs dialog = new Dialogs();
+
+  //Connect
   Connect connect = new Connect();
 
   @override
   void initState() {
     super.initState();
     passwordVisible = true;
-  }
-
-  void check() {
-    connect.check().then((intenet) {
-      if (intenet != null && intenet) {
-        print("connect");
-      } else {
-        print("no connect");
-        dialog.showAlertDialog(
-            context, 'Aviso', 'Please check your connection internet !');
-      }
-    });
   }
 
   @override
@@ -171,49 +160,60 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           color: Colors.red,
                           textColor: Colors.white,
-                          onPressed: () async {
+                          onPressed: () {
                             FocusScope.of(context)
                                 .requestFocus(new FocusNode());
-                            //check connection
-                            check();
                             if (_formkey.currentState.validate()) {
                               setState(() {
                                 isLoading = true;
                               });
-                              Login user = await api.login(
-                                  _emailController.text, _senhaController.text);
-                              if (user != null) {
-                                helper.saveLogado(user.id, user.nome,
-                                    user.email, user.status, user.token);
-                                Logado logado = await helper.getLogado();
-                                if (logado.status == 1) {
-                                  Navigator.pop(context);
-                                  await Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => TabBarMenu(
-                                              user.id,
-                                              user.nome,
-                                              user.email,
-                                              user.status,
-                                              Api(token: user.token))));
-                                } else if (logado.status == 2) {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => HomeCliente(
-                                              user.id,
-                                              user.nome,
-                                              user.email,
-                                              user.status)));
+                              connect.check().then((intenet) async {
+                                if (intenet != null && intenet) {
+                                  print("connect");
+                                  Login user = await api.login(
+                                      _emailController.text,
+                                      _senhaController.text);
+                                  if (user != null) {
+                                    helper.saveLogado(user.id, user.nome,
+                                        user.email, user.status, user.token);
+                                    Logado logado = await helper.getLogado();
+                                    if (logado.status == 1) {
+                                      Navigator.pop(context);
+                                      await Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => TabBarMenu(
+                                                  user.id,
+                                                  user.nome,
+                                                  user.email,
+                                                  user.status,
+                                                  Api(token: user.token))));
+                                    } else if (logado.status == 2) {
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => HomeCliente(
+                                                  user.id,
+                                                  user.nome,
+                                                  user.email,
+                                                  user.status)));
+                                    }
+                                  } else {
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                    dialog.showAlertDialog(
+                                        context, 'Aviso', 'Login inválido');
+                                  }
+                                } else {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  print("no connect");
+                                  dialog.showAlertDialog(context, 'Aviso',
+                                      'Please check your connection and try again !');
                                 }
-                              } else {
-                                setState(() {
-                                  isLoading = false;
-                                });
-                                dialog.showAlertDialog(
-                                    context, 'Aviso', 'Login inválido');
-                              }
+                              });
                             }
                           },
                         )

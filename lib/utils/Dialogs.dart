@@ -23,6 +23,19 @@ class Dialogs extends State {
     );
   }
 
+  void msg(BuildContext context, title, message) {
+    AlertDialog alert = AlertDialog(
+      title: Text(title),
+      content: Text(message),
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   void showBottomOptions(BuildContext context, botoes) {
     showModalBottomSheet(
         context: context,

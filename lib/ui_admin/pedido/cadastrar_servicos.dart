@@ -3,6 +3,7 @@ import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/helper/servicos_helper.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
+import 'package:ordem_services/utils/connect.dart';
 
 class CadastrarServicos extends StatefulWidget {
   final dynamic id;
@@ -26,6 +27,7 @@ class _CadastrarServicosState extends State<CadastrarServicos> {
   Servicos _editedservico;
 
   Dialogs dialog = new Dialogs();
+  Connect connect = new Connect();
 
   @override
   void initState() {
@@ -169,27 +171,35 @@ class _CadastrarServicosState extends State<CadastrarServicos> {
                           child: Text("Cadastrar Serviço"),
                           color: Colors.blueGrey,
                           textColor: Colors.white,
-                          onPressed: () async {
+                          onPressed: () {
                             FocusScope.of(context)
                                 .requestFocus(new FocusNode());
                             if (_formkey.currentState.validate()) {
                               setState(() {
                                 isLoading = true;
                               });
-                              if (await widget.api.cadastrarServicos(
-                                      _editedservico, widget.id) !=
-                                  null) {
-                                Navigator.pop(context);
-                              } else {
-                                setState(() {
-                                  isLoading = false;
-                                });
-                                dialog.showAlertDialog(context, 'Aviso',
-                                    'Falhao ao cadastrar serviço');
-                              }
-                            } else {
-                              setState(() {
-                                isLoading = false;
+                              connect.check().then((intenet) async {
+                                if (intenet != null && intenet) {
+                                  print("connect");
+                                  if (await widget.api.cadastrarServicos(
+                                          _editedservico, widget.id) !=
+                                      null) {
+                                    Navigator.pop(context);
+                                  } else {
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                    dialog.showAlertDialog(context, 'Aviso',
+                                        'Falhao ao cadastrar serviço');
+                                  }
+                                } else {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  print("no connect");
+                                  dialog.showAlertDialog(context, 'Aviso',
+                                      'Please check your connection and try again !');
+                                }
                               });
                             }
                           },

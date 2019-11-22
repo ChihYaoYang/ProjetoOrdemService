@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ordem_services/helper/funcionario_helper.dart';
+import 'package:ordem_services/utils/connect.dart';
 import 'package:ordem_services/utils/validator.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
 import 'package:validators/validators.dart';
@@ -24,6 +25,7 @@ class _UpdateFunconarioState extends State<UpdateFunconario> {
   final _telefoneController = TextEditingController();
   final _cpfController = MaskedTextController(mask: '000.000.000-00');
   Dialogs dialog = new Dialogs();
+  Connect connect = new Connect();
   Funcionario _editedFuncionario;
   bool passwordVisible;
   bool _userEdited = false;
@@ -280,7 +282,16 @@ class _UpdateFunconarioState extends State<UpdateFunconario> {
                         if (isEmail(_emailController.text)) {
                           if (isNumeric(_telefoneController.text)) {
                             if (CPFValidator.isValid(_cpfController.text)) {
-                              Navigator.pop(context, _editedFuncionario);
+                              connect.check().then((intenet) {
+                                if (intenet != null && intenet) {
+                                  print("connect");
+                                  Navigator.pop(context, _editedFuncionario);
+                                } else {
+                                  print("no connect");
+                                  dialog.showAlertDialog(context, 'Aviso',
+                                      'Please check your connection and try again !');
+                                }
+                              });
                             } else {
                               dialog.showAlertDialog(
                                   context, 'Aviso', 'Preencher com CPF válido');

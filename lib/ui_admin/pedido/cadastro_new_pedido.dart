@@ -64,11 +64,21 @@ class _CadastroPedidoState extends State<CadastroPedido> {
   @override
   void initState() {
     super.initState();
-    //Check connection
-    check();
     isLoading = true;
-    _getAllType();
-    _getAllStatus();
+    connect.check().then((intenet) {
+      if (intenet != null && intenet) {
+        print("connect");
+        _getAllType();
+        _getAllStatus();
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        print("no connect");
+        dialog.showAlertDialog(
+            context, 'Aviso', 'Please check your connection and try again !');
+      }
+    });
     if (pedido == null || cliente == null) {
       _editedpedido = Cadastro_Pedido();
       _editedcliente = Cliente();
@@ -564,66 +574,63 @@ class _CadastroPedidoState extends State<CadastroPedido> {
     );
   }
 
-  _validateForm() async {
+  _validateForm() {
     bool _isValid = _formkey.currentState.validate();
     if (_selectedtype == null || _selectedStatus == null) {
       setState(() => _dropdownError = "Campo obrigatório !");
       _isValid = false;
     }
     if (_isValid) {
-      //gerar senha aleatorio
-      _editedcliente.password = randomAlphaNumeric(8);
-      password = _editedcliente.password;
-      if (await widget.api.cadastrarNewPedido(
-              _editedcliente, _editedpedido, widget.login_id) !=
-          null) {
-        //      Enviar password pelo whatsapp
-        launch(
-            "whatsapp://send?text=Olá, aqui é o OS, baixe nosso aplicativo e faça login com seguintes dados: \n"
-            "Email: $email\n"
-            "Senha: $password\n"
-            "Ou Faça login pelo telefone\n"
-            "&phone=+55$telefone");
-        Logado logado = await helper.getLogado();
-        Navigator.pop(context);
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => TabBarMenu(
-                    logado.logado_login_id,
-                    logado.nome,
-                    logado.email,
-                    logado.status,
-                    Api(token: logado.token))));
-      } else {
-        setState(() {
-          isLoading = false;
-        });
-        dialog.showAlertDialog(context, 'Aviso',
-            'Pedido não cadastrado verifica se o email já está cadastrado');
-      }
+      connect.check().then((intenet) async {
+        if (intenet != null && intenet) {
+          print("connect");
+          _editedcliente.password = randomAlphaNumeric(8);
+          password = _editedcliente.password;
+          if (await widget.api.cadastrarNewPedido(
+                  _editedcliente, _editedpedido, widget.login_id) !=
+              null) {
+            //Enviar password pelo whatsapp
+            launch(
+                "whatsapp://send?text=Olá, aqui é o OS, baixe nosso aplicativo e faça login com seguintes dados: \n"
+                "Email: $email\n"
+                "Senha: $password\n"
+                "Ou Faça login pelo telefone\n"
+                "&phone=+55$telefone");
+            Logado logado = await helper.getLogado();
+            Navigator.pop(context);
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TabBarMenu(
+                        logado.logado_login_id,
+                        logado.nome,
+                        logado.email,
+                        logado.status,
+                        Api(token: logado.token))));
+          } else {
+            setState(() {
+              isLoading = false;
+            });
+            dialog.showAlertDialog(context, 'Aviso',
+                'Pedido não cadastrado verifica se o email já está cadastrado');
+          }
+        } else {
+          setState(() {
+            isLoading = false;
+          });
+          print("no connect");
+          dialog.showAlertDialog(
+              context, 'Aviso', 'Please check your connection and try again !');
+        }
+      });
     }
-  }
-
-//Check connection
-  void check() {
-    connect.check().then((intenet) {
-      if (intenet != null && intenet) {
-        print("connect");
-      } else {
-        print("no connect");
-        dialog.showAlertDialog(
-            context, 'Aviso', 'Please check your connection internet !');
-      }
-    });
   }
 
   _getAllType() async {
     await widget.api.getType().then((list) {
       setState(() {
-        isLoading = false;
         type = list;
-        debugPrint(type.toString());
+        isLoading = false;
       });
     });
   }
@@ -631,9 +638,8 @@ class _CadastroPedidoState extends State<CadastroPedido> {
   _getAllStatus() async {
     await widget.api.getStatus().then((list) {
       setState(() {
-        isLoading = false;
         status = list;
-        debugPrint(status.toString());
+        isLoading = false;
       });
     });
   }
