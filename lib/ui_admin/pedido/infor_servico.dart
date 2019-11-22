@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/helper/item_pedido_helper.dart';
 import 'package:ordem_services/ui_admin/pedido/updateservico.dart';
+import 'package:ordem_services/utils/Dialogs.dart';
 
 class Information_Servico extends StatefulWidget {
   final Api api;
@@ -21,7 +22,7 @@ class Information_Servico extends StatefulWidget {
 
 class _Information_ServicoState extends State<Information_Servico> {
   List<Item_Pedido> item = List();
-
+  Dialogs dialog = new Dialogs();
   bool isLoading = false;
 
   @override
@@ -139,13 +140,18 @@ class _Information_ServicoState extends State<Information_Servico> {
                                   actions: <Widget>[
                                     FlatButton(
                                       child: Text('Sim'),
-                                      onPressed: () {
-                                        widget.api.deletarServico(
-                                            item[index].cd_servicos);
-                                        setState(() {
-                                          item.removeAt(index);
-                                          Navigator.pop(context);
-                                        });
+                                      onPressed: () async {
+                                        if (await widget.api.deletarServico(
+                                                item[index].cd_servicos) ==
+                                            true) {
+                                          setState(() {
+                                            item.removeAt(index);
+                                            Navigator.pop(context);
+                                          });
+                                        } else {
+                                          dialog.showAlertDialog(context,
+                                              'Aviso', 'Falha ao deletar');
+                                        }
                                       },
                                     ),
                                     FlatButton(

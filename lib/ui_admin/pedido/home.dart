@@ -5,10 +5,10 @@ import 'package:ordem_services/helper/tipo_helper.dart';
 import 'package:ordem_services/ui_admin/pedido/update.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
 import 'package:ordem_services/ui_admin/pedido/cadastrar_servicos.dart';
+import 'package:ordem_services/utils/connect.dart';
 import 'package:ordem_services/utils/menu.dart';
-import 'infor_pedido.dart';
-import 'infor_servico.dart';
-import 'dart:io';
+import 'package:ordem_services/ui_admin/pedido/infor_pedido.dart';
+import 'package:ordem_services/ui_admin/pedido/infor_servico.dart';
 
 class HomePage extends StatefulWidget {
   final Api api;
@@ -37,6 +37,7 @@ class _HomePageState extends State<HomePage> {
   List<Tipo> type = List();
 
   Dialogs dialog = new Dialogs();
+  Connect connect = new Connect();
   bool isLoading = false;
 
   //filtro dropwdown
@@ -54,6 +55,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     isLoading = true;
+    //check connection
     check();
     _getAllPedidos();
   }
@@ -206,6 +208,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showOptions(BuildContext context, int index) {
+    Widget loadingIndicator = isLoading
+        ? new Container(
+            width: 70.0,
+            height: 70.0,
+            child: new Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: new Center(child: new CircularProgressIndicator())),
+          )
+        : new Container();
     List<Widget> botoes = [];
     botoes.add(FlatButton(
       child: Row(
@@ -315,13 +326,18 @@ class _HomePageState extends State<HomePage> {
                 actions: <Widget>[
                   FlatButton(
                     child: Text('Sim'),
-                    onPressed: () {
-                      widget.api.deletarPedido(pedido[index].id);
-                      setState(() {
-                        Navigator.pop(context);
-                        pedido.removeAt(index);
-                        Navigator.pop(context);
-                      });
+                    onPressed: () async {
+                      if (await widget.api.deletarPedido(pedido[index].id) ==
+                          true) {
+                        setState(() {
+                          Navigator.pop(context);
+                          pedido.removeAt(index);
+                          Navigator.pop(context);
+                        });
+                      } else {
+                        dialog.showAlertDialog(
+                            context, 'Aviso', 'Falha ao deletar');
+                      }
                     },
                   ),
                   FlatButton(
@@ -350,19 +366,14 @@ class _HomePageState extends State<HomePage> {
   }
 
 //  //Check connection
-  void check() async {
-    setState(() async {
-      try {
-        final result = await InternetAddress.lookup('google.com');
-        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          print('connected');
-        }
-      } on SocketException catch (_) {
+  void check() {
+    connect.check().then((intenet) {
+      if (intenet != null && intenet) {
+        print("connect");
+      } else {
+        print("no connect");
         dialog.showAlertDialog(
             context, 'Aviso', 'Please check your connection internet !');
-        setState(() {
-          isLoading = false;
-        });
       }
     });
   }

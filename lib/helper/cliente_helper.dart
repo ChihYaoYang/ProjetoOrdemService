@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:sqflite/sqflite.dart';
-import '../helper/Databases.dart';
+import 'package:ordem_services/helper/Databases.dart';
 
 class ClienteHelper {
   static final ClienteHelper _instance = ClienteHelper.internal();
@@ -28,12 +28,12 @@ class Cliente {
 
   Cliente(
       {this.id,
-        this.nome,
-        this.email,
-        this.password,
-        this.telefone,
-        this.cpf,
-        this.status});
+      this.nome,
+      this.email,
+      this.password,
+      this.telefone,
+      this.cpf,
+      this.status});
 
   factory Cliente.fromJson(Map<String, dynamic> json) {
     return Cliente(

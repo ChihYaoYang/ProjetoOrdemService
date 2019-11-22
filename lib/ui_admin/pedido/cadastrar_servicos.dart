@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/helper/servicos_helper.dart';
+import 'package:ordem_services/utils/Dialogs.dart';
 
 class CadastrarServicos extends StatefulWidget {
   final dynamic id;
@@ -23,6 +24,8 @@ class _CadastrarServicosState extends State<CadastrarServicos> {
   bool isLoading = false;
   Servicos servico;
   Servicos _editedservico;
+
+  Dialogs dialog = new Dialogs();
 
   @override
   void initState() {
@@ -173,9 +176,17 @@ class _CadastrarServicosState extends State<CadastrarServicos> {
                               setState(() {
                                 isLoading = true;
                               });
-                              await widget.api
-                                  .cadastrarServicos(_editedservico, widget.id);
-                              Navigator.pop(context);
+                              if (await widget.api.cadastrarServicos(
+                                      _editedservico, widget.id) !=
+                                  null) {
+                                Navigator.pop(context);
+                              } else {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                                dialog.showAlertDialog(context, 'Aviso',
+                                    'Falhao ao cadastrar serviço');
+                              }
                             } else {
                               setState(() {
                                 isLoading = false;

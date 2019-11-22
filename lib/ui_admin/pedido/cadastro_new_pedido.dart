@@ -9,12 +9,12 @@ import 'package:ordem_services/helper/status_helper.dart';
 import 'package:ordem_services/helper/tipo_helper.dart';
 import 'package:ordem_services/tabbar.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
+import 'package:ordem_services/utils/connect.dart';
 import 'package:ordem_services/utils/menu.dart';
 import 'package:ordem_services/utils/validator.dart';
 import 'package:random_string/random_string.dart';
 import 'package:validators/validators.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:io';
 
 class CadastroPedido extends StatefulWidget {
   final Api api;
@@ -41,6 +41,7 @@ class _CadastroPedidoState extends State<CadastroPedido> {
   final _descricaoController = TextEditingController();
 
   Dialogs dialog = new Dialogs();
+  Connect connect = new Connect();
   LoginHelper helper = LoginHelper();
   Cadastro_Pedido pedido;
   Cadastro_Pedido _editedpedido;
@@ -63,6 +64,7 @@ class _CadastroPedidoState extends State<CadastroPedido> {
   @override
   void initState() {
     super.initState();
+    //Check connection
     check();
     isLoading = true;
     _getAllType();
@@ -280,7 +282,7 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(3.0),
                     border: Border.all(color: Colors.blueGrey)),
-                child: (isLoading || type == null)
+                child: (isLoading)
                     ? new Align(
                         child: loadingIndicator,
                         alignment: FractionalOffset.center,
@@ -325,7 +327,7 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(3.0),
                     border: Border.all(color: Colors.blueGrey)),
-                child: (isLoading || status == null)
+                child: (isLoading)
                     ? new Align(
                         child: loadingIndicator,
                         alignment: FractionalOffset.center,
@@ -522,7 +524,6 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                         color: Colors.blueGrey,
                         textColor: Colors.white,
                         onPressed: () async {
-                          check();
                           if (_formkey.currentState.validate()) {
                             setState(() {
                               isLoading = true;
@@ -573,45 +574,46 @@ class _CadastroPedidoState extends State<CadastroPedido> {
       //gerar senha aleatorio
       _editedcliente.password = randomAlphaNumeric(8);
       password = _editedcliente.password;
-      //cadastro
-      await widget.api
-          .cadastrarNewPedido(_editedcliente, _editedpedido, widget.login_id);
-//      Enviar password pelo whatsapp
-      launch(
-          "whatsapp://send?text=Olá, aqui é o OS, baixe nosso aplicativo e faça login com seguintes dados: \n"
-          "Email: $email\n"
-          "Senha: $password\n"
-          "Ou Faça login pelo telefone\n"
-          "&phone=+55$telefone");
-      Logado logado = await helper.getLogado();
-      Navigator.pop(context);
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => TabBarMenu(
-                  logado.logado_login_id,
-                  logado.nome,
-                  logado.email,
-                  logado.status,
-                  Api(token: logado.token))));
+      if (await widget.api.cadastrarNewPedido(
+              _editedcliente, _editedpedido, widget.login_id) !=
+          null) {
+        //      Enviar password pelo whatsapp
+        launch(
+            "whatsapp://send?text=Olá, aqui é o OS, baixe nosso aplicativo e faça login com seguintes dados: \n"
+            "Email: $email\n"
+            "Senha: $password\n"
+            "Ou Faça login pelo telefone\n"
+            "&phone=+55$telefone");
+        Logado logado = await helper.getLogado();
+        Navigator.pop(context);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => TabBarMenu(
+                    logado.logado_login_id,
+                    logado.nome,
+                    logado.email,
+                    logado.status,
+                    Api(token: logado.token))));
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        dialog.showAlertDialog(context, 'Aviso',
+            'Pedido não cadastrado verifica se o email já está cadastrado');
+      }
     }
   }
 
 //Check connection
-  void check() async {
-    setState(() async {
-      try {
-        final result = await InternetAddress.lookup('google.com');
-        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          print('connected');
-        }
-      } on SocketException catch (_) {
-        print("no connection ");
+  void check() {
+    connect.check().then((intenet) {
+      if (intenet != null && intenet) {
+        print("connect");
+      } else {
+        print("no connect");
         dialog.showAlertDialog(
             context, 'Aviso', 'Please check your connection internet !');
-        setState(() {
-          isLoading = false;
-        });
       }
     });
   }

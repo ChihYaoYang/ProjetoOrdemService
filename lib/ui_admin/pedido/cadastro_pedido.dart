@@ -7,7 +7,7 @@ import 'package:ordem_services/helper/status_helper.dart';
 import 'package:ordem_services/helper/tipo_helper.dart';
 import 'package:ordem_services/tabbar.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
-import 'dart:io';
+import 'package:ordem_services/utils/connect.dart';
 
 class CadasrarPedido extends StatefulWidget {
   final Api api;
@@ -26,6 +26,7 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
   final _defeitoController = TextEditingController();
   final _descricaoController = TextEditingController();
   Dialogs dialog = new Dialogs();
+  Connect connect = new Connect();
   LoginHelper helper = LoginHelper();
   Cadastro_Pedido pedido;
   Cadastro_Pedido _editedpedido;
@@ -45,6 +46,7 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
   void initState() {
     super.initState();
     isLoading = true;
+    //Check connection
     check();
     _getAllType();
     _getAllStatus();
@@ -99,7 +101,7 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(3.0),
                       border: Border.all(color: Colors.blueGrey)),
-                  child: (isLoading || client == null)
+                  child: (isLoading)
                       ? new Align(
                           child: loadingIndicator,
                           alignment: FractionalOffset.center,
@@ -155,7 +157,7 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(3.0),
                       border: Border.all(color: Colors.blueGrey)),
-                  child: (isLoading || type == null)
+                  child: (isLoading)
                       ? new Align(
                           child: loadingIndicator,
                           alignment: FractionalOffset.center,
@@ -201,7 +203,7 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(3.0),
                       border: Border.all(color: Colors.blueGrey)),
-                  child: (isLoading || status == null)
+                  child: (isLoading)
                       ? new Align(
                           child: loadingIndicator,
                           alignment: FractionalOffset.center,
@@ -403,7 +405,6 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
                           color: Colors.blueGrey,
                           textColor: Colors.white,
                           onPressed: () async {
-                            check();
                             if (_formkey.currentState.validate()) {
                               setState(() {
                                 isLoading = true;
@@ -430,19 +431,25 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
       _isValid = false;
     }
     if (_isValid) {
-      //cadastro
-      await widget.api.cadastrarPedido(_editedpedido, widget.login_id);
-      Logado logado = await helper.getLogado();
-      Navigator.pop(context);
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => TabBarMenu(
-                  logado.logado_login_id,
-                  logado.nome,
-                  logado.email,
-                  logado.status,
-                  Api(token: logado.token))));
+      if (await widget.api.cadastrarPedido(_editedpedido, widget.login_id) !=
+          null) {
+        Logado logado = await helper.getLogado();
+        Navigator.pop(context);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => TabBarMenu(
+                    logado.logado_login_id,
+                    logado.nome,
+                    logado.email,
+                    logado.status,
+                    Api(token: logado.token))));
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        dialog.showAlertDialog(context, 'Aviso', 'Falhao ao cadastrar pedidos');
+      }
     } else {
       setState(() {
         isLoading = false;
@@ -461,20 +468,14 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
   }
 
   //Check connection
-  void check() async {
-    setState(() async {
-      try {
-        final result = await InternetAddress.lookup('google.com');
-        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          print('connected');
-        }
-      } on SocketException catch (_) {
-        print("no connection ");
+  void check() {
+    connect.check().then((intenet) {
+      if (intenet != null && intenet) {
+        print("connect");
+      } else {
+        print("no connect");
         dialog.showAlertDialog(
             context, 'Aviso', 'Please check your connection internet !');
-        setState(() {
-          isLoading = false;
-        });
       }
     });
   }

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:sqflite/sqflite.dart';
-import '../helper/Databases.dart';
+import 'package:ordem_services/helper/Databases.dart';
 
 class Item_PedidoHelper {
   static final Item_PedidoHelper _instance = Item_PedidoHelper.internal();

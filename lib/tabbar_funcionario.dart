@@ -3,8 +3,7 @@ import 'package:ordem_services/helper/funcionario_helper.dart';
 import 'package:ordem_services/ui_admin/funcionario/cadastro.dart';
 import 'package:ordem_services/ui_admin/funcionario/lista.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-
-import 'helper/Api.dart';
+import 'package:ordem_services/helper/Api.dart';
 
 class TabBarFuncionario extends StatefulWidget {
   final Api api;

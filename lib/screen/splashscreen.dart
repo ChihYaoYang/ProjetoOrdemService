@@ -4,8 +4,7 @@ import 'package:ordem_services/tabbar.dart';
 import 'package:ordem_services/ui_cliente/home_cliente.dart';
 import 'package:ordem_services/helper/login_helper.dart';
 import 'package:ordem_services/helper/Api.dart';
-import '../tabbar_login.dart';
-
+import 'package:ordem_services/tabbar_login.dart';
 
 class Splash extends StatefulWidget {
   @override

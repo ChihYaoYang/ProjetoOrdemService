@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/helper/cadastro_pedido_helper.dart';
-import 'package:ordem_services/helper/cliente_helper.dart';
 import 'package:ordem_services/helper/login_helper.dart';
 import 'package:ordem_services/helper/status_helper.dart';
 import 'package:ordem_services/helper/tipo_helper.dart';
@@ -99,7 +98,7 @@ class _AlterarPedidoState extends State<AlterarPedido> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(3.0),
                       border: Border.all(color: Colors.blueGrey)),
-                  child: (isLoading || type == null)
+                  child: (isLoading)
                       ? new Align(
                           child: loadingIndicator,
                           alignment: FractionalOffset.center,
@@ -145,7 +144,7 @@ class _AlterarPedidoState extends State<AlterarPedido> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(3.0),
                       border: Border.all(color: Colors.blueGrey)),
-                  child: (isLoading || status == null)
+                  child: (isLoading)
                       ? new Align(
                           child: loadingIndicator,
                           alignment: FractionalOffset.center,

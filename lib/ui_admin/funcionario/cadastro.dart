@@ -262,27 +262,35 @@ class _CadastroFuncionarioState extends State<CadastroFuncionario> {
                                       randomAlphaNumeric(8);
                                   password = _editedFuncionario.password;
                                   //cadastro
-                                  await api
-                                      .cadastrarFuncionario(_editedFuncionario);
-                                  //Enviar password pelo whatsapp
-                                  launch(
-                                      "whatsapp://send?text=Olá, aqui é o OS, baixe nosso aplicativo e faça login com seguintes dados: \n"
-                                      "Email: $email\n"
-                                      "Senha: $password\n"
-                                      "Ou Faça login pelo telefone\n"
-                                      "&phone=+55$telefone");
-                                  Logado logado = await helper.getLogado();
-                                  Navigator.pop(context);
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              TabBarFuncionario(
-                                                  logado.logado_login_id,
-                                                  logado.nome,
-                                                  logado.email,
-                                                  logado.status,
-                                                  Api(token: logado.token))));
+                                  if (await api.cadastrarFuncionario(
+                                          _editedFuncionario) !=
+                                      null) {
+                                    //Enviar password pelo whatsapp
+                                    launch(
+                                        "whatsapp://send?text=Olá, aqui é o OS, baixe nosso aplicativo e faça login com seguintes dados: \n"
+                                        "Email: $email\n"
+                                        "Senha: $password\n"
+                                        "Ou Faça login pelo telefone\n"
+                                        "&phone=+55$telefone");
+                                    Logado logado = await helper.getLogado();
+                                    Navigator.pop(context);
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                TabBarFuncionario(
+                                                    logado.logado_login_id,
+                                                    logado.nome,
+                                                    logado.email,
+                                                    logado.status,
+                                                    Api(token: logado.token))));
+                                  } else {
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                    dialog.showAlertDialog(context, 'Aviso',
+                                        'Funcionário não cadastrado verifica se o email já está cadastrado');
+                                  }
                                 } else {
                                   setState(() {
                                     isLoading = false;

@@ -4,13 +4,13 @@ import 'package:ordem_services/helper/login_helper.dart';
 import 'package:ordem_services/helper/servicos_helper.dart';
 import 'package:ordem_services/helper/status_helper.dart';
 import 'package:ordem_services/helper/tipo_helper.dart';
+import 'package:ordem_services/helper/cadastro_pedido_helper.dart';
+import 'package:ordem_services/helper/cliente_helper.dart';
+import 'package:ordem_services/helper/funcionario_helper.dart';
+import 'package:ordem_services/helper/item_pedido_helper.dart';
 
-import 'cadastro_pedido_helper.dart';
-import 'cliente_helper.dart';
-import 'funcionario_helper.dart';
-import 'item_pedido_helper.dart';
-
-const BASE_URL = "https://ordemservices.000webhostapp.com/rest/";
+//const BASE_URL = "https://ordemservices.000webhostapp.com/rest/";
+const BASE_URL = "http://10.10.196.210/REST_OS/rest/";
 
 class Api {
   String token;
@@ -24,7 +24,6 @@ class Api {
         headers: {'token': token, 'Content-Type': 'application/json'});
     print(response.body);
     if (response.statusCode == 200) {
-      print(response.body);
       Login dadosJson = new Login.fromMap(json.decode(response.body));
       return dadosJson;
     } else {
@@ -38,7 +37,6 @@ class Api {
         headers: {'token': token, 'Content-Type': 'application/json'});
     print(response.body);
     if (response.statusCode == 200) {
-      print(response.body);
       Login dadosJson = new Login.fromMap(json.decode(response.body));
       return dadosJson;
     } else {

@@ -30,6 +30,7 @@ dependencies:
   flutter_masked_text: ^0.7.0
   random_string: ^1.1.0
   curved_navigation_bar: ^0.1.2
+  connectivity: ^0.4.2
 
 dev_dependencies:
   flutter_test:

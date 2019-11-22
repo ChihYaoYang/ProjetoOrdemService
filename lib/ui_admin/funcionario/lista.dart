@@ -237,13 +237,19 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
                 actions: <Widget>[
                   FlatButton(
                     child: Text('Sim'),
-                    onPressed: () {
-                      widget.api.deletarFuncionario(funcionario[index].id);
-                      setState(() {
-                        Navigator.pop(context);
-                        funcionario.removeAt(index);
-                        Navigator.pop(context);
-                      });
+                    onPressed: () async {
+                      if (await widget.api
+                              .deletarFuncionario(funcionario[index].id) ==
+                          true) {
+                        setState(() {
+                          Navigator.pop(context);
+                          funcionario.removeAt(index);
+                          Navigator.pop(context);
+                        });
+                      } else {
+                        dialog.showAlertDialog(
+                            context, 'Aviso', 'Falha ao deletar');
+                      }
                     },
                   ),
                   FlatButton(
