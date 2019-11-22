@@ -8,6 +8,7 @@ import 'package:ordem_services/helper/tipo_helper.dart';
 import 'package:ordem_services/tabbar.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
 import 'package:ordem_services/utils/connect.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CadasrarPedido extends StatefulWidget {
   final Api api;
@@ -79,9 +80,11 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
             child: new Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: new Center(
-                    child: new LinearProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                ))),
+                  child: SpinKitThreeBounce(
+                    size: 30,
+                    color: Colors.blue,
+                  ),
+                )),
           )
         : new Container();
     return WillPopScope(
@@ -345,7 +348,6 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
                           Icons.report_problem,
                           color: Colors.white,
                         ),
-                        color: Colors.blue,
                       ),
                     ),
                     onChanged: (text) {
@@ -383,7 +385,6 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
                           Icons.text_fields,
                           color: Colors.white,
                         ),
-                        color: Colors.blue,
                       ),
                     ),
                     onChanged: (text) {

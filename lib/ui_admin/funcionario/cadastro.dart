@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:random_string/random_string.dart';
 import 'package:ordem_services/tabbar_funcionario.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CadastroFuncionario extends StatefulWidget {
   String nome;
@@ -66,9 +67,10 @@ class _CadastroFuncionarioState extends State<CadastroFuncionario> {
             child: new Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: new Center(
-                    child: new CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                ))),
+                  child: SpinKitDualRing(
+                    color: Colors.blue,
+                  ),
+                )),
           )
         : new Container();
     return Scaffold(

@@ -6,6 +6,7 @@ import 'package:ordem_services/utils/connect.dart';
 import 'package:ordem_services/utils/menu.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ordem_services/ui_admin/cliente/alterar.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class ListaCliente extends StatefulWidget {
   final Api api;
@@ -34,6 +35,8 @@ class _ListaClienteState extends State<ListaCliente> {
   List<Cliente> _queryResults = [];
   List<Cliente> _filter = [];
 
+  var phone;
+
   @override
   void initState() {
     super.initState();
@@ -61,7 +64,11 @@ class _ListaClienteState extends State<ListaCliente> {
             height: 70.0,
             child: new Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: new Center(child: new CircularProgressIndicator())),
+                child: new Center(
+                  child: SpinKitDualRing(
+                    color: Colors.blue,
+                  ),
+                )),
           )
         : new Container();
     return Scaffold(
@@ -169,7 +176,7 @@ class _ListaClienteState extends State<ListaCliente> {
               child: Column(
                 children: <Widget>[
                   Text(
-                    'Ligar',
+                    'Contato',
                     style: TextStyle(color: Colors.blueAccent, fontSize: 20.0),
                   )
                 ],
@@ -177,7 +184,9 @@ class _ListaClienteState extends State<ListaCliente> {
         ],
       ),
       onPressed: () {
-        launch("tel:${cliente[index].telefone}");
+        phone = cliente[index].telefone;
+        launch("whatsapp://send?text=Olá"
+            "&phone=+55$phone");
         Navigator.pop(context);
       },
     ));

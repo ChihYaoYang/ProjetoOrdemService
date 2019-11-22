@@ -6,6 +6,7 @@ import 'package:ordem_services/utils/connect.dart';
 import 'package:ordem_services/utils/menu.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ordem_services/ui_admin/funcionario/alterar.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class ListaFuncionario extends StatefulWidget {
   final Api api;
@@ -33,6 +34,7 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
   final _search = TextEditingController();
   List<Funcionario> _queryResults = [];
   List<Funcionario> _filter = [];
+  var phone;
 
   @override
   void initState() {
@@ -61,7 +63,11 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
             height: 70.0,
             child: new Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: new Center(child: new CircularProgressIndicator())),
+                child: new Center(
+                  child: SpinKitDualRing(
+                    color: Colors.blue,
+                  ),
+                )),
           )
         : new Container();
     return Scaffold(
@@ -170,7 +176,7 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
               child: Column(
                 children: <Widget>[
                   Text(
-                    'Ligar',
+                    'Contato',
                     style: TextStyle(color: Colors.blueAccent, fontSize: 20.0),
                   )
                 ],
@@ -178,7 +184,9 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
         ],
       ),
       onPressed: () {
-        launch("tel:${funcionario[index].telefone}");
+        phone = funcionario[index].telefone;
+        launch("whatsapp://send?text=Olá"
+            "&phone=+55$phone");
         Navigator.pop(context);
       },
     ));

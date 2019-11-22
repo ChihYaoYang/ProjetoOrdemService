@@ -9,6 +9,7 @@ import 'package:ordem_services/utils/connect.dart';
 import 'package:ordem_services/utils/menu.dart';
 import 'package:ordem_services/ui_admin/pedido/infor_pedido.dart';
 import 'package:ordem_services/ui_admin/pedido/infor_servico.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class HomePage extends StatefulWidget {
   final Api api;
@@ -66,7 +67,11 @@ class _HomePageState extends State<HomePage> {
             height: 70.0,
             child: new Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: new Center(child: new CircularProgressIndicator())),
+                child: new Center(
+                  child: SpinKitDualRing(
+                    color: Colors.blue,
+                  ),
+                )),
           )
         : new Container();
     return Scaffold(

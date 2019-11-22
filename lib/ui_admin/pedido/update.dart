@@ -6,6 +6,7 @@ import 'package:ordem_services/helper/status_helper.dart';
 import 'package:ordem_services/helper/tipo_helper.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
 import 'package:ordem_services/utils/connect.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AlterarPedido extends StatefulWidget {
   final Cadastro_Pedido pedidos;
@@ -75,9 +76,11 @@ class _AlterarPedidoState extends State<AlterarPedido> {
             child: new Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: new Center(
-                    child: new LinearProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                ))),
+                  child: SpinKitThreeBounce(
+                    size: 30,
+                    color: Colors.blue,
+                  ),
+                )),
           )
         : new Container();
     return WillPopScope(
@@ -290,7 +293,6 @@ class _AlterarPedidoState extends State<AlterarPedido> {
                           Icons.report_problem,
                           color: Colors.white,
                         ),
-                        color: Colors.blue,
                       ),
                     ),
                     onChanged: (text) {
@@ -328,7 +330,6 @@ class _AlterarPedidoState extends State<AlterarPedido> {
                           Icons.text_fields,
                           color: Colors.white,
                         ),
-                        color: Colors.blue,
                       ),
                     ),
                     onChanged: (text) {

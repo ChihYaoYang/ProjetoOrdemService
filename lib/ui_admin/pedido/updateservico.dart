@@ -90,7 +90,6 @@ class _AlterarServicoState extends State<AlterarServico> {
                           Icons.room_service,
                           color: Colors.white,
                         ),
-                        color: Colors.blue,
                       ),
                     ),
                     onChanged: (text) {

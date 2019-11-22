@@ -5,6 +5,7 @@ import 'package:ordem_services/helper/item_pedido_helper.dart';
 import 'package:ordem_services/ui_admin/pedido/updateservico.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
 import 'package:ordem_services/utils/connect.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Information_Servico extends StatefulWidget {
   final Api api;
@@ -55,9 +56,10 @@ class _Information_ServicoState extends State<Information_Servico> {
             child: new Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: new Center(
-                    child: new CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-                ))),
+                  child: SpinKitDualRing(
+                    color: Colors.red,
+                  ),
+                )),
           )
         : new Container();
     return Scaffold(

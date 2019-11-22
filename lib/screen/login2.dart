@@ -5,6 +5,7 @@ import 'package:ordem_services/ui_cliente/home_cliente.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
 import 'package:ordem_services/utils/connect.dart';
 import 'package:ordem_services/tabbar.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoginPage2 extends StatefulWidget {
   final Login login;
@@ -41,9 +42,10 @@ class _LoginPage2State extends State<LoginPage2> {
             child: new Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: new Center(
-                    child: new CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-                ))),
+                  child: SpinKitDualRing(
+                    color: Colors.red,
+                  ),
+                )),
           )
         : new Container();
     return Scaffold(

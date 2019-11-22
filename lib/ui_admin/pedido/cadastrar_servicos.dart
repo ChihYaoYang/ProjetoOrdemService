@@ -4,6 +4,7 @@ import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/helper/servicos_helper.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
 import 'package:ordem_services/utils/connect.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CadastrarServicos extends StatefulWidget {
   final dynamic id;
@@ -49,7 +50,11 @@ class _CadastrarServicosState extends State<CadastrarServicos> {
             height: 70.0,
             child: new Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: new Center(child: new CircularProgressIndicator())),
+                child: new Center(
+                  child: SpinKitDualRing(
+                    color: Colors.blue,
+                  ),
+                )),
           )
         : new Container();
     return WillPopScope(
@@ -101,7 +106,6 @@ class _CadastrarServicosState extends State<CadastrarServicos> {
                           Icons.room_service,
                           color: Colors.white,
                         ),
-                        color: Colors.blue,
                       ),
                     ),
                     onChanged: (text) {

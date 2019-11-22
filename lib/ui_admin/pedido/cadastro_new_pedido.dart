@@ -15,6 +15,7 @@ import 'package:ordem_services/utils/validator.dart';
 import 'package:random_string/random_string.dart';
 import 'package:validators/validators.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CadastroPedido extends StatefulWidget {
   final Api api;
@@ -103,9 +104,11 @@ class _CadastroPedidoState extends State<CadastroPedido> {
             child: new Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: new Center(
-                    child: new LinearProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                ))),
+                  child: SpinKitThreeBounce(
+                    size: 30,
+                    color: Colors.blue,
+                  ),
+                )),
           )
         : new Container();
     return Scaffold(
@@ -466,7 +469,6 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                         Icons.report_problem,
                         color: Colors.white,
                       ),
-                      color: Colors.blue,
                     ),
                   ),
                   onChanged: (text) {
@@ -503,7 +505,6 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                         Icons.text_fields,
                         color: Colors.white,
                       ),
-                      color: Colors.blue,
                     ),
                   ),
                   onChanged: (text) {
