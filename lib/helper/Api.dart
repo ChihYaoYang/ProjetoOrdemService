@@ -266,13 +266,11 @@ class Api {
     http.Response response = await http.get(BASE_URL + 'Itempedido/' + codigo,
         headers: {'token': token, 'Content-Type': 'application/json'});
     print(response.body);
-    print(response.statusCode);
     if (response.statusCode == 200) {
       List<Item_Pedido> itens =
           json.decode(response.body).map<Item_Pedido>((map) {
         return Item_Pedido.fromJson(map);
       }).toList();
-      print(response.body);
       return itens;
     } else {
       return null;

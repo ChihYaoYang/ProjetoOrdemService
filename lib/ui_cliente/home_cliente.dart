@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:ordem_services/helper/Api.dart';
@@ -32,7 +33,6 @@ class _HomeClienteState extends State<HomeCliente> {
   void initState() {
     super.initState();
     isLoading = true;
-    print(widget.login_id);
     _getAllPedidos();
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   }
@@ -54,7 +54,7 @@ class _HomeClienteState extends State<HomeCliente> {
         : new Container();
     return Scaffold(
       appBar: AppBar(
-        title: Text("Lista de Pedido"),
+        title: Text("Serviço Solicitado"),
         centerTitle: true,
       ),
       drawer: DrawerMenu(widget.nome, widget.email, widget.status),
@@ -91,13 +91,19 @@ class _HomeClienteState extends State<HomeCliente> {
                       overflow: TextOverflow.ellipsis),
                   Text('Status: ' + pedido[index].Status,
                       overflow: TextOverflow.ellipsis),
-                  Text('Defeito: ' + pedido[index].defeito,
-                      overflow: TextOverflow.ellipsis),
                   Text('Data foi cadastrado: ' + pedido[index].data_pedido,
                       overflow: TextOverflow.ellipsis),
                 ],
               ),
-              trailing: Text((index + 1).toString()),
+              trailing: (pedido[index].Status == "Pronto a entrega")
+                  ? Icon(Icons.check, color: Colors.green)
+                  : Icon(Icons.report_problem, color: Colors.red)
+//              Icon(
+//                  (pedido[index].Status == "Pronto a entrega")
+//                      ? Icons.check
+//                      : Icons.report_problem,
+//                  color: Colors.deepOrange)
+              ,
             )),
       ),
       onTap: () {
@@ -129,8 +135,8 @@ class _HomeClienteState extends State<HomeCliente> {
         Navigator.push(
           context,
           CupertinoPageRoute(
-              builder: (context) => Information_Cliente_Servico(
-                  widget.api, pedido[index].id, pedido[index].Cliente)),
+              builder: (context) =>
+                  Information_Cliente_Servico(widget.api, pedido[index].id)),
         );
       },
     ));
@@ -148,7 +154,6 @@ class _HomeClienteState extends State<HomeCliente> {
           setState(() {
             pedido = list;
             isLoading = false;
-            debugPrint(pedido.toString());
           });
         });
       } else {
