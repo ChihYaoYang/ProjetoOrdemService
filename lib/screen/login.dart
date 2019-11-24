@@ -198,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
                                                   user.id,
                                                   user.nome,
                                                   user.email,
-                                                  user.status)));
+                                                  user.status,Api())));
                                     }
                                   } else {
                                     setState(() {

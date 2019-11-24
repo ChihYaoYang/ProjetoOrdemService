@@ -70,7 +70,7 @@ class _Information_ServicoState extends State<Information_Servico> {
       ),
       backgroundColor: Colors.blueGrey,
       body: WillPopScope(
-        child: (isLoading || item == null)
+        child: (isLoading)
             ? new Align(
                 child: loadingIndicator,
                 alignment: FractionalOffset.center,

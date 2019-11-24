@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/helper/cadastro_pedido_helper.dart';
@@ -185,7 +186,7 @@ class _HomePageState extends State<HomePage> {
       onLongPress: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
+          CupertinoPageRoute(
               builder: (context) => Information_Servico(
                   widget.api, pedido[index].id, pedido[index].Cliente)),
         );
@@ -232,7 +233,7 @@ class _HomePageState extends State<HomePage> {
         Navigator.pop(context);
         Navigator.push(
           context,
-          MaterialPageRoute(
+          CupertinoPageRoute(
               builder: (context) => Information_Pedido(
                   pedido[index].id,
                   pedido[index].Cliente,

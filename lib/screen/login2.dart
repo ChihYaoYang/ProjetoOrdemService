@@ -143,7 +143,8 @@ class _LoginPage2State extends State<LoginPage2> {
                                                   user.id,
                                                   user.nome,
                                                   user.email,
-                                                  user.status)));
+                                                  user.status,
+                                                  Api())));
                                     }
                                   } else {
                                     setState(() {

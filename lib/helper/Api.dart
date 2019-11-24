@@ -9,8 +9,8 @@ import 'package:ordem_services/helper/cliente_helper.dart';
 import 'package:ordem_services/helper/funcionario_helper.dart';
 import 'package:ordem_services/helper/item_pedido_helper.dart';
 
-const BASE_URL = "https://ordemservices.000webhostapp.com/rest/";
-
+//const BASE_URL = "https://ordemservices.000webhostapp.com/rest/";
+const BASE_URL = "http://192.168.0.152/REST_OS/rest/";
 
 class Api {
   String token;
@@ -241,6 +241,21 @@ class Api {
         headers: {'token': token, 'Content-Type': 'application/json'});
     if (response.statusCode == 200) {
       return new Cadastro_Pedido.fromJson(json.decode(response.body));
+    } else {
+      return null;
+    }
+  }
+
+/////////////////////////////////Client Pedido////////////////////////////////////////////////////
+  Future<List<Cadastro_Pedido>> getClientPedido(String codigo) async {
+    http.Response response = await http.get(BASE_URL + 'Clientpedido/' + codigo,
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    if (response.statusCode == 200) {
+      List<Cadastro_Pedido> pedidos =
+          json.decode(response.body).map<Cadastro_Pedido>((map) {
+        return Cadastro_Pedido.fromJson(map);
+      }).toList();
+      return pedidos;
     } else {
       return null;
     }
