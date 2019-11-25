@@ -60,49 +60,48 @@ class _Information_Cliente_ServicoState
           )
         : new Container();
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Serviço forão feitos"),
-          backgroundColor: Colors.blueAccent,
-          centerTitle: true,
-        ),
-        body: WillPopScope(
-          child: (isLoading)
-              ? new Align(
-                  child: loadingIndicator,
-                  alignment: FractionalOffset.center,
-                )
-              : ListView.builder(
-                  itemCount: item.length,
-                  itemBuilder: (context, index) {
-                    return _itemCard(context, index);
-                  }),
-        ),
-        bottomSheet: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          textDirection: TextDirection.rtl,
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(15.0),
-              child: Text(
-                "Valor total: " + 'R\$ ' + total.toString(),
-                style: TextStyle(color: Colors.red, fontSize: 20),
-              ),
-            ),
-          ],
-        ));
+      appBar: AppBar(
+        title: Text("Serviço feito"),
+        backgroundColor: Colors.blueAccent,
+        centerTitle: true,
+      ),
+      body: WillPopScope(
+        child: (isLoading)
+            ? new Align(
+                child: loadingIndicator,
+                alignment: FractionalOffset.center,
+              )
+            : ListView.builder(
+                itemCount: item.length,
+                itemBuilder: (context, index) {
+                  return _itemCard(context, index);
+                }),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showModalSheet,
+        child: Icon(Icons.keyboard_arrow_down),
+        backgroundColor: Colors.green,
+      ),
+    );
   }
 
   Widget _itemCard(BuildContext context, int index) {
     return GestureDetector(
       child: Card(
-        margin:
-            new EdgeInsets.only(left: 20.0, right: 20.0, top: 8.0, bottom: 5.0),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         elevation: 5.0,
         child: ListTile(
-          title: Text(item[index].Servico,
-              style: TextStyle(color: Colors.lightBlue)),
+          title: Text((index + 1).toString()),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Text(item[index].Servico,
+                  style: TextStyle(color: Colors.lightBlue)),
+            ],
+          ),
           trailing: Container(
             padding: EdgeInsets.only(top: 10.0),
             child: Text('Valor: ' + item[index].Precos,
@@ -111,6 +110,29 @@ class _Information_Cliente_ServicoState
         ),
       ),
     );
+  }
+
+  void _showModalSheet() {
+    showModalBottomSheet(
+        context: context,
+        builder: (builder) {
+          return Container(
+            height: 50,
+            color: Colors.lightBlue,
+            child: Row(
+              textDirection: TextDirection.rtl,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    "Valor total: " + 'R\$ ' + total.toString(),
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   _getItem() async {

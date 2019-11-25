@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ordem_services/ui_admin/pedido/cadastro_pedido.dart';
@@ -73,7 +74,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
               onPressed: () {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(
+                    CupertinoPageRoute(
                         builder: (context) =>
                             CadasrarPedido(widget.api, widget.login_id)));
               },

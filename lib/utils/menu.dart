@@ -5,6 +5,7 @@ import 'package:ordem_services/tabbar_funcionario.dart';
 import 'package:ordem_services/helper/login_helper.dart';
 import 'package:ordem_services/tabbar_login.dart';
 import 'package:ordem_services/ui_admin/cliente/lista.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DrawerMenu extends StatefulWidget {
   String nome;
@@ -19,6 +20,7 @@ class DrawerMenu extends StatefulWidget {
 
 class _DrawerMenuState extends State<DrawerMenu> {
   LoginHelper helperLog = LoginHelper();
+  var phone = 4999579414;
 
   @override
   void initState() {
@@ -125,7 +127,11 @@ class _DrawerMenuState extends State<DrawerMenu> {
                   leading: Icon(
                     Icons.comment,
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    launch("whatsapp://send?text=Olá"
+                        "&phone=+55$phone");
+                    Navigator.pop(context);
+                  },
                 )
               : Visibility(
                   visible: true,
