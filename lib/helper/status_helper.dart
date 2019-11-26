@@ -19,7 +19,7 @@ class StatusHelper {
 
 class Status {
   dynamic id;
-  String status;
+  dynamic status;
 
   Status({this.id, this.status});
 

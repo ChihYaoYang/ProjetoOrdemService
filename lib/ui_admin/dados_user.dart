@@ -9,6 +9,7 @@ import 'package:ordem_services/helper/login_helper.dart';
 import 'package:ordem_services/tabbar_funcionario.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
 import 'package:ordem_services/utils/connect.dart';
+import 'package:ordem_services/utils/menu.dart';
 import 'package:validators/validators.dart';
 
 class Dados_usuario extends StatefulWidget {
@@ -268,7 +269,7 @@ class _Dados_usuarioState extends State<Dados_usuario> {
                                             logado.nome,
                                             logado.email,
                                             logado.status,
-                                            Api())),
+                                            Api(token: logado.token))),
                                   );
                                 } else {
                                   print("no connect");

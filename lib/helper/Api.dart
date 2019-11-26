@@ -357,6 +357,21 @@ class Api {
   }
 
 ///////////////////////////////////Tipo//////////////////////////////////////////////
+  Future<Tipo> cadastrarTipo(Tipo tipo) async {
+    http.Response response = await http.post(BASE_URL + "Tipo",
+        body: jsonEncode({
+          "type": tipo.type,
+        }),
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
+    if (response.statusCode == 200) {
+      Tipo dadosJson = new Tipo.fromJson(json.decode(response.body));
+      return dadosJson;
+    } else {
+      return null;
+    }
+  }
+
   Future<List<Tipo>> getType() async {
     http.Response response = await http.get(BASE_URL + 'Tipo',
         headers: {'token': token, 'Content-Type': 'application/json'});
@@ -371,7 +386,47 @@ class Api {
     }
   }
 
+  Future<bool> deletarTipo(String codigoTipo) async {
+    http.Response response = await http.delete(BASE_URL + "Tipo/" + codigoTipo,
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<Tipo> atualizarTipo(Tipo tipo) async {
+    http.Response response = await http.put(BASE_URL + "Tipo/" + tipo.id,
+        body: jsonEncode({
+          "type": tipo.type,
+        }),
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
+    if (response.statusCode == 200) {
+      return new Tipo.fromJson(json.decode(response.body));
+    } else {
+      return null;
+    }
+  }
+
 ///////////////////////////////////Status//////////////////////////////////////////////
+  Future<Status> cadastrarStatus(Status status) async {
+    http.Response response = await http.post(BASE_URL + "Status",
+        body: jsonEncode({
+          "status": status.status,
+        }),
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
+    if (response.statusCode == 200) {
+      Status dadosJson = new Status.fromJson(json.decode(response.body));
+      return dadosJson;
+    } else {
+      return null;
+    }
+  }
+
   Future<List<Status>> getStatus() async {
     http.Response response = await http.get(BASE_URL + 'Status',
         headers: {'token': token, 'Content-Type': 'application/json'});
@@ -381,6 +436,30 @@ class Api {
         return Status.fromJson(map);
       }).toList();
       return statuss;
+    } else {
+      return null;
+    }
+  }
+
+  Future<bool> deletarStatus(String codigoStatus) async {
+    http.Response response = await http.delete(
+        BASE_URL + "Status/" + codigoStatus,
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<Status> atualizarStatus(Status status) async {
+    http.Response response = await http.put(BASE_URL + "Status/" + status.id,
+        body: jsonEncode({"status": status.status}),
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
+    if (response.statusCode == 200) {
+      return new Status.fromJson(json.decode(response.body));
     } else {
       return null;
     }

@@ -5,6 +5,8 @@ import 'package:ordem_services/tabbar.dart';
 import 'package:ordem_services/tabbar_funcionario.dart';
 import 'package:ordem_services/helper/login_helper.dart';
 import 'package:ordem_services/tabbar_login.dart';
+import 'package:ordem_services/tabbar_status.dart';
+import 'package:ordem_services/tabbar_tipo.dart';
 import 'package:ordem_services/ui_admin/cliente/lista.dart';
 import 'package:ordem_services/ui_admin/dados_user.dart';
 import 'package:ordem_services/ui_cliente/data_user.dart';
@@ -110,6 +112,58 @@ class _DrawerMenuState extends State<DrawerMenu> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => TabBarFuncionario(
+                                logado.logado_login_id,
+                                logado.nome,
+                                logado.email,
+                                logado.status,
+                                Api(token: logado.token))));
+                  },
+                )
+              : Visibility(
+                  visible: true,
+                  child: Text(
+                    '',
+                    style: TextStyle(fontSize: 0),
+                  ),
+                ),
+          (widget.status == "1" || widget.status == 1)
+              ? ListTile(
+                  title: Text('Cadastrar Tipo de Produto'),
+                  leading: Icon(
+                    Icons.style,
+                  ),
+                  onTap: () async {
+                    Logado logado = await helperLog.getLogado();
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TabBarTipo(
+                                logado.logado_login_id,
+                                logado.nome,
+                                logado.email,
+                                logado.status,
+                                Api(token: logado.token))));
+                  },
+                )
+              : Visibility(
+                  visible: true,
+                  child: Text(
+                    '',
+                    style: TextStyle(fontSize: 0),
+                  ),
+                ),
+          (widget.status == "1" || widget.status == 1)
+              ? ListTile(
+                  title: Text('Cadastrar Status do pedido'),
+                  leading: Icon(
+                    Icons.assistant,
+                  ),
+                  onTap: () async {
+                    Logado logado = await helperLog.getLogado();
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TabBarStatus(
                                 logado.logado_login_id,
                                 logado.nome,
                                 logado.email,
