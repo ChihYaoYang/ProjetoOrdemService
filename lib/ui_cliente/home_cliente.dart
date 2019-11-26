@@ -97,13 +97,7 @@ class _HomeClienteState extends State<HomeCliente> {
               ),
               trailing: (pedido[index].Status == "Pronto a entrega")
                   ? Icon(Icons.check, color: Colors.green)
-                  : Icon(Icons.report_problem, color: Colors.red)
-//              Icon(
-//                  (pedido[index].Status == "Pronto a entrega")
-//                      ? Icons.check
-//                      : Icons.report_problem,
-//                  color: Colors.deepOrange)
-              ,
+                  : Icon(Icons.report_problem, color: Colors.red),
             )),
       ),
       onTap: () {

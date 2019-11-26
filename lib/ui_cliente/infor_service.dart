@@ -125,7 +125,7 @@ class _Information_Cliente_ServicoState
                 Container(
                   padding: EdgeInsets.all(10.0),
                   child: Text(
-                    "Valor total: " + 'R\$ ' + total.toString(),
+                    "Valor total: " + 'R\$ ' + total.toStringAsFixed(2),
                     style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
                 ),

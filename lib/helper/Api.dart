@@ -10,7 +10,7 @@ import 'package:ordem_services/helper/funcionario_helper.dart';
 import 'package:ordem_services/helper/item_pedido_helper.dart';
 
 //const BASE_URL = "https://ordemservices.000webhostapp.com/rest/";
-const BASE_URL = "http://192.168.0.152/REST_OS/rest/";
+const BASE_URL = "http://10.10.196.210/REST_OS/rest/";
 
 class Api {
   String token;
@@ -116,6 +116,20 @@ class Api {
         return Cliente.fromJson(map);
       }).toList();
       return clientes;
+    } else {
+      return null;
+    }
+  }
+
+  Future<List<Cliente>> getClienteOne(String codigo) async {
+    http.Response response = await http.get(BASE_URL + 'Cliente/' + codigo,
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    if (response.statusCode == 200) {
+      List<Cliente> getonecliente =
+          json.decode(response.body).map<Cliente>((map) {
+        return Cliente.fromJson(map);
+      }).toList();
+      return getonecliente;
     } else {
       return null;
     }

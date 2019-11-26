@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/tabbar.dart';
@@ -5,6 +6,7 @@ import 'package:ordem_services/tabbar_funcionario.dart';
 import 'package:ordem_services/helper/login_helper.dart';
 import 'package:ordem_services/tabbar_login.dart';
 import 'package:ordem_services/ui_admin/cliente/lista.dart';
+import 'package:ordem_services/ui_cliente/data_user.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DrawerMenu extends StatefulWidget {
@@ -146,7 +148,18 @@ class _DrawerMenuState extends State<DrawerMenu> {
                   leading: Icon(
                     Icons.verified_user,
                   ),
-                  onTap: () {},
+                  onTap: () async {
+                    Logado logado = await helperLog.getLogado();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Dados_User(
+                                logado.id,
+                                logado.nome,
+                                logado.email,
+                                logado.status,
+                                Api())));
+                  },
                 )
               : Visibility(
                   visible: true,
