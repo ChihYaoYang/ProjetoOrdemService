@@ -56,7 +56,7 @@ class Logado {
   int id;
   String nome;
   String email;
-  int logado_login_id;
+  dynamic logado_login_id;
   dynamic status;
   String token;
 

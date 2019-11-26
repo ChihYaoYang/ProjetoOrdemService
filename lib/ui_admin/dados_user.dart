@@ -4,45 +4,44 @@ import 'package:flutter/services.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:ordem_services/helper/Api.dart';
-import 'package:ordem_services/helper/cliente_helper.dart';
+import 'package:ordem_services/helper/funcionario_helper.dart';
 import 'package:ordem_services/helper/login_helper.dart';
+import 'package:ordem_services/tabbar_funcionario.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
 import 'package:ordem_services/utils/connect.dart';
 import 'package:validators/validators.dart';
 
-import 'home_cliente.dart';
-
-class Dados_User extends StatefulWidget {
+class Dados_usuario extends StatefulWidget {
   int login_id;
   final Api api;
 
-  Dados_User(this.login_id, this.api);
+  Dados_usuario(this.login_id, this.api);
 
   @override
-  _Dados_UserState createState() => _Dados_UserState();
+  _Dados_usuarioState createState() => _Dados_usuarioState();
 }
 
-class _Dados_UserState extends State<Dados_User> {
+class _Dados_usuarioState extends State<Dados_usuario> {
   GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   final _nomeController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _telefoneController = TextEditingController();
   final _cpfController = MaskedTextController(mask: '000.000.000-00');
-  Cliente _editedCliente;
+  Funcionario _editedFuncionario;
 
-  List<Cliente> cliente = List();
+  List<Funcionario> funcionario = List();
   Dialogs dialog = new Dialogs();
   Connect connect = new Connect();
-  bool isLoading = false;
-
   LoginHelper helper = LoginHelper();
+
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
     isLoading = true;
-    _getClientes();
+    _getFuncionarios();
   }
 
   @override
@@ -62,7 +61,7 @@ class _Dados_UserState extends State<Dados_User> {
         : new Container();
     return Scaffold(
       appBar: AppBar(
-        title: Text("Dados de Cliente"),
+        title: Text("Dados de Funcionário"),
         centerTitle: true,
       ),
       body: WillPopScope(
@@ -73,7 +72,7 @@ class _Dados_UserState extends State<Dados_User> {
               )
             : ListView.builder(
                 padding: EdgeInsets.all(10.0),
-                itemCount: cliente.length,
+                itemCount: funcionario.length,
                 itemBuilder: (context, index) {
                   return _clienteCard(context, index);
                 }),
@@ -87,17 +86,17 @@ class _Dados_UserState extends State<Dados_User> {
         child: Padding(
             padding: EdgeInsets.all(10.0),
             child: ListTile(
-              title: Text('Nome: ' + cliente[index].nome,
+              title: Text('Nome: ' + funcionario[index].nome,
                   overflow: TextOverflow.ellipsis),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  Text('E-mail: ' + cliente[index].email,
+                  Text('E-mail: ' + funcionario[index].email,
                       overflow: TextOverflow.ellipsis),
-                  Text('Telefone: ' + cliente[index].telefone,
+                  Text('Telefone: ' + funcionario[index].telefone,
                       overflow: TextOverflow.ellipsis),
-                  Text('CPF: ' + cliente[index].cpf,
+                  Text('CPF: ' + funcionario[index].cpf,
                       overflow: TextOverflow.ellipsis),
                 ],
               ),
@@ -111,11 +110,11 @@ class _Dados_UserState extends State<Dados_User> {
   }
 
   void _showOptions(BuildContext context, int index) {
-    _editedCliente = Cliente.fromJson(cliente[index].toJson());
-    _nomeController.text = _editedCliente.nome;
-    _emailController.text = _editedCliente.email;
-    _telefoneController.text = _editedCliente.telefone;
-    _cpfController.text = _editedCliente.cpf;
+    _editedFuncionario = Funcionario.fromJson(funcionario[index].toJson());
+    _nomeController.text = _editedFuncionario.nome;
+    _emailController.text = _editedFuncionario.email;
+    _telefoneController.text = _editedFuncionario.telefone;
+    _cpfController.text = _editedFuncionario.cpf;
     showModalBottomSheet(
         context: context,
         builder: (builder) {
@@ -152,7 +151,7 @@ class _Dados_UserState extends State<Dados_User> {
                             ),
                           ),
                           onChanged: (text) {
-                            _editedCliente.nome = text;
+                            _editedFuncionario.nome = text;
                           },
                           controller: _nomeController,
                           validator: (value) {
@@ -186,7 +185,7 @@ class _Dados_UserState extends State<Dados_User> {
                             ),
                           ),
                           onChanged: (text) {
-                            _editedCliente.password = text;
+                            _editedFuncionario.password = text;
                           },
                           controller: _passwordController,
                           validator: (value) {
@@ -225,7 +224,7 @@ class _Dados_UserState extends State<Dados_User> {
                             ),
                           ),
                           onChanged: (text) {
-                            _editedCliente.telefone = text;
+                            _editedFuncionario.telefone = text;
                           },
                           controller: _telefoneController,
                           validator: (value) {
@@ -258,13 +257,13 @@ class _Dados_UserState extends State<Dados_User> {
                                   print("connect");
                                   Navigator.pop(context);
                                   await widget.api
-                                      .atualizarCliente(_editedCliente);
+                                      .atualizarFuncionario(_editedFuncionario);
                                   Logado logado = await helper.getLogado();
                                   Navigator.pop(context);
                                   Navigator.pushReplacement(
                                     context,
                                     CupertinoPageRoute(
-                                        builder: (context) => HomeCliente(
+                                        builder: (context) => TabBarFuncionario(
                                             logado.logado_login_id,
                                             logado.nome,
                                             logado.email,
@@ -288,14 +287,16 @@ class _Dados_UserState extends State<Dados_User> {
         });
   }
 
-  _getClientes() async {
+  _getFuncionarios() async {
     connect.check().then((intenet) async {
       if (intenet != null && intenet) {
         print("connect");
-        await widget.api.getClienteOne(widget.login_id.toString()).then((list) {
+        await widget.api
+            .getfuncionarioOne(widget.login_id.toString())
+            .then((list) {
           setState(() {
-            cliente = list;
-            debugPrint(cliente.toString());
+            funcionario = list;
+            debugPrint(funcionario.toString());
             isLoading = false;
           });
         });

@@ -10,7 +10,7 @@ import 'package:ordem_services/helper/funcionario_helper.dart';
 import 'package:ordem_services/helper/item_pedido_helper.dart';
 
 //const BASE_URL = "https://ordemservices.000webhostapp.com/rest/";
-const BASE_URL = "http://10.10.196.210/REST_OS/rest/";
+const BASE_URL = "http://192.168.0.152/REST_OS/rest/";
 
 class Api {
   String token;
@@ -47,12 +47,28 @@ class Api {
   Future<List<Funcionario>> getfuncionario() async {
     http.Response response = await http.get(BASE_URL + 'Funcionario',
         headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
     if (response.statusCode == 200) {
       List<Funcionario> funcionarios =
           json.decode(response.body).map<Funcionario>((map) {
         return Funcionario.fromJson(map);
       }).toList();
       return funcionarios;
+    } else {
+      return null;
+    }
+  }
+
+  Future<List<Funcionario>> getfuncionarioOne(String codigo) async {
+    http.Response response = await http.get(BASE_URL + 'Funcionario/' + codigo,
+        headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
+    if (response.statusCode == 200) {
+      List<Funcionario> func =
+          json.decode(response.body).map<Funcionario>((map) {
+        return Funcionario.fromJson(map);
+      }).toList();
+      return func;
     } else {
       return null;
     }
@@ -69,6 +85,7 @@ class Api {
           "cpf": funcionario.cpf
         }),
         headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
     if (response.statusCode == 200) {
       Funcionario dadosJson =
           new Funcionario.fromJson(json.decode(response.body));
@@ -82,6 +99,7 @@ class Api {
     http.Response response = await http.delete(
         BASE_URL + "Funcionario/" + codigoFuncionario,
         headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -100,6 +118,7 @@ class Api {
               "cpf": funcionario.cpf
             }),
             headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
     if (response.statusCode == 200) {
       return new Funcionario.fromJson(json.decode(response.body));
     } else {
@@ -111,6 +130,7 @@ class Api {
   Future<List<Cliente>> getCliente() async {
     http.Response response = await http.get(BASE_URL + 'Cliente',
         headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
     if (response.statusCode == 200) {
       List<Cliente> clientes = json.decode(response.body).map<Cliente>((map) {
         return Cliente.fromJson(map);
@@ -124,12 +144,12 @@ class Api {
   Future<List<Cliente>> getClienteOne(String codigo) async {
     http.Response response = await http.get(BASE_URL + 'Cliente/' + codigo,
         headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
     if (response.statusCode == 200) {
-      List<Cliente> getonecliente =
-          json.decode(response.body).map<Cliente>((map) {
+      List<Cliente> clientes = json.decode(response.body).map<Cliente>((map) {
         return Cliente.fromJson(map);
       }).toList();
-      return getonecliente;
+      return clientes;
     } else {
       return null;
     }
@@ -138,6 +158,7 @@ class Api {
   Future<bool> deletarCliente(String codigo) async {
     http.Response response = await http.delete(BASE_URL + "Cliente/" + codigo,
         headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
     if (response.statusCode == 200) {
       print(response.body);
       return true;
@@ -156,6 +177,7 @@ class Api {
           "cpf": cliente.cpf
         }),
         headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
     if (response.statusCode == 200) {
       return new Cliente.fromJson(json.decode(response.body));
     } else {
@@ -167,6 +189,7 @@ class Api {
   Future<List<Cadastro_Pedido>> getPedido() async {
     http.Response response = await http.get(BASE_URL + 'Pedido',
         headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
     if (response.statusCode == 200) {
       List<Cadastro_Pedido> pedidos =
           json.decode(response.body).map<Cadastro_Pedido>((map) {
@@ -220,6 +243,7 @@ class Api {
           "descricao": pedido.descricao
         }),
         headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
     if (response.statusCode == 200) {
       Cadastro_Pedido dadosJson =
           new Cadastro_Pedido.fromJson(json.decode(response.body));
@@ -253,6 +277,7 @@ class Api {
           "descricao": pedido.descricao
         }),
         headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
     if (response.statusCode == 200) {
       return new Cadastro_Pedido.fromJson(json.decode(response.body));
     } else {
@@ -264,6 +289,7 @@ class Api {
   Future<List<Cadastro_Pedido>> getClientPedido(String codigo) async {
     http.Response response = await http.get(BASE_URL + 'Clientpedido/' + codigo,
         headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
     if (response.statusCode == 200) {
       List<Cadastro_Pedido> pedidos =
           json.decode(response.body).map<Cadastro_Pedido>((map) {
@@ -309,6 +335,7 @@ class Api {
   Future<bool> deletarServico(String codigo) async {
     http.Response response = await http.delete(BASE_URL + "Servico/" + codigo,
         headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -333,6 +360,7 @@ class Api {
   Future<List<Tipo>> getType() async {
     http.Response response = await http.get(BASE_URL + 'Tipo',
         headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
     if (response.statusCode == 200) {
       List<Tipo> types = json.decode(response.body).map<Tipo>((map) {
         return Tipo.fromJson(map);
@@ -347,6 +375,7 @@ class Api {
   Future<List<Status>> getStatus() async {
     http.Response response = await http.get(BASE_URL + 'Status',
         headers: {'token': token, 'Content-Type': 'application/json'});
+    print(response.body);
     if (response.statusCode == 200) {
       List<Status> statuss = json.decode(response.body).map<Status>((map) {
         return Status.fromJson(map);

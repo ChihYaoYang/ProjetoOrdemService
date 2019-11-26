@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                     hintStyle: TextStyle(color: Colors.white),
                     prefixIcon: Container(
                       child: Icon(
-                        Icons.account_circle,
+                        Icons.email,
                         color: Colors.white,
                       ),
                       color: Colors.redAccent,

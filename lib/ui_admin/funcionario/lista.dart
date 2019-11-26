@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ordem_services/helper/Api.dart';
 import 'package:ordem_services/helper/funcionario_helper.dart';
+import 'package:ordem_services/helper/login_helper.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
 import 'package:ordem_services/utils/connect.dart';
 import 'package:ordem_services/utils/menu.dart';
@@ -26,6 +27,7 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
   Dialogs dialog = new Dialogs();
   Connect connect = new Connect();
   bool isLoading = false;
+  LoginHelper helper = LoginHelper();
 
   //Filtro Search
   final _key = new GlobalKey<ScaffoldState>();
@@ -53,6 +55,8 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
             context, 'Aviso', 'Please check your connection and try again !');
       }
     });
+    print(widget.login_id);
+    print("dlkasldklaskdasçkdlçask");
   }
 
   @override
@@ -308,7 +312,12 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
     widget.api.getfuncionario().then((list) {
       setState(() {
         funcionario = list;
+        debugPrint(funcionario.toString());
         _filter = list;
+        funcionario = funcionario
+            .where((func) =>
+                !func.id.toString().contains(widget.login_id.toString()))
+            .toList();
         isLoading = false;
       });
     });

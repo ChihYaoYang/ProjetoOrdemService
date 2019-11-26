@@ -34,6 +34,7 @@ class _HomeClienteState extends State<HomeCliente> {
     super.initState();
     isLoading = true;
     _getAllPedidos();
+    print(widget.login_id);
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   }
 
@@ -147,6 +148,7 @@ class _HomeClienteState extends State<HomeCliente> {
             .then((list) {
           setState(() {
             pedido = list;
+            debugPrint(pedido.toString());
             isLoading = false;
           });
         });
