@@ -49,12 +49,6 @@ class _CadastroFuncionarioState extends State<CadastroFuncionario> {
     super.initState();
     if (funcionario == null) {
       _editedFuncionario = Funcionario();
-    } else {
-      _editedFuncionario = Funcionario.fromJson(funcionario.toJson());
-      _nomeController.text = _editedFuncionario.nome;
-      _emailController.text = _editedFuncionario.email;
-      _telefoneController.text = _editedFuncionario.telefone;
-      _cpfController.text = _editedFuncionario.cpf;
     }
   }
 

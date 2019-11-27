@@ -29,13 +29,6 @@ class _TabBarFuncionarioState extends State<TabBarFuncionario> {
       ];
 
   @override
-  void initState() {
-    super.initState();
-    print(widget.api);
-    print(widget.login_id);
-  }
-
-  @override
   Widget build(BuildContext context) {
     final List<Widget> page = pages();
     return Scaffold(

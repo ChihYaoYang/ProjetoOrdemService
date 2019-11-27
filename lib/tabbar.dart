@@ -34,7 +34,6 @@ class _TabBarMenuState extends State<TabBarMenu> {
   @override
   void initState() {
     super.initState();
-
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   }
 

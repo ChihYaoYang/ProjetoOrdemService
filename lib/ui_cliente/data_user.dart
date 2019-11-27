@@ -9,7 +9,6 @@ import 'package:ordem_services/helper/login_helper.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
 import 'package:ordem_services/utils/connect.dart';
 import 'package:validators/validators.dart';
-
 import 'home_cliente.dart';
 
 class Dados_User extends StatefulWidget {
@@ -29,14 +28,14 @@ class _Dados_UserState extends State<Dados_User> {
   final _passwordController = TextEditingController();
   final _telefoneController = TextEditingController();
   final _cpfController = MaskedTextController(mask: '000.000.000-00');
-  Cliente _editedCliente;
 
+  LoginHelper helper = LoginHelper();
   List<Cliente> cliente = List();
   Dialogs dialog = new Dialogs();
   Connect connect = new Connect();
-  bool isLoading = false;
 
-  LoginHelper helper = LoginHelper();
+  Cliente _editedCliente;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -295,7 +294,6 @@ class _Dados_UserState extends State<Dados_User> {
         await widget.api.getClienteOne(widget.login_id.toString()).then((list) {
           setState(() {
             cliente = list;
-            debugPrint(cliente.toString());
             isLoading = false;
           });
         });

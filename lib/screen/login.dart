@@ -28,11 +28,7 @@ class _LoginPageState extends State<LoginPage> {
 
   LoginHelper helper = LoginHelper();
   Api api = new Api();
-  List<Login> login = List();
-
   Dialogs dialog = new Dialogs();
-
-  //Connect
   Connect connect = new Connect();
 
   @override
@@ -198,7 +194,8 @@ class _LoginPageState extends State<LoginPage> {
                                                   user.id,
                                                   user.nome,
                                                   user.email,
-                                                  user.status,Api())));
+                                                  user.status,
+                                                  Api())));
                                     }
                                   } else {
                                     setState(() {

@@ -21,22 +21,16 @@ class _AlterarServicoState extends State<AlterarServico> {
   final _precosController =
       MoneyMaskedTextController(decimalSeparator: ',', thousandSeparator: '.');
   bool _userEdited = false;
-  Item_Pedido itens;
   Item_Pedido _editeditens;
-
   Dialogs dialog = new Dialogs();
   Connect connect = new Connect();
 
   @override
   void initState() {
     super.initState();
-    if (widget.itens == null) {
-      _editeditens = Item_Pedido();
-    } else {
-      _editeditens = Item_Pedido.fromJson(widget.itens.toJson());
-      _servicesController.text = _editeditens.Servico;
-      _precosController.text = _editeditens.Precos;
-    }
+    _editeditens = Item_Pedido.fromJson(widget.itens.toJson());
+    _servicesController.text = _editeditens.Servico;
+    _precosController.text = _editeditens.Precos;
   }
 
   @override

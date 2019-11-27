@@ -9,7 +9,6 @@ import 'package:ordem_services/helper/login_helper.dart';
 import 'package:ordem_services/tabbar_funcionario.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
 import 'package:ordem_services/utils/connect.dart';
-import 'package:ordem_services/utils/menu.dart';
 import 'package:validators/validators.dart';
 
 class Dados_usuario extends StatefulWidget {
@@ -30,7 +29,6 @@ class _Dados_usuarioState extends State<Dados_usuario> {
   final _telefoneController = TextEditingController();
   final _cpfController = MaskedTextController(mask: '000.000.000-00');
   Funcionario _editedFuncionario;
-
   List<Funcionario> funcionario = List();
   Dialogs dialog = new Dialogs();
   Connect connect = new Connect();
@@ -297,7 +295,6 @@ class _Dados_usuarioState extends State<Dados_usuario> {
             .then((list) {
           setState(() {
             funcionario = list;
-            debugPrint(funcionario.toString());
             isLoading = false;
           });
         });

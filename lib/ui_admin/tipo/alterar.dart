@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ordem_services/helper/funcionario_helper.dart';
 import 'package:ordem_services/helper/tipo_helper.dart';
 import 'package:ordem_services/utils/connect.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
@@ -20,7 +19,6 @@ class _UpdateTipoState extends State<UpdateTipo> {
   final _typeController = TextEditingController();
   Dialogs dialog = new Dialogs();
   Connect connect = new Connect();
-  Tipo tipo;
   Tipo _editedtipo;
   bool isLoading = false;
   bool _userEdited = false;

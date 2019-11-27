@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ordem_services/helper/Api.dart';
-import 'package:ordem_services/helper/login_helper.dart';
 import 'package:ordem_services/helper/status_helper.dart';
 import 'package:ordem_services/ui_admin/status/alterar.dart';
 import 'package:ordem_services/utils/Dialogs.dart';
@@ -26,7 +25,6 @@ class _ListaStatusState extends State<ListaStatus> {
   Dialogs dialog = new Dialogs();
   Connect connect = new Connect();
   bool isLoading = false;
-  LoginHelper helper = LoginHelper();
 
   @override
   void initState() {

@@ -10,7 +10,7 @@ import 'package:ordem_services/helper/funcionario_helper.dart';
 import 'package:ordem_services/helper/item_pedido_helper.dart';
 
 //const BASE_URL = "https://ordemservices.000webhostapp.com/rest/";
-const BASE_URL = "http://192.168.0.152/REST_OS/rest/";
+const BASE_URL = "http://10.10.196.210/REST_OS/rest/";
 
 class Api {
   String token;

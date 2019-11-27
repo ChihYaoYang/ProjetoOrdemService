@@ -35,10 +35,6 @@ class _CadastrarServicosState extends State<CadastrarServicos> {
     super.initState();
     if (servico == null) {
       _editedservico = Servicos();
-    } else {
-      _editedservico = Servicos.fromJson(servico.toJson());
-      _servicesController.text = _editedservico.servico;
-      _precosController.text = _editedservico.precos;
     }
   }
 

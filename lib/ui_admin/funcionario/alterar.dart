@@ -33,15 +33,11 @@ class _UpdateFunconarioState extends State<UpdateFunconario> {
   @override
   void initState() {
     super.initState();
-    if (widget.funcionarios == null) {
-      _editedFuncionario = Funcionario();
-    } else {
-      _editedFuncionario = Funcionario.fromJson(widget.funcionarios.toJson());
-      _nomeController.text = _editedFuncionario.nome;
-      _emailController.text = _editedFuncionario.email;
-      _telefoneController.text = _editedFuncionario.telefone;
-      _cpfController.text = _editedFuncionario.cpf;
-    }
+    _editedFuncionario = Funcionario.fromJson(widget.funcionarios.toJson());
+    _nomeController.text = _editedFuncionario.nome;
+    _emailController.text = _editedFuncionario.email;
+    _telefoneController.text = _editedFuncionario.telefone;
+    _cpfController.text = _editedFuncionario.cpf;
     passwordVisible = true;
   }
 

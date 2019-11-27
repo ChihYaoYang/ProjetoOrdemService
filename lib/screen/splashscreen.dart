@@ -31,8 +31,8 @@ class _SplashState extends State<Splash> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => HomeCliente(logado.logado_login_id, logado.nome,
-                      logado.email, logado.status, Api())));
+                  builder: (context) => HomeCliente(logado.logado_login_id,
+                      logado.nome, logado.email, logado.status, Api())));
         }
       } else {
         Navigator.pushReplacement(

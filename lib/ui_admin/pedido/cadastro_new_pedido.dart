@@ -83,17 +83,6 @@ class _CadastroPedidoState extends State<CadastroPedido> {
     if (pedido == null || cliente == null) {
       _editedpedido = Cadastro_Pedido();
       _editedcliente = Cliente();
-    } else {
-      _editedpedido = Cadastro_Pedido.fromJson(pedido.toJson());
-      _editedcliente = Cliente.fromJson(cliente.toJson());
-      _nomeController.text = _editedcliente.nome;
-      _emailController.text = _editedcliente.email;
-      _telefoneController.text = _editedcliente.telefone;
-      _cpfController.text = _editedcliente.cpf;
-      _marcaController.text = _editedpedido.marca;
-      _modeloController.text = _editedpedido.modelo;
-      _defeitoController.text = _editedpedido.defeito;
-      _descricaoController.text = _editedpedido.descricao;
     }
   }
 

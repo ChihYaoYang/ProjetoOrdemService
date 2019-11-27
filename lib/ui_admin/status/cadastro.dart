@@ -35,7 +35,7 @@ class _CadastroStatusState extends State<CadastroStatus> {
   void initState() {
     super.initState();
     if (status == null) {
-    _editedStatus = Status();
+      _editedStatus = Status();
     }
   }
 
@@ -136,13 +136,12 @@ class _CadastroStatusState extends State<CadastroStatus> {
                                   Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              TabBarStatus(
-                                                  logado.logado_login_id,
-                                                  logado.nome,
-                                                  logado.email,
-                                                  logado.status,
-                                                  Api(token: logado.token))));
+                                          builder: (context) => TabBarStatus(
+                                              logado.logado_login_id,
+                                              logado.nome,
+                                              logado.email,
+                                              logado.status,
+                                              Api(token: logado.token))));
                                 } else {
                                   setState(() {
                                     isLoading = false;

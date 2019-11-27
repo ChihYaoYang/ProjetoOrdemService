@@ -27,8 +27,6 @@ class _AlterarPedidoState extends State<AlterarPedido> {
   final _descricaoController = TextEditingController();
   Dialogs dialog = new Dialogs();
   Connect connect = new Connect();
-  LoginHelper helper = LoginHelper();
-  Cadastro_Pedido pedido;
   Cadastro_Pedido _editedpedido;
   bool isLoading = false;
   bool _userEdited = false;
@@ -58,15 +56,12 @@ class _AlterarPedidoState extends State<AlterarPedido> {
             context, 'Aviso', 'Please check your connection and try again !');
       }
     });
-    if (widget.pedidos == null) {
-      _editedpedido = Cadastro_Pedido();
-    } else {
-      _editedpedido = Cadastro_Pedido.fromJson(widget.pedidos.toJson());
-      _marcaController.text = _editedpedido.marca;
-      _modeloController.text = _editedpedido.modelo;
-      _defeitoController.text = _editedpedido.defeito;
-      _descricaoController.text = _editedpedido.descricao;
-    }
+
+    _editedpedido = Cadastro_Pedido.fromJson(widget.pedidos.toJson());
+    _marcaController.text = _editedpedido.marca;
+    _modeloController.text = _editedpedido.modelo;
+    _defeitoController.text = _editedpedido.defeito;
+    _descricaoController.text = _editedpedido.descricao;
   }
 
   @override

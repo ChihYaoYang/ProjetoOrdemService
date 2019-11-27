@@ -34,15 +34,11 @@ class _UpdateClienteState extends State<UpdateCliente> {
   @override
   void initState() {
     super.initState();
-    if (widget.client == null) {
-      _editedCliente = Cliente();
-    } else {
-      _editedCliente = Cliente.fromJson(widget.client.toJson());
-      _nomeController.text = _editedCliente.nome;
-      _emailController.text = _editedCliente.email;
-      _telefoneController.text = _editedCliente.telefone;
-      _cpfController.text = _editedCliente.cpf;
-    }
+    _editedCliente = Cliente.fromJson(widget.client.toJson());
+    _nomeController.text = _editedCliente.nome;
+    _emailController.text = _editedCliente.email;
+    _telefoneController.text = _editedCliente.telefone;
+    _cpfController.text = _editedCliente.cpf;
     passwordVisible = true;
   }
 

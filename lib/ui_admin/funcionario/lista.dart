@@ -27,7 +27,6 @@ class _ListaFuncionarioState extends State<ListaFuncionario> {
   Dialogs dialog = new Dialogs();
   Connect connect = new Connect();
   bool isLoading = false;
-  LoginHelper helper = LoginHelper();
 
   //Filtro Search
   final _key = new GlobalKey<ScaffoldState>();

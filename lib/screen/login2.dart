@@ -24,14 +24,8 @@ class _LoginPage2State extends State<LoginPage2> {
 
   LoginHelper helper = LoginHelper();
   Api api = new Api();
-  List<Login> login = List();
   Dialogs dialog = new Dialogs();
   Connect connect = new Connect();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

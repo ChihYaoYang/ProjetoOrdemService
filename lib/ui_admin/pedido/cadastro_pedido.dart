@@ -64,12 +64,6 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
     });
     if (pedido == null) {
       _editedpedido = Cadastro_Pedido();
-    } else {
-      _editedpedido = Cadastro_Pedido.fromJson(pedido.toJson());
-      _marcaController.text = _editedpedido.marca;
-      _modeloController.text = _editedpedido.modelo;
-      _defeitoController.text = _editedpedido.defeito;
-      _descricaoController.text = _editedpedido.descricao;
     }
   }
 
