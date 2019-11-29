@@ -16,6 +16,7 @@ import 'package:random_string/random_string.dart';
 import 'package:validators/validators.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class CadastroPedido extends StatefulWidget {
   final Api api;
@@ -32,6 +33,7 @@ class CadastroPedido extends StatefulWidget {
 
 class _CadastroPedidoState extends State<CadastroPedido> {
   GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   final _nomeController = TextEditingController();
   final _emailController = TextEditingController();
   final _cpfController = MaskedTextController(mask: '000.000.000-00');
@@ -112,400 +114,384 @@ class _CadastroPedidoState extends State<CadastroPedido> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(top: 5),
-                child: Text(
-                  "Dados do Cliente",
-                  style: TextStyle(fontSize: 20, color: Colors.blueGrey),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " Nome",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.account_circle,
-                        color: Colors.white,
-                      ),
-                      color: Colors.blue,
-                    ),
-                  ),
-                  onChanged: (text) {
-                    _editedcliente.nome = text;
-                  },
-                  controller: _nomeController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  keyboardType: TextInputType.emailAddress,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " E-mail",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.email,
-                        color: Colors.white,
-                      ),
-                      color: Colors.blue,
-                    ),
-                  ),
-                  onChanged: (text) {
-                    email = text;
-                    _editedcliente.email = text;
-                  },
-                  controller: _emailController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " Telefone",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.phone,
-                        color: Colors.white,
-                      ),
-                      color: Colors.blue,
-                    ),
-                  ),
-                  onChanged: (text) {
-                    telefone = text;
-                    _editedcliente.telefone = text;
-                  },
-                  controller: _telefoneController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  maxLength: 14,
-                  keyboardType: TextInputType.number,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " CPF",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.assignment_ind,
-                        color: Colors.white,
-                      ),
-                      color: Colors.blue,
-                    ),
-                  ),
-                  onChanged: (text) {
-                    _editedcliente.cpf = text;
-                  },
-                  controller: _cpfController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Row(
-                children: <Widget>[
-                  Expanded(child: Divider(color: Colors.blueGrey)),
-                ],
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 5),
-                child: Text(
-                  "Dados do Pedido",
-                  style: TextStyle(fontSize: 20, color: Colors.blueGrey),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(3.0),
-                    border: Border.all(color: Colors.blueGrey)),
-                child: (isLoading)
-                    ? new Align(
-                        child: loadingIndicator,
-                        alignment: FractionalOffset.center,
-                      )
-                    : DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          hint: Text(
-                            'Seleciona uma tipo',
-                          ),
-                          items: type?.map((item) {
-                                return new DropdownMenuItem(
-                                  child: Text(item.type.toString()),
-                                  value: item.id.toString(),
-                                );
-                              }).toList() ??
-                              [],
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedtype = value;
-                              _editedpedido.cd_tipo = _selectedtype;
-                              _dropdownError = null;
-                            });
-                          },
-                          value: _selectedtype,
-                        ),
-                      ),
-              ),
-              _dropdownError == null
-                  ? SizedBox.shrink()
-                  : Container(
-                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
+              FormBuilder(
+                key: _fbKey,
+                autovalidate: false,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.only(top: 5),
                       child: Text(
-                        _dropdownError ?? "",
-                        style: TextStyle(color: Colors.red),
+                        "Dados do Cliente",
+                        style: TextStyle(fontSize: 20, color: Colors.blueGrey),
+                        textAlign: TextAlign.left,
                       ),
                     ),
-              Padding(
-                padding: EdgeInsets.only(bottom: 10.0),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(3.0),
-                    border: Border.all(color: Colors.blueGrey)),
-                child: (isLoading)
-                    ? new Align(
-                        child: loadingIndicator,
-                        alignment: FractionalOffset.center,
-                      )
-                    : DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          hint: Text(
-                            'Selecione status do pedido',
-                          ),
-                          items: status?.map((item) {
-                                return new DropdownMenuItem(
-                                  child: Text(item.status.toString()),
-                                  value: item.id.toString(),
-                                );
-                              }).toList() ??
-                              [],
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedStatus = value;
-                              _editedpedido.cd_status = _selectedStatus;
-                              _dropdownError = null;
-                            });
-                          },
-                          value: _selectedStatus,
-                        ),
-                      ),
-              ),
-              _dropdownError == null
-                  ? SizedBox.shrink()
-                  : Container(
+                    Container(
+                      padding: EdgeInsets.only(top: 10.0),
                       margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: TextFormField(
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          border: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0)),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                          filled: true,
+                          fillColor: Colors.blueGrey.withOpacity(0.45),
+                          hintText: " Nome",
+                          hintStyle: TextStyle(color: Colors.white),
+                          prefixIcon: Container(
+                            child: Icon(
+                              Icons.account_circle,
+                              color: Colors.white,
+                            ),
+                            color: Colors.blue,
+                          ),
+                        ),
+                        onChanged: (text) {
+                          _editedcliente.nome = text;
+                        },
+                        controller: _nomeController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "Campo obrigatório !";
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 10.0),
+                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: TextFormField(
+                        keyboardType: TextInputType.emailAddress,
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          border: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0)),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                          filled: true,
+                          fillColor: Colors.blueGrey.withOpacity(0.45),
+                          hintText: " E-mail",
+                          hintStyle: TextStyle(color: Colors.white),
+                          prefixIcon: Container(
+                            child: Icon(
+                              Icons.email,
+                              color: Colors.white,
+                            ),
+                            color: Colors.blue,
+                          ),
+                        ),
+                        onChanged: (text) {
+                          email = text;
+                          _editedcliente.email = text;
+                        },
+                        controller: _emailController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "Campo obrigatório !";
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 10.0),
+                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          border: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0)),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                          filled: true,
+                          fillColor: Colors.blueGrey.withOpacity(0.45),
+                          hintText: " Telefone",
+                          hintStyle: TextStyle(color: Colors.white),
+                          prefixIcon: Container(
+                            child: Icon(
+                              Icons.phone,
+                              color: Colors.white,
+                            ),
+                            color: Colors.blue,
+                          ),
+                        ),
+                        onChanged: (text) {
+                          telefone = text;
+                          _editedcliente.telefone = text;
+                        },
+                        controller: _telefoneController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "Campo obrigatório !";
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 10.0),
+                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: TextFormField(
+                        maxLength: 14,
+                        keyboardType: TextInputType.number,
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          border: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0)),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                          filled: true,
+                          fillColor: Colors.blueGrey.withOpacity(0.45),
+                          hintText: " CPF",
+                          hintStyle: TextStyle(color: Colors.white),
+                          prefixIcon: Container(
+                            child: Icon(
+                              Icons.assignment_ind,
+                              color: Colors.white,
+                            ),
+                            color: Colors.blue,
+                          ),
+                        ),
+                        onChanged: (text) {
+                          _editedcliente.cpf = text;
+                        },
+                        controller: _cpfController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "Campo obrigatório !";
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(child: Divider(color: Colors.blueGrey)),
+                      ],
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 5),
                       child: Text(
-                        _dropdownError ?? "",
-                        style: TextStyle(color: Colors.red),
+                        "Dados do Pedido",
+                        style: TextStyle(fontSize: 20, color: Colors.blueGrey),
+                        textAlign: TextAlign.left,
                       ),
                     ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
+                    Container(
+                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(3.0),
+                          border: Border.all(color: Colors.blueGrey)),
+                      child: (isLoading)
+                          ? new Align(
+                              child: loadingIndicator,
+                              alignment: FractionalOffset.center,
+                            )
+                          : FormBuilderDropdown(
+                              attribute: _selectedtype,
+                              hint: Text('Seleciona uma tipo'),
+                              validators: [FormBuilderValidators.required()],
+                              items: type?.map((item) {
+                                    return new DropdownMenuItem(
+                                      child: Text(item.type.toString()),
+                                      value: item.id.toString(),
+                                    );
+                                  }).toList() ??
+                                  [],
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedtype = value;
+                                  _editedpedido.cd_tipo = _selectedtype;
+                                  _dropdownError = null;
+                                });
+                              },
+                            ),
                     ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " Marca",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.collections_bookmark,
-                        color: Colors.white,
-                      ),
-                      color: Colors.blue,
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 10.0),
                     ),
-                  ),
-                  onChanged: (text) {
-                    _editedpedido.marca = text;
-                  },
-                  controller: _marcaController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
+                    Container(
+                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(3.0),
+                          border: Border.all(color: Colors.blueGrey)),
+                      child: (isLoading)
+                          ? new Align(
+                              child: loadingIndicator,
+                              alignment: FractionalOffset.center,
+                            )
+                          : FormBuilderDropdown(
+                              attribute: _selectedStatus,
+                              hint: Text('Selecione status do pedido'),
+                              validators: [FormBuilderValidators.required()],
+                              items: status?.map((item) {
+                                    return new DropdownMenuItem(
+                                      child: Text(item.status.toString()),
+                                      value: item.id.toString(),
+                                    );
+                                  }).toList() ??
+                                  [],
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedStatus = value;
+                                  _editedpedido.cd_status = _selectedStatus;
+                                  _dropdownError = null;
+                                });
+                              },
+                            ),
                     ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " Modelo",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.mobile_screen_share,
-                        color: Colors.white,
-                      ),
-                      color: Colors.blue,
-                    ),
-                  ),
-                  onChanged: (text) {
-                    _editedpedido.modelo = text;
-                  },
-                  controller: _modeloController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  maxLines: 5,
-                  maxLength: 200,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " Defeito",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.report_problem,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  onChanged: (text) {
-                    _editedpedido.defeito = text;
-                  },
-                  controller: _defeitoController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 10.0),
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                child: TextFormField(
-                  maxLines: 5,
-                  maxLength: 200,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                    filled: true,
-                    fillColor: Colors.blueGrey.withOpacity(0.45),
-                    hintText: " Descrição",
-                    hintStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Container(
-                      child: Icon(
-                        Icons.text_fields,
-                        color: Colors.white,
+                    Container(
+                      padding: EdgeInsets.only(top: 10.0),
+                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: TextFormField(
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          border: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0)),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                          filled: true,
+                          fillColor: Colors.blueGrey.withOpacity(0.45),
+                          hintText: " Marca",
+                          hintStyle: TextStyle(color: Colors.white),
+                          prefixIcon: Container(
+                            child: Icon(
+                              Icons.collections_bookmark,
+                              color: Colors.white,
+                            ),
+                            color: Colors.blue,
+                          ),
+                        ),
+                        onChanged: (text) {
+                          _editedpedido.marca = text;
+                        },
+                        controller: _marcaController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "Campo obrigatório !";
+                          }
+                          return null;
+                        },
                       ),
                     ),
-                  ),
-                  onChanged: (text) {
-                    _editedpedido.descricao = text;
-                  },
-                  controller: _descricaoController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Campo obrigatório !";
-                    }
-                    return null;
-                  },
+                    Container(
+                      padding: EdgeInsets.only(top: 10.0),
+                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: TextFormField(
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          border: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0)),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                          filled: true,
+                          fillColor: Colors.blueGrey.withOpacity(0.45),
+                          hintText: " Modelo",
+                          hintStyle: TextStyle(color: Colors.white),
+                          prefixIcon: Container(
+                            child: Icon(
+                              Icons.mobile_screen_share,
+                              color: Colors.white,
+                            ),
+                            color: Colors.blue,
+                          ),
+                        ),
+                        onChanged: (text) {
+                          _editedpedido.modelo = text;
+                        },
+                        controller: _modeloController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "Campo obrigatório !";
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: TextFormField(
+                        maxLines: 5,
+                        maxLength: 200,
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          border: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0)),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                          filled: true,
+                          fillColor: Colors.blueGrey.withOpacity(0.45),
+                          hintText: " Defeito",
+                          hintStyle: TextStyle(color: Colors.white),
+                          prefixIcon: Container(
+                            child: Icon(
+                              Icons.report_problem,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        onChanged: (text) {
+                          _editedpedido.defeito = text;
+                        },
+                        controller: _defeitoController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "Campo obrigatório !";
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 10.0),
+                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: TextFormField(
+                        maxLines: 5,
+                        maxLength: 200,
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          border: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0)),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                          ),
+                          filled: true,
+                          fillColor: Colors.blueGrey.withOpacity(0.45),
+                          hintText: " Descrição",
+                          hintStyle: TextStyle(color: Colors.white),
+                          prefixIcon: Container(
+                            child: Icon(
+                              Icons.text_fields,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        onChanged: (text) {
+                          _editedpedido.descricao = text;
+                        },
+                        controller: _descricaoController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return "Campo obrigatório !";
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
               (isLoading)
@@ -524,14 +510,63 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                         color: Colors.blueGrey,
                         textColor: Colors.white,
                         onPressed: () async {
-                          if (_formkey.currentState.validate()) {
+                          if (_formkey.currentState.validate() &&
+                              _fbKey.currentState.saveAndValidate()) {
                             setState(() {
                               isLoading = true;
                             });
                             if (isEmail(_emailController.text)) {
                               if (isNumeric(_telefoneController.text)) {
                                 if (CPFValidator.isValid(_cpfController.text)) {
-                                  _validateForm();
+                                  connect.check().then((intenet) async {
+                                    if (intenet != null && intenet) {
+                                      print("connect");
+                                      _editedcliente.password =
+                                          randomAlphaNumeric(8);
+                                      password = _editedcliente.password;
+                                      if (await widget.api.cadastrarNewPedido(
+                                              _editedcliente,
+                                              _editedpedido,
+                                              widget.login_id) !=
+                                          null) {
+                                        //Enviar password pelo whatsapp
+                                        launch(
+                                            "whatsapp://send?text=Olá, aqui é o OS, baixe nosso aplicativo e faça login com seguintes dados: \n"
+                                            "Email: $email\n"
+                                            "Senha: $password\n"
+                                            "Ou Faça login pelo telefone\n"
+                                            "&phone=+55$telefone");
+                                        Logado logado =
+                                            await helper.getLogado();
+                                        Navigator.pop(context);
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TabBarMenu(
+                                                        logado.logado_login_id,
+                                                        logado.nome,
+                                                        logado.email,
+                                                        logado.status,
+                                                        Api(
+                                                            token: logado
+                                                                .token))));
+                                      } else {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                        dialog.showAlertDialog(context, 'Aviso',
+                                            'Pedido não cadastrado verifica se o email já está cadastrado');
+                                      }
+                                    } else {
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                      print("no connect");
+                                      dialog.showAlertDialog(context, 'Aviso',
+                                          'Please check your connection and try again !');
+                                    }
+                                  });
                                 } else {
                                   setState(() {
                                     isLoading = false;
@@ -562,58 +597,6 @@ class _CadastroPedidoState extends State<CadastroPedido> {
         ),
       ),
     );
-  }
-
-  _validateForm() {
-    bool _isValid = _formkey.currentState.validate();
-    if (_selectedtype == null || _selectedStatus == null) {
-      setState(() => _dropdownError = "Campo obrigatório !");
-      _isValid = false;
-    }
-    if (_isValid) {
-      connect.check().then((intenet) async {
-        if (intenet != null && intenet) {
-          print("connect");
-          _editedcliente.password = randomAlphaNumeric(8);
-          password = _editedcliente.password;
-          if (await widget.api.cadastrarNewPedido(
-                  _editedcliente, _editedpedido, widget.login_id) !=
-              null) {
-            //Enviar password pelo whatsapp
-            launch(
-                "whatsapp://send?text=Olá, aqui é o OS, baixe nosso aplicativo e faça login com seguintes dados: \n"
-                "Email: $email\n"
-                "Senha: $password\n"
-                "Ou Faça login pelo telefone\n"
-                "&phone=+55$telefone");
-            Logado logado = await helper.getLogado();
-            Navigator.pop(context);
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => TabBarMenu(
-                        logado.logado_login_id,
-                        logado.nome,
-                        logado.email,
-                        logado.status,
-                        Api(token: logado.token))));
-          } else {
-            setState(() {
-              isLoading = false;
-            });
-            dialog.showAlertDialog(context, 'Aviso',
-                'Pedido não cadastrado verifica se o email já está cadastrado');
-          }
-        } else {
-          setState(() {
-            isLoading = false;
-          });
-          print("no connect");
-          dialog.showAlertDialog(
-              context, 'Aviso', 'Please check your connection and try again !');
-        }
-      });
-    }
   }
 
   _getAllType() async {
