@@ -272,6 +272,9 @@ class _CadastroFuncionarioState extends State<CadastroFuncionario> {
                                             "Email: $email\n"
                                             "Senha: $password\n"
                                             "Ou Faça login pelo telefone\n"
+                                            "Acessa nosso Site/APP\n"
+                                            "Site: https://ordemservices.000webhostapp.com/\n"
+                                            "APP: https://play.google.com/store/apps/details?id=com.chihyaoyang.api_contatos\n"
                                             "&phone=+55$telefone");
                                         Logado logado =
                                             await helper.getLogado();
