@@ -58,7 +58,6 @@ class _CadastroPedidoState extends State<CadastroPedido> {
   var password;
 
   //DropDown
-  String _dropdownError;
   List<Tipo> type = List();
   String _selectedtype;
   List<Status> status = List();
@@ -311,7 +310,6 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                                 setState(() {
                                   _selectedtype = value;
                                   _editedpedido.cd_tipo = _selectedtype;
-                                  _dropdownError = null;
                                 });
                               },
                             ),
@@ -344,7 +342,6 @@ class _CadastroPedidoState extends State<CadastroPedido> {
                                 setState(() {
                                   _selectedStatus = value;
                                   _editedpedido.cd_status = _selectedStatus;
-                                  _dropdownError = null;
                                 });
                               },
                             ),

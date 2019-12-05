@@ -37,7 +37,6 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
   bool _userEdited = false;
 
   //DropDown
-  String _dropdownError;
   List<Cliente> client = List();
   String _selectedClient;
   List<Tipo> type = List();
@@ -127,7 +126,7 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
                                 validators: [FormBuilderValidators.required()],
                                 items: client?.map((item) {
                                       return new DropdownMenuItem(
-                                        child: Text(item.email.toString()),
+                                        child: Text(item.nome.toString()),
                                         value: item.id.toString(),
                                       );
                                     }).toList() ??
@@ -137,7 +136,6 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
                                     _userEdited = true;
                                     _selectedClient = value;
                                     _editedpedido.cd_cliente = _selectedClient;
-                                    _dropdownError = null;
                                   });
                                 },
                               ),
@@ -182,7 +180,6 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
                                     _userEdited = true;
                                     _selectedtype = value;
                                     _editedpedido.cd_tipo = _selectedtype;
-                                    _dropdownError = null;
                                   });
                                 },
                               ),
@@ -216,7 +213,6 @@ class _CadasrarPedidoState extends State<CadasrarPedido> {
                                     _userEdited = true;
                                     _selectedStatus = value;
                                     _editedpedido.cd_status = _selectedStatus;
-                                    _dropdownError = null;
                                   });
                                 },
                               ),
